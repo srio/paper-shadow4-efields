@@ -107,12 +107,12 @@
 
 \begin{document}  % DO NOT DELETE THIS LINE
 
-\title{SHADOW4 models to transport and modify electric fields.
-Application to ray-tracing X-ray polarizers and phase-shifters.}
+\title{Modelling polarization effects by ray-tracing with SHADOW4. Examples of applications (X-ray polarizers and phase-shifters)}
 
 \cauthor[1]{{Manuel}}{{Sanchez del Rio}}{srio@esrf.eu}{address if different from \aff}
 \author[1]{{Juan}}{{Reyes-Herrera}}
-\author[2]{{Xiaojian}}{{Yu}}
+\author[2]{{Xiaojiang}}{{Yu}}
+\author[1]{{Carsten}}{{Detlefs}}
 
 \aff[1]{ESRF - The European Synchrotron, 71 Avenue des Martyrs, 38000 Grenoble, \country{France}}
 \aff[2]{Singapore Synchrotron Light Source,National University of Singapore, 5 Research Link, Singapore 117603 \country{Singapore}}
@@ -183,8 +183,43 @@ where $T$ is the transpose operator (we use ``column" vectors), $\vec{x}=(x_1,x_
 The complex electric vector is expressed as a function of the $\sigma$ and $\pi$ components (perpendicular and parallel to the diffraction of reflection plane, respectively):
 
 \begin{equation}\label{eq:electricfieldray}
-   \vec{E}= \vec{E}_\sigma e^{i \phi_\sigma} + \vec{E}_\pi e^{i \phi_\pi}.
+   \vec{E}= \vec{E}_\sigma e^{i \phi_\sigma} + \vec{E}_\pi e^{i \phi_\pi},
 \end{equation}
+where it is implicetly assumed that the only the real part of $\vec{E}$ has a physical meaning. This equation can be expressed\footnote{
+this is calculated as  
+$\hat{u}_\sigma = \vec{E}_\sigma/|\vec{E}_\sigma|$ and $\hat{u}_\sigma = (\hat{u}_\sigma \times \vec{v})/|\hat{u}_\sigma \times \vec{v}|=0$.
+In case that $|\vec{E}_\sigma|=0$ the calculation is $\hat{u}_\pi = \vec{E}_\pi/|\vec{E}_\pi|$ and $\hat{u}_\sigma = (\vec{v} \times \hat{u}_\pi)/|\vec{v} \times \hat{u}_\pi|$. If $|\vec{E}|=0$ then we chose arbitrarly $\hat{u}_\sigma=(1,0,0)^T$. This is computed in in {\tt S4Beam.get\_efield\_directions}.
+} using the direction versors $\hat{u}_\sigma$ 
+\begin{equation}\label{eq:electricfieldray2}
+   \vec{E}=
+    \mathcal{E}_\sigma \hat{u}_\sigma + 
+    \mathcal{E}_\pi \hat{u}_\pi
+   =
+   E_\sigma e^{i \phi_\sigma} \hat{u}_\sigma + E_\pi e^{i \phi_\pi} \hat{u}_\pi
+\end{equation}
+with $\mathcal{E}_{\sigma,\pi}$ the complex amplitudes of the electric field and $E_{\sigma,\pi}=|\vec{E}_{\sigma,\pi}|$ the modulus of the complex amplitudes (real).
+
+
+
+% and of the electric fields for the $\sigma$ and  $\hat{u}_\pi$ can be calculated\footnote{this is done in {\tt S4Beam.get\_efield\_directions}.
+% In case that $|\vec{E}_\sigma|=0$ the calculation is $\hat{u}_\pi = \vec{E}_\pi/|\vec{E}_\pi|$ and $\hat{u}_\sigma = (\vec{v} \times \hat{u}_\pi)/|\vec{v} \times \hat{u}_\pi|$. If $|\vec{E}|=0$ then we chose arbitrarly $\hat{u}_\sigma=(1,0,0)^T$.
+% } as:
+% \begin{eqnarray}
+%     \hat{u}_\sigma = \frac{\vec{E}_\sigma}{|\vec{E}_\sigma|} \nonumber \\
+%     \hat{u}_\pi = \frac{\hat{u}_\sigma \times \vec{v}}{|\hat{u}_\sigma \times \vec{v}|},
+% \end{eqnarray}
+% and equation~(\ref{eq:electricfieldray}) becomes 
+
+
+
+The intensity carried-out by a single ray is:
+\begin{eqnarray}
+   I=|\vec{E}|^2 = \vec{E}.\vec{E}^* =
+   % (\vec{E}_\sigma e^{i \phi_\sigma} + \vec{E}_\pi e^{i\phi_\pi} ).
+   % (\vec{E}_\sigma e^{-i\phi_\sigma} + \vec{E}_\pi e^{-i\phi_\pi} ) =  \nonumber \\
+   % |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2 + 2 \vec{E}_\sigma.\vec{E}_\pi \cos(\phi_\sigma-\phi_\pi) =
+   |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2.
+\end{eqnarray}
 
 The storage in SHADOW is redundant, which imply that some relationships among the parameters must hold. For example, being the direction a unitary vector, $v_3\text{=}\sqrt{v_1^2+v_2^2}$. Concerning the electric fields,
 \begin{itemize}
@@ -194,15 +229,6 @@ The storage in SHADOW is redundant, which imply that some relationships among th
  optical elements
 \end{itemize}
 
-The intensity carried-out by a single ray is:
-\begin{eqnarray}
-   I=|\vec{E}|^2 = \vec{E}.\vec{E}^* = (\vec{E}_\sigma e^{i \phi_\sigma} + \vec{E}_\pi e^{i\phi_\pi} ).
-   (\vec{E}_\sigma e^{-i\phi_\sigma} + \vec{E}_\pi e^{-i\phi_\pi} ) =  \nonumber \\
-   |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2 + 2 \vec{E}_\sigma.\vec{E}_\pi \cos(\phi_\sigma-\phi_\pi) =
-   |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2.
-\end{eqnarray}
-
-
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 \section{The electric fields at the source}
@@ -211,31 +237,29 @@ The intensity carried-out by a single ray is:
 % -----------------------------------------------------------------
 
 When simulating a source, SHADOW first samples the ray energy, direction and positions and then define set electric vectors. 
-A first step is to obtain orthogonal unitary vectors $\vec{u}_\sigma$ and $\vec{u}_\pi$ that are normal to $\vec{v}$.
+A first step is to obtain orthogonal unitary vectors $\hat{u}_\sigma$ and $\hat{u}_\pi$ that are normal to $\vec{v}$.
 At the source level, there is not yet knowledge of any optical surface to define $\sigma$ and $\pi$ directions, so these directions 
-are considered ``mostly'' horizontal and vertical, respectively. The unitary vectors are calculated as: 
+are considered ``mostly'' horizontal and vertical, respectively. The unitary vectors are calculated\footnote{
+This is done for most SHADOW4 sources by using the {\tt vector\_default\_efields} function found in {\tt shadow4.tools.arrayofvectors}.
+} as: 
 \begin{eqnarray}
-   \vec{u}_\sigma = \vec{v} \wedge (\vec{u}_x \wedge \vec{v}) \nonumber \\
-   \vec{u}_\pi = \vec{u}_\sigma \wedge  \vec{v}
+   \hat{u}_\sigma = \vec{v} \times (\hat{u}_x \times \vec{v}) \nonumber \\
+   \hat{u}_\pi = \hat{u}_\sigma \times  \vec{v}
 \end{eqnarray}
-with $\wedge$ the cross product, and  $\vec{u}_x\text{=}(1,0,0)$ the unitary vector along the horizontal direction at the source plane ($x$ axis).
-This is done for most SHADOW4 sources by using the {\tt vector\_default\_efields} function found in {\tt shadow4.tools.arrayofvectors}
-(see\footnote{\url{https://shadow4.readthedocs.io/en/latest/shadow4.tools.html#shadow4.tools.arrayofvectors.vector_refraction}})
+with $\times$ the cross product, and  $\hat{u}_x\text{=}(1,0,0)$ the unitary vector along the horizontal direction at the source plane ($x$ axis).
 
-The electric vectors are 
-\begin{equation}
-    \vec{E}_{\sigma,\pi} = |\vec{E}_{\sigma,\pi}| \vec{u}_{\sigma,\pi}.
-\end{equation}
-At the source level SHADOW normalizes the total intensity of each ray to one. For that, two parameters are used: $P$ and %$\chi$.  
+At the source level SHADOW normalizes the total intensity of each ray to one.
+
+For the geometrical source, two parameters are used: $P$ and $\chi$.  
 $P$ is a non-standard way\footnote{In SHADOW the polarization is defined as a function of the amplitudes and not the intensities, in such a way that $P=|\vec{E}_\sigma|/(|\vec{E}_\sigma|+|\vec{E}_\pi|)$} to define the polarization degree:
 \begin{equation}
    P = \frac{\cos \chi}{\cos \chi + \sin \chi}
 \end{equation}
-where $\chi$ is the angle between $\vec{u}_\sigma$ and $\vec{u}_x$ when the beam is linearly polarized. 
+where $\chi$ is the angle between $\hat{u}_\sigma$ and $\hat{u}_x$ when the beam is linearly polarized. 
 The electric vectors are: 
 \begin{eqnarray}
-   \vec{E}_\sigma = \frac{P}{\sqrt{1-2 P+ 2 P^2}} \vec{u}_\sigma \nonumber \\
-   \vec{E}_\pi    = \frac{1-P}{\sqrt{1-2 P+ 2 P^2}} \vec{u}_\pi.
+   \vec{E}_\sigma = \frac{P}{\sqrt{1-2 P+ 2 P^2}} \hat{u}_\sigma, \nonumber \\
+   \vec{E}_\pi    = \frac{1-P}{\sqrt{1-2 P+ 2 P^2}} \hat{u}_\pi.
 \end{eqnarray}
 These expressions verify, as expected,  $|\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2 = 1$, and $P=|\vec{E}_\sigma|/(|\vec{E}_\sigma|+|\vec{E}_\pi|)$
 
@@ -287,8 +311,8 @@ The beam coming from the source or a previous beamline element must be converted
 The rotation of the vectors of the rays in the beam ($\vec{x}$, $\vec{v}$ and $\vec{E}_{\sigma,\pi}$) around a given axis is done in the method {\tt S4Beam.rotate}\footnote{\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beam.html#shadow4.beam.s4_beam.S4Beam.rotate}}. 
 Therefore, to put the beam in the local reference of the beamline element, the beam vectors ($\vec{x}$,  $\vec{v}$ and $\vec{E}_{\sigma,\pi}$) are affected by these sequential operations:
 \begin{itemize}
-    \item rotate the vectors by an angle $\alpha$ around the $\vec{u}_y$=(0,1,0); 
-    \item rotate the vectors by an angle $\theta_i$ around $\vec{u}_x$,
+    \item rotate the vectors by an angle $\alpha$ around the $\hat{u}_y$=(0,1,0); 
+    \item rotate the vectors by an angle $\theta_i$ around $\hat{u}_x$,
     \item translate the beam coordinates $\vec{x}$ a distance $-p$.
 \end{itemize}
 As an example, see the listed code\footnote{\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beamline.optical_elements.mirrors.html#shadow4.beamline.optical_elements.mirrors.s4_mirror.S4MirrorElement.trace_beam}}.
@@ -296,13 +320,15 @@ As an example, see the listed code\footnote{\tiny \url{https://shadow4.readthedo
 Then, the reflection/refraction/diffraction by the beamline element is applied, which changes the beam direction and electric vectors.
 This will be discussed in detail in the next paragraphs.
 
-Last, after the reflection, the rays are 
+Last, after the reflection, the rays are\footnote{
+These operations are done by the method {\tt S4Beam.change\_to\_image\_reference\_system}, see: {\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beam.html#shadow4.beam.s4_beam.S4Beam.change_to_image_reference_system}}.
+} 
 \begin{itemize}
     \item projected into the image plane, and
     \item change the coordinate system to have the origin in the image plane.
 \end{itemize}
 For that it projects the  vectors onto the versors of the new reference. 
-These operations are done by the method {\tt S4Beam.change\_to\_image\_reference\_system}\footnote{\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beam.html#shadow4.beam.s4_beam.S4Beam.change_to_image_reference_system}}.
+
 
 It is important that the changes of refecence system (before and after interaction with the beamline element)  are not affecting the phase $\phi_\sigma$ and $\phi_\pi$ and conserve the modulus of each electric field component $\vec{E}_\sigma$ and $\vec{E}_\pi$. Also, they do not alter the orthogonality relationships:
 \begin{eqnarray}
@@ -318,361 +344,274 @@ It is important that the changes of refecence system (before and after interacti
 \section{Interaction with the beamline element using Jones calculus}
 \label{sec:S4}
 
-The interaction of the SHADOW beam with the optical element  uses the Jones calculus in SHADOW4. We explain here the theory and implementation. This is new in SHADOW4, and the old implementation in SHADOW3 is described in Appendix~\ref{sec:S3}.
-
-% -----------------------------------------------------------------
-% -----------------------------------------------------------------
-
-
-% -----------------------------------------------------------------
-% See, e.g., https://arxiv.org/pdf/2011.07834
-\subsection{Basics results from Jones Calculus}
-\label{sec:Jones}
-% -----------------------------------------------------------------
+The interaction of the SHADOW beam with the optical element  uses the Jones calculus \cite{Jones1941a, Jones1941b} in SHADOW4. We explain here the theory and implementation. This is new in SHADOW4, and the old implementation in SHADOW3 is described in Appendix~\ref{sec:S3}.
 
 Fully polarized light can be described using the Jones calculus. The polarized electric field is represented by a Jones vector, made by two complex numbers representing the scalar electric field for the $\sigma$ and $\pi$ polarizations. 
 The effect of the beamline elements are represented by Jones matrices.
-In such a way, the light after the interaction with the optical elemnt is found by taking the product of the Jones matrix of the optical element and the Jones vector of the incident light. 
+In such a way, the light after the interaction with the optical element is found by taking the product of the Jones matrix of the optical element and the Jones vector of the incident light.
 
-The Jones matrix that represents a beamline element (crystal, mirror or multilayer) is\footnote{The off-diagonal elements are set to zero as this is the typical case of beamline reflectors, refractors and diffractors. However, there are elements, like magnetic scattering samples, where these off-diagonal elements are not zero. The SHADOW4 implementation would allow to create new elements with any $\textbf{J}$}
+Jones vector for a ray, following equation~(\ref{eq:electricfieldray2}), is
+\begin{equation}
+        \begin{pmatrix}
+        \mathcal{E}_\sigma \\
+        \mathcal{E}_\pi
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        |\vec{E}_{\sigma}| e^{i \phi_\sigma} \\
+        |\vec{E}_{\pi}| e^{i \phi_\pi}
+    \end{pmatrix}.
+\end{equation}
+
+In general, a Jones matrix is applied to a Jones vector to get the scattered Jones vector
+\begin{equation}\label{eq:applyJones}
+    \begin{pmatrix}
+        \mathcal{E}'_\sigma \\
+        \mathcal{E}'_\pi
+    \end{pmatrix}
+    =
+    \textbf{J}
+    \cdot
+    \begin{pmatrix}
+        \mathcal{E}_\sigma\\
+        \mathcal{E}_\pi
+    \end{pmatrix}.
+\end{equation}
+
+The Jones matrix that represents a generic beamline element is\footnote{The off-diagonal elements in the most common beamline elements like crystals, gratings, mirrors and multilayer are zero}
 \begin{equation}\label{eq:J}
-\textbf{J} = 
+\textbf{J}_e = 
 \begin{pmatrix}
-r_\sigma & 0\\
-0 & r_\pi
+r_{\sigma\sigma} & r_{\sigma\pi}\\
+r_{\pi\sigma} & r_{\pi\pi}
 \end{pmatrix},
 \end{equation}
-with $r_{\sigma,\pi}$ the complex amplitude of the reflection.
-Note that the $\sigma$ and $\pi$ directions here are ``local" because they are referred to the scattering plane. This implies that $\textbf{J}$ cannot be applied to the Jones vector of the incident ray, but has to be affected by a rotation. 
+where the elements are the complex scattering amplitudes.
+Note that the $\sigma$ and $\pi$ directions here are ``local" (they are referred to the scattering plane). 
+This implies that $\textbf{J}_e$ in equation~(\ref{eq:J}) cannot be directly applied to the Jones vector of the incident ray, but has to be transformed. 
+
+The $\sigma$ and $\pi$ directions of polarization are defined by the scattering plane spanned by the direction vectors before and after the scattering: $\vec{v}$ and $\vec{v}'$, respectively.
+It is convinient to consider the $\sigma$ and $\pi$ versors in three different frames, defined:
+\begin{itemize}
+    \item the $\hat{u}_\sigma$ and $\hat{u}_\pi$ for the incoming ray as defined in equation~(\ref{eq:electricfieldray2}), 
+
+    \item for the scattering plane spanned by $\vec{v}$ (incident direction): 
+
+\begin{eqnarray}\label{eq:u_i}
+  \hat{u}_{\sigma,i} 
+  &=&
+  \frac{\vec{v} \times \vec{v}'}{\left| \vec{v} \times \vec{v}' \right|}
+  \nonumber \\
+  \hat{u}_{\pi,i}
+  &=&
+  \frac{\vec{v} \times \hat{u}_{\sigma,i}}{\left| \vec{v} \times \hat{u}_{\sigma,i} \right|}.
+\end{eqnarray}
+
+    \item for the scattering plane spanned by $\vec{v}'$ (output or final direction): 
+
+\begin{eqnarray}\label{eq:u_f}
+  \hat{u}_{\sigma,f} 
+  &=&
+  \hat{u}_{\sigma,i} 
+  \nonumber \\
+  \hat{u}_{\pi,f}
+  &=&
+  \frac{\vec{v}' \times \hat{u}_{\sigma,f}}{\left| \vec{v}' \times \hat{u}_{\sigma,f} \right|}.
+\end{eqnarray}
+\end{itemize}
+All $\hat{u}$ are real 3D unit vectors.
+% Note: Signs or order of the cross products may be chosen differently, depending on how you want to define a right-handed coordinate system with these 3 vectors as basis.
+Note that in forward scattering, $\vec{v}' = \vec{v}$, the scattering plane is ill defined, and an arbitrary direction can be chosen (we use $\hat{u}_{\sigma,i}=\hat{u}_{\sigma}$).
+
+The electric vector in the frame related to the diffraction plane (with axes along $\hat{u}_{\sigma,i}$, $\vec{v}$, and $\hat{u}_{\pi,i}$) is expressed as 
+\begin{equation}
+  \left( \begin{array}{c}
+    E_{\sigma,i} e^{i \phi_{\sigma,i}} \\
+    E_{\pi,i} e^{i \phi_{\pi,i}}
+  \end{array} \right)
+  =
+  \underbrace{
+  \left( \begin{array}{cc}
+    \hat{u}_{\sigma,i} \cdot \hat{u}_{\sigma} &
+    \hat{u}_{\sigma,i} \cdot \hat{u}_{\pi} \\
+    \hat{u}_{\pi,i} \cdot \hat{u}_{\sigma} &
+    \hat{u}_{\pi,i} \cdot \hat{u}_{\pi} 
+  \end{array} \right)
+  }_{\textbf{R}(\alpha)}
+  \cdot
+  \left( \begin{array}{c}
+    E_{\sigma} e^{i \phi_{\sigma}} \\
+    E_{\pi} e^{i \phi_{\pi}}
+  \end{array} \right).
+\end{equation}
+
+The $2\times 2$ matrix is a coordinate transform that can be seen as a rotation
+
+\begin{equation}\label{eq:rotation}
+  \textbf{R}(\alpha)
+  =
+  \left( \begin{array}{cc}
+    \cos(\alpha) & -\sin(\alpha) \\
+    \sin(\alpha) & \cos(\alpha)
+ \end{array} \right)
+\end{equation}
+
+
 % The $\sigma$ direction is coincident with the $x$ axis when the surface normal is along $z$ and the scattering plane is $yz$ (this is the default case). The $\pi$ direction is therefore in the $yz$ plane, and is perpendicular to $\sigma$ and the incident direction $\vec{v}$.
 
 % https://pleclair.ua.edu/optics/Notes/Jones.pdf
-A rotation matrix in 2D transforms the coordinates of a generic point $(x_1,x_2)^T$ into the coordinates $(x'_1,x'_2)^T$ in a new reference system rotated an angle $\phi$ is (see, e.g., \cite{LeClair})
-\begin{equation}
-\textbf{R}(\phi) = 
-\begin{pmatrix}
-\cos\phi & -\sin\phi\\
-\sin\phi & \cos\phi
-\end{pmatrix},
-\end{equation}
-in such a way that
-\begin{equation}
-\begin{pmatrix}
-x'_1 \\
-x'_2
-\end{pmatrix} = 
-\textbf{R}(\phi)
-\begin{pmatrix}
-x_1 \\
-x_2
-\end{pmatrix}.
-\end{equation}
 
-Consider now an incident ray whose electric fields is along the directions $\vec{u}_\sigma$ and $\vec{u}_\pi$. Let be $\alpha$ the angle between $\vec{u}_\sigma$ and $\sigma$ direction of the beamline element  (always perpendicular to the scattering plane). The Jones matrix to be applied to this ray is\footnote{
-In \cite{LeClair} it is said that if an optical element is rotated about the optical axis by an angle $\alpha$, the Jones matrix for the
-rotated element $\textbf{J}_\alpha$ is constructed from the matrix for the unrotated element $\textbf{J}$ by rotating by an angle $\alpha$, applying the matrix $\textbf{J}$, and rotating back by an angle $\-\alpha$:
-$\textbf{J}_\alpha = \textbf{R}(-\alpha) \textbf{J} \textbf{R}(\alpha)$.
-Considering that in SHADOW the rotation of $\alpha$ is not reset, it implies that we must use instead the equation~(\ref{eq:Jalpha_S4}).
-}
-\begin{equation}\label{eq:Jalpha_S4}
-    \textbf{J}_\alpha =  \textbf{J} \textbf{R}(\alpha)=
-    \begin{pmatrix}
-r_\sigma c & -r_\sigma s\\
-r_\pi s& 
-r_\pi c
-\end{pmatrix}.
-\end{equation}
-Therefore, the particular cases for zero and 90$^\circ$ are
+% A rotation matrix in 2D transforms the coordinates of a generic point $(x_1,x_2)^T$ into the coordinates $(x'_1,x'_2)^T$ in a new reference system rotated an angle $\phi$ is (see, e.g., \cite{LeClair})
+% \begin{equation}
+% \textbf{R}(\phi) = 
+% \begin{pmatrix}
+% \cos\phi & -\sin\phi\\
+% \sin\phi & \cos\phi
+% \end{pmatrix},
+% \end{equation}
+% in such a way that
+% \begin{equation}
+% \begin{pmatrix}
+% x'_1 \\
+% x'_2
+% \end{pmatrix} = 
+% \textbf{R}(\phi)
+% \begin{pmatrix}
+% x_1 \\
+% x_2
+% \end{pmatrix}.
+% \end{equation}
+
+The Jones matrix in equation~(\ref{eq:J}) is now applied to the incident Jones vectors as
+
 \begin{equation}
-\textbf{J}_{0^\circ} = 
-\begin{pmatrix}
-r_\sigma & 0\\
-0 & r_\pi
-\end{pmatrix},\text{~and~}
-\textbf{J}_{90^\circ} = 
-\begin{pmatrix}
-0 & -r_\sigma\\
-r_\pi & 0
-\end{pmatrix}. \nonumber
+  \left( \begin{array}{c}
+    \mathcal{E}_{\sigma,f} \\
+    \mathcal{E}_{\pi,f}
+  \end{array} \right)
+  =
+    \textbf{J}_e \cdot
+  \left( \begin{array}{c}
+    \mathcal{E}_{\sigma,i} \\
+    \mathcal{E}_{\pi,i}
+  \end{array} \right)
+  =
+  \textbf{J}_e \cdot \textbf{R}(\alpha) \cdot
+  \left( \begin{array}{c}
+    E_{\sigma} e^{i \phi_{\sigma}} \\
+    E_{\pi} e^{i \phi_{\pi}}
+  \end{array} \right),
 \end{equation}
+where $\mathcal{E}$ are complex amplitudes along the different direction versors.
 
-% -----------------------------------------------------------------
-\subsection{Jones vectors from/to SHADOW rays}
-\label{sec:JonesAndShadow}
-% -----------------------------------------------------------------
+% Consider now an incident ray whose electric fields is along the directions $\vec{u}_\sigma$ and $\vec{u}_\pi$. Let be $\alpha$ the angle between $\vec{u}_\sigma$ and $\sigma$ direction of the beamline element  (always perpendicular to the scattering plane). The Jones matrix to be applied to this ray is\footnote{
+% In \cite{LeClair} it is said that if an optical element is rotated about the optical axis by an angle $\alpha$, the Jones matrix for the
+% rotated element $\textbf{J}_\alpha$ is constructed from the matrix for the unrotated element $\textbf{J}$ by rotating by an angle $\alpha$, applying the matrix $\textbf{J}$, and rotating back by an angle $\-\alpha$:
+% $\textbf{J}_\alpha = \textbf{R}(-\alpha) \textbf{J} \textbf{R}(\alpha)$.
+% Considering that in SHADOW the rotation of $\alpha$ is not reset, it implies that we must use instead the equation~(\ref{eq:Jalpha_S4}).
+% }
+% \begin{equation}\label{eq:Jalpha_S4}
+%     \textbf{J}_\alpha =  \textbf{J} \textbf{R}(\alpha)=
+%     \begin{pmatrix}
+% r_\sigma c & -r_\sigma s\\
+% r_\pi s& 
+% r_\pi c
+% \end{pmatrix}.
+% \end{equation}
+% Therefore, the particular cases for zero and 90$^\circ$ are
+% \begin{equation}
+% \textbf{J}_{0^\circ} = 
+% \begin{pmatrix}
+% r_\sigma & 0\\
+% 0 & r_\pi
+% \end{pmatrix},\text{~and~}
+% \textbf{J}_{90^\circ} = 
+% \begin{pmatrix}
+% 0 & -r_\sigma\\
+% r_\pi & 0
+% \end{pmatrix}. \nonumber
+% \end{equation}
+%
+% Jones vector $E^J$ for a ray, following Eq.~\ref{eq:electricfieldray}, is
+% \begin{equation}
+%     E^J = 
+%         \begin{pmatrix}
+%         e_1 \\
+%         e_2
+%     \end{pmatrix}
+%     =
+%     \begin{pmatrix}
+%         |E_{\sigma}| e^{i \phi_\sigma} \\
+%         |E_{\pi}| e^{i \phi_\pi}
+%     \end{pmatrix}.
+% \end{equation}
 
-Jones vector $E^J$ for a ray, following Eq.~\ref{eq:electricfieldray}, is
-\begin{equation}
-    E^J = 
-        \begin{pmatrix}
-        e_1 \\
-        e_2
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-        |E_{\sigma}| e^{i \phi_\sigma} \\
-        |E_{\pi}| e^{i \phi_\pi}
-    \end{pmatrix}.
-\end{equation}
-
-In general, the Jones vector after the effect of an optical element is
-\begin{equation}\label{eq:applyJones}
-    (E^J)' = \textbf{J}_\alpha E^J, \text{~~or~~}
-        \begin{pmatrix}
-        e'_1 \\
-        e'_2
-    \end{pmatrix}
-    =
-    \textbf{J}_\alpha
-    \begin{pmatrix}
-        e_1 \\
-        e_2
-    \end{pmatrix}.
-\end{equation}
-To convert the new Jones vector into SHADOW variables we must know the direction of the new electric field vectors $\vec{u'}_{\sigma,\pi}$. This should be obtained from the physics of the scattering process. Then $\vec{E}'_\sigma=|e'_1| ~\vec{u}'_\sigma$ (similarly, $\vec{E}'_\pi,=|e'_2| ~\vec{u}'_\pi$), and $\phi_\sigma=\arg(e'_1)$ [similarly, $\phi_\pi=\arg(e'_2)$].
+To convert a Jones vector to SHADOW variables we must know the versors with the directions of the electric field.
+After scattering of a beamline element, the versors to consider are those of equations~(\ref{eq:u_f}).
+Then, $\vec{E}_\sigma=|\mathcal{E}_\sigma| \hat{u}_{\sigma,f}$, and 
+$\phi_\sigma=\arg(\mathcal{E}_{\sigma,f})$
+(and a similar expression holds for the $\pi$ component).
 
 Note that in the SHADOW implementation, the particular values of $\vec{E}_\sigma$ are correlated to the $\phi_\sigma$ (same for $\pi$): it is always possible to get an equivalent description of the field with $\phi_\sigma$=0. For that, the vectors $\vec{E}_\sigma$ and $\vec{E}_\pi$ are rotated an angle $\phi_\sigma$ around the axis $\vec{v}$ and then the new phases are set to $\phi_\pi \xleftarrow{}(\phi_\pi-\phi_\sigma)$ and $\phi_\sigma\xleftarrow{}0$. In particular, a change of sign in $\vec{E}_\sigma$ corresponds to adding $\pi$ to $\phi_\sigma$.
 
-% -----------------------------------------------------------------
-% -----------------------------------------------------------------
-\section{Applying reflectivity in SHADOW4 using Jones matrices }\label{sec:JonesInS4}
 
-In SHADOW4 we calculate the crystal raflections (and mirror, multilayer, etc? ) applying the Jones formalist. Let us describe this in the local reference of the optical element (i.e., all the vectors such as direction and electric fields are expressed in the optical element local reference).
-We can therefore obtain from the local beam the input direction $\vec{v}$, the electric field vectors $\vec{E}_{\sigma,\pi}$ and their phases $\phi_{\sigma,\pi}$.
-The corresponding reflected values are noted with primes (e.g, $\vec{v}'$ is the output direction, always in the optical element local reference).
-From the model of the optical element (if is a crystal, mirror, multilayer, etc.) we know the reflected direction $\vec{v}'$ (geometrical model) and the reflectivities along its ``principal" directions $r_{\sigma,\pi}$ (physical model).
+% In SHADOW4 we calculate the scattering in a beamline element (mirror and multilayer reflections, crystal and grating diffraction, lens refraction) applying the Jones formalist.
 
-The steps of the calculation are:
+In summary, the different steps to be followed in the ray-tracing calculation, considering the input beam already in the local reference of the beamline element (i.e., all the vectors such as direction and electric fields are expressed in the optical element local reference, as described in section~\ref{sec:change_frame}), are:
 
-\begin{itemize}
-    \item From the incident electric fields $\vec{E}_{\sigma,\pi}$, calculate their unitary vectors directions $\vec{e}_{\sigma,\pi}$
-
-    \item Compute the directions of the output electric vectors $\vec{e}'_{\sigma,\pi}$. Note that $\vec{e}'_{\sigma}$ is perpendicular to the diffraction plane defined by the plane containing the incident $\vec{v}$ and reflected $\vec{v}'$ directions, therefore $\vec{e}'_\sigma=\vec{v}' \wedge \vec{v}$. Consequently, $\vec{e}'_\pi=\vec{e}'_\sigma \wedge \vec{v}'$
-        
-    \item Calculate the incident Jones vector $E^J=(|\vec{E}_\sigma| \exp(i\phi_\sigma), |\vec{E}_\pi| \exp(i\phi_\pi))$
-    \item Calculate the Jones matrix (equation~(\ref{eq:Jalpha_S4})) using the reflectivities (calculated elsewhere) and $\alpha$ as the angle between $\vec{e}_\sigma$ and the $x$ axis $(1,0,0)^T$
-    \item Calculate the reflected Jones vector $(E^J)'$ using equation~(\ref{eq:applyJones})
-    \item Calculate the SHADOW variables $\vec{E}'_{\sigma,\pi}$ and $\phi'_{\sigma,\pi}$ for the reflected ray combining $(E^J)'$ and $\vec{e}'_{\sigma, \pi}$ as described in section \ref{sec:JonesAndShadow}.
-\end{itemize}
-
-
-
-% -----------------------------------------------------------------
-% -----------------------------------------------------------------
-
-
-% \todo{REMOVE?} Let us consider some particular cases.
-% \begin{enumerate}
-%     \item  a ray with $\vec{E}_\sigma=(E_\sigma,0,0)^T$; $\vec{E}_\pi=(0,0,E_\pi)^T$; $\phi_\sigma \ne 0$ $\phi_\pi \ne 0$ (polarized light with an arbitrary phase difference). $\alpha=0$ (axis 1 of the incident ray coincident with the $\sigma$ local direction or the optical element).
-%     This gives:
-%     \begin{equation}
-%         (E^J)' = \begin{pmatrix}
-%         r_\sigma E_\sigma e^{i \phi_s} \\
-%         r_\pi E_\pi e^{i \phi_\pi} 
-%         \end{pmatrix},      
-%     \end{equation}
-%     and the modified ray has  $\vec{E}_\sigma'=(E_\sigma,0,0)^T |r_\sigma|$; $\vec{E}'_\pi=(0,0,E_\pi)^T |r_\pi|$; $\phi'_\sigma = \phi_\sigma + \arg(r_\sigma)$; $\phi'_\pi = \phi_\pi + \arg(r_\pi)$. 
-    
-%     \item  the same ray with $\alpha=90^{\circ}$ axis 1 of the incident ray coincident with the $\pi$ local direction or the optical element).
-%     This gives:
-%     \begin{equation}
-%         (E^J)' = \begin{pmatrix}
-%         r_\pi E_\sigma e^{i \phi_s} \\
-%         r_\sigma E_\pi e^{i \phi_\pi} 
-%         \end{pmatrix},      
-%     \end{equation}
-%     and the modified ray has  $\vec{E}_\sigma'=(E_\sigma,0,0)^T |r_\pi|$; $\vec{E}'_\pi=(0,0,E_\pi)^T |r_\sigma|$; $\phi'_\sigma = \phi_\sigma + \arg(r_\pi)$ $\phi'_\pi = \phi_\pi + \arg(r_\sigma)$.
-
-%     \item  a ray with $\vec{E}_\sigma=(0,0,E_\sigma)^T$; $\vec{E}_\pi=(E_\pi,0,0)^T$; $\phi_\sigma \ne 0$ $\phi_\pi \ne 0$ (polarized light with an arbitrary phase difference). $\alpha=0$ (axis 1 of the incident ray coincident with the $\sigma$ local direction or the optical element).
-%     This gives:
-%     \begin{equation}
-%         (E^J)' = \begin{pmatrix}
-%         r_\sigma E_\pi e^{i \phi_\pi} \\
-%         r_\pi E_\sigma e^{i \phi_\sigma} 
-%         \end{pmatrix},      
-%     \end{equation}
-%     and the modified ray has  $\vec{E}_\sigma'=(E_\pi,0,0)^T |r_\sigma|$; $\vec{E}'_\pi=(0,0,E_\sigma)^T |r_\sigma|$; $\phi'_\sigma = \phi_\pi + \arg(r_\sigma)$; $\phi'_\pi = \phi_\sigma + \arg(r_\pi)$. Note that the ``default" recipe to pass from Jones to SHADOW vector imply a swapping of the SHADOW $\sigma$ and $\pi$ components.
-
-%     \item  the same ray with $\alpha=90^{\circ}$ (axis 1 of the incident ray coincident with the $\pi$ local direction or the optical element).
-%     This gives:
-%     \begin{equation}
-%         (E^J)' = \begin{pmatrix}
-%         r_\pi E_\pi e^{i \phi_\pi} \\
-%         r_\sigma E_\sigma e^{i \phi_\sigma} 
-%         \end{pmatrix},      
-%     \end{equation}
-%     and the modified ray has  $\vec{E}_\sigma'=(E_\pi,0,0)^T |r_\pi|$; $\vec{E}'_\pi=(0,0,E_\sigma)^T |r_\pi|$; $\phi'_\sigma = \phi_\pi + \arg(r_\pi)$; $\phi'_\pi = \phi_\sigma + \arg(r_\sigma)$. Note that, again, the ``default" recipe to pass from Jones to SHADOW vector imply a swapping of the SHADOW $\sigma$ and $\pi$ components.
-% \end{enumerate}
-
-\newpage
-% -----------------------------------------------------------------
-% -----------------------------------------------------------------
-\section{Polarizers based on $\theta_B$=$\pi$/4: Benchmarks}\label{sec:polarizers45degBenchmark}
-% -----------------------------------------------------------------
-% -----------------------------------------------------------------
-
-We want to study the polarization produced in an x-ray beam by a series of reflections with $\theta_B=\pi/4$. In this case, the crystal reflectivity (in amplitudes) is $r_\sigma \approx 1$ and $r_\pi \approx 0$. The interest of multiple reflections is to eliminate the $\pi$ component by successive reflections (i.e. multiplication) by $r_\pi$. We consider the Si800 crystal that for $\theta_B=45^{\circ}$ the corresponding photon energy is 12914.734732580844~eV. For practical purposes we consider the beam at photon energy 12914~eV. The Bragg angle at this energy is $\theta_B=44.99999630280492^{\circ}$, and the ``corrected Bragg angle" (at which the crystal is positioned) is $\theta_{Bc}=45.00033074818061^{\circ}$. At this corrected Bragg angle, the reflectivities are $r_\sigma=-0.024724229926740865-0.9700768156818347j$ and $r_\pi=0.0009332843711563077+0.0011002464391183318j$. The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.9416603158688784$ and 
-$R_\pi=|r_\pi|^2=2.0815619442371935~10^{-06}$.
-
-Let us use 8 crystals, divided in two packs of 4 crystals each (the ``polariser" and the ``analyser"). A pack has the crystals in non-dispersive configuration $(+,-,+,-)$. The second pack is rotated 90$^\circ$ with respect to the first pack. Therefore we consider all the crystals as a single rigid body, with all crystals well aligned. We now have to define the incident beam and the orientation of the first crystal with respect to this beam. For our first tests we define an idealized pencil beam (zero cross section, and zero divergence), with a given polarization $P$. In our ray tracing source, all rays are identical. We consider two cases that will be referred as case 1 and case 2 respectively (see Fig.~\ref{fig:sketch}):
 \begin{enumerate}
-    \item a source linearly polarized with $P=1$ (Jones vector of each ray $(1,0)^T$) and first crystal rotated -45$^\circ$ along the beam direction (zero is facing up).
-    \item a source linearly polarized with $P=0.5$ (Jones vector of each ray $(2^{-1/2},2^{-1/2})^T$) and first crystal is facing up.    
+
+\item From every ray we extract the input direction $\vec{v}$, the phases $\phi_{\sigma,\pi}$, and the electric field vectors $\vec{E}_{\sigma,\pi}$. We construct the versor directions $\hat{u}_{\sigma,\pi}$, and the Jones vector $(\mathcal{E}_\sigma, \mathcal{E}_\pi)^T$.
+
+\item From the model of the beamline element we obtain the outgoing direction $\vec{v}'$ (geometrical model), and the reflectivities (physical model) to build $\mathbf{J}_e$ [equation~(\ref{eq:J}))].
+
+\item Construct the versors in equations~(\ref{eq:u_i}) and (\ref{eq:u_f}) and the matrix $\textbf{R}(\alpha)$.
+
+
+\item Compute the Jones matrix $\textbf{J}_e \cdot \textbf{R}(\alpha)$ [equation~(\ref{eq:rotation})].
+
+\item Calculate the scattered Jones vector using equation~(\ref{eq:applyJones}).
+
+\item Compute the SHADOW variables $\vec{E}'_{\sigma,\pi}$ and $\phi'_{\sigma,\pi}$ for the reflected ray with the amplitudes in the scattered Jones vector $(E^J)'$ and directions $\hat{u}_{\sigma,f}$ and $\hat{u}_{\pi,f}$.
 \end{enumerate}
 
-\subsection{Case 1 using equation~(\ref{eq:Jalpha}) \todo{delete?}}
-The Jones vector of the incident ray is $(1,0)^T$ and first crystal is rotated $\alpha$-45$^\circ$ (therefore $s=-1/\sqrt{2}$ and $s=1/\sqrt{2}$). Following equation~(\ref{eq:Jalpha}), the Jones matrices of the first crystal is: 
-
-\begin{equation}\label{eq:Jcase1_xtal1}
-    \textbf{J}_1=
-    \begin{pmatrix}
-(r_\sigma + r_\pi) / 2 &
-(r_\sigma - r_\pi) / 2\\
-(r_\sigma - r_\pi) / 2& 
-(r_\sigma + r_\pi) / 2
-\end{pmatrix} \approx
-    \frac{r_\sigma}{2}\begin{pmatrix}
-1 & 1 \\
-1 & 1
-\end{pmatrix} 
-,
-\end{equation}
-where the approximated value is only valid for $r_\pi \approx 0$. For the other crystals
-
-\begin{equation}\label{eq:Jcase1}
-\textbf{J}_{2,3,4,6,7,8}=
-    \begin{pmatrix}
-r_\sigma & 0\\
-0& 
-r_\pi
-\end{pmatrix}
-\end{equation}
-and
-    \todo{ review this critical point:  Note that in the case that the o.e. orientation angle is 90$^\circ$ (or a multiplier of it) the axis of the image reference system are affected by this rotation. In SHADOW this rotation is not compensated, meaning that all vectors are affected. This effect is not known by the next element. To compensate for that it is necessary to swap the $\sigma$ and $\pi$ components, thus applying a new Jones matrix $((0,1),(1,0))$ to the Jones vector when the o.e. orientation angle is $n~\times~$~90$^\circ$ ($n=\pm 1, \pm 2, ...)$}
-    
-\begin{equation}\label{eq:J5case1}
-\textbf{J}_{5}=
-\inred{
-\begin{pmatrix}
-0 & 1\\
-1 & 0
-\end{pmatrix}
-}
-\begin{pmatrix}
-r_\pi & 0\\
-0& 
-r_\sigma
-\end{pmatrix}
-=
-\begin{pmatrix}
-0 & r_\sigma\\
-r_\pi& 
-0
-\end{pmatrix}
-\end{equation}
 
 
+% -----------------------------------------------------------------
+% -----------------------------------------------------------------
+\section{X-ray polarizers based on crystals with $\theta_B$=$\pi$/4}\label{sec:polarizers45degBenchmark}
+% -----------------------------------------------------------------
+% -----------------------------------------------------------------
 
-Therefore, the Jones vector after alll reflections is:
+We want to study the polarization produced in an x-ray beam by a series of reflections with $\theta_B=\pi/4$. In this case, the crystal reflectivity (in amplitudes) is $r_\sigma \approx 1$ and $r_\pi \approx 0$. The interest of multiple reflections is to eliminate the $\pi$ component by successive reflections (i.e. multiplication) by $r_\pi$.
 
-\begin{equation}\label{eq:JVcase1}
-    % \textbf{J}    \begin{pmatrix}
-    % 1\\0
-    % \end{pmatrix}=
-[\textbf{J}_8~\textbf{J}_7~\textbf{J}_6~\textbf{J}_5]~[\textbf{J}_4~\textbf{J}_3~\textbf{J}_2~\textbf{J}_1
-    \begin{pmatrix}
-    1\\0
-    \end{pmatrix}]=
-    \begin{pmatrix}
-    0 & r_\sigma^4\\
-    r_\pi^4 & 0
-    \end{pmatrix}
-    \frac{1}{2}
-    \begin{pmatrix}
-    r_\sigma^4\\
-    r_\pi^3
-    \end{pmatrix}
-    = 
-\frac{1}{2}
-    \begin{pmatrix}
-    r_\sigma^5 r_\pi^3\\
-    r_\sigma^4 r_\pi^4
-    \end{pmatrix}.
-\end{equation}
+\subsection{Benchmarking}
 
-The intensities are (for 1000 rays)
-\begin{itemize}
-    \item $\sigma$-polarized $I_\sigma=|0.5~r_\sigma^5 r_\pi^3|^2$=1.67334~ 10$^{-15}$
-    \item $\pi$-polarized $I_\pi=|0.5~r_\sigma^4 r_\pi^4|^2$=3.68187~ 10$^{-21}$
-    \item total 1.67335~ 10$^{-15}$
-\end{itemize}
-in good agreement with SHADOW4.
+In this paragraph we consider the Si800 crystal that for $\theta_B=45^{\circ}$ the corresponding photon energy is 12914.735~eV. For practical purposes we consider the beam at photon energy 12914~eV. The Bragg angle at this energy is $\theta_B=44.999996^{\circ}$, and the ``corrected Bragg angle" (at which the crystal is positioned) is $\theta_{Bc}=45.000331^{\circ}$.
+At this corrected Bragg angle, the reflectivities are $r_\sigma=-0.0247-0.970 i$ and $r_\pi=0.000933+0.001100 i$.
+The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.941660$ and 
+$R_\pi=|r_\pi|^2=2.081562~10^{-06}$.
 
-\subsection{Case 2 using equation~(\ref{eq:Jalpha}) \todo{delete?}}
-The Jones vector of the incident ray is $(1/\sqrt{2},1/\sqrt{2})^T$ and first crystal is rotated 0$^\circ$. Following equation~(\ref{eq:Jalpha}), the Jones matrices of the eight crystals are: 
+Let us use 8 crystals, divided in two packs of 4 crystals each (the ``polariser" and the ``analyser"). A pack has the crystals in non-dispersive configuration $(+,-,+,-)$. The second pack is rotated 90$^\circ$ with respect to the first pack. Therefore we consider all the crystals as a single rigid body, with all crystals well aligned.
 
-\begin{equation}\label{eq:Jcase2}
-\textbf{J}_{1,2,3,4,6,7,8}=
-    \begin{pmatrix}
-r_\sigma & 0\\
-0& 
-r_\pi
-\end{pmatrix},
-\textbf{J}_{5}=
-\inred{
-    \begin{pmatrix}
-0 & r_\sigma\\ 
-r_\pi & 0\end{pmatrix}
-}
-,
-\end{equation}
-Therefore, the Jones vector after all reflections is:
+We now have to define the incident beam and the orientation of the first crystal with respect to this beam. For our first tests we define an idealized pencil beam (zero cross section, and zero divergence), with a given polarization $P$. In our ray tracing source, all rays are identical. We consider two cases that will be referred as case 1 and case 2 respectively:
+\begin{enumerate}
+    \item a source linearly polarized with $P=1$ (Jones vector of each ray $(1,0)^T$) and first crystal rotated -45$^\circ$ along the beam direction (zero is facing up).
+    \item a source linearly polarized with $P=0.5$ [Jones vector of each ray $(2^{-1/2},2^{-1/2})^T$] and first crystal is facing up.    
+\end{enumerate}
 
-\begin{equation}\label{eq:JVcase2}
-\textbf{J}_8~\textbf{J}_7~\textbf{J}_6~\textbf{J}_5~\textbf{J}_4~\textbf{J}_3~\textbf{J}_2~\textbf{J}_1
-    \begin{pmatrix}
-    1/\sqrt{2}\\1/\sqrt{2}
-    \end{pmatrix}=
-\begin{pmatrix}
-  0 & (r_\sigma r_\pi)^4 \\
-  (r_\sigma r_\pi)^4 & 0
-\end{pmatrix}    \begin{pmatrix}
-    1/\sqrt{2}\\1/\sqrt{2}
-    \end{pmatrix}.
-\end{equation}
-
-The intensities are (for 1000 rays)
-\begin{itemize}
-    \item $\sigma$-polarized $I_\sigma=|2^{-1/2}~r_\sigma^4 r_\pi^4|^2$=7.38098~ 10$^{-21}$
-    \item $\pi$-polarized the same as $\sigma$-polarized.
-\end{itemize}
-
-SHADOW4 gives the same result.
-
-\todo{
-Note that 
-\begin{itemize}
-    \item S4 with {\tt method\_efields\_management}=1 (i.e., like S3) gives different results. 
-    \item S3 itself gives different results and different from the previous ones.
-    \item a possible cause of the disagreements in S3 is that it sometimes makes a switch (or rename) of $\sigma$ and $\pi$ polarizations, typically when $I_\sigma$=0 (to be investigated)
-    \item OASYS workspace at: {\tt https://raw.githubusercontent.com/oasys-esrf-kit/paper-shadow4-efields-resources/refs/heads/main/workspaces/SU8-SEL\_collimated\_source.ows} 
-\end{itemize}
-}
-
-
-\subsection{Case 1 using equation~(\ref{eq:Jalpha_S4})}
-The Jones vector of the incident ray is $(1,0)^T$ and first crystal is rotated $\alpha$=-45$^\circ$ (therefore $s=-1/\sqrt{2}$ and $s=1/\sqrt{2}$). Following equation~(\ref{eq:Jalpha_S4}), the Jones matrices of the first crystal is: 
-
+\subsubsection{Case 1}
+The Jones vector of the incident ray is $(1,0)^T$ and first crystal is rotated $\alpha$=-45$^\circ$ (therefore $s=-2^{-1/2}$ and $s=2^{-1/2}$). The Jones matrices of the first crystal is: 
 \begin{equation}\label{eq:Jcase1_xtal1_S4}
-    \textbf{J}_1=
-    \frac{1}{\sqrt{2}}
+    \textbf{J}_1=\textbf{J}_e \cdot \textbf{R}(-45^{\circ})
+    \cdot
+    2^{-1/2}
     \begin{pmatrix}
 r_\sigma  &
 r_\sigma \\
 - r_\pi& 
 r_\pi
-\end{pmatrix} 
-.
+\end{pmatrix}.
 \end{equation}
 For the other crystals
 \begin{equation}\label{eq:Jcase1_S4}
@@ -681,11 +620,12 @@ For the other crystals
 r_\sigma & 0\\
 0& 
 r_\pi
-\end{pmatrix}
+\end{pmatrix},
 \end{equation}
 and
 \begin{equation}\label{eq:J5case1_S4}
-\textbf{J}_{5}=
+\textbf{J}_{5}=\textbf{J}_e\cdot \textbf{R}(90^{\circ})
+=
 \begin{pmatrix}
 0 & -r_\sigma\\
 r_\pi& 0
@@ -695,6 +635,7 @@ r_\pi& 0
 Therefore, the Jones vector after all reflections is:
 \begin{equation}\label{eq:JVcase1_S4}
 \left[ \prod_{i=1}^{8} \textbf{J}_i \right]
+    \cdot
     \begin{pmatrix}
     1\\0
     \end{pmatrix}=
@@ -703,6 +644,7 @@ Therefore, the Jones vector after all reflections is:
    1&-1\\
     1 & 1
     \end{pmatrix}
+    \cdot
         \begin{pmatrix}
     1\\0
     \end{pmatrix}
@@ -718,12 +660,14 @@ The intensities are (for 1000 rays)
 \begin{itemize}
     \item $\sigma$-polarized $I_\sigma=|2^{-1/2}~r_\sigma^4 r_\pi^4|^2$=7.38~ 10$^{-21}$
     \item $\pi$-polarized: the same 
-    \item total 1.47~ 10$^{-21}$
+    \item total 1.47~ 10$^{-21}$.
 \end{itemize}
-in good agreement with NEW SHADOW4.
+SHADOW4 rasults are in good agreement.
 
-\subsection{Case 2 using equation~(\ref{eq:Jalpha_S4})}
-The Jones vector of the incident ray is $(1/\sqrt{2},1/\sqrt{2})^T$.Following equation~(\ref{eq:Jalpha_S4}), the Jones matrices are: 
+\subsubsection{Case 2}
+
+The Jones vector of the incident ray is $(2^{-1/2},2^{-1/2})^T$.
+The Jones matrices are: 
 \begin{equation}\label{eq:Jcase2_S4}
 \textbf{J}_{1,2,3,4,6,7,8}=
     \begin{pmatrix}
@@ -734,7 +678,7 @@ r_\pi
 \end{equation}
 and
 \begin{equation}\label{eq:J5case2_S4}
-\textbf{J}_{5}=
+\textbf{J}_{5}=\textbf{J}_e \cdot \textbf{R}(90^\circ)=
 \begin{pmatrix}
 0 & -r_\sigma\\
 r_\pi& 0
@@ -744,18 +688,18 @@ r_\pi& 0
 Therefore, the Jones vector after all reflections is:
 \begin{equation}\label{eq:JVcase2_S4}
 \left[ \prod_{i=1}^{8} \textbf{J}_i \right]
-    2^{-1/2}
+    \cdot 
     \begin{pmatrix}
-    1\\1
+    2^{-1/2}\\2^{-1/2}
     \end{pmatrix}=
     r_\sigma^4 r_\pi^4
         \begin{pmatrix}
     0&-1\\
     1 & 0
     \end{pmatrix}
-    2^{-1/2}
+    \cdot
         \begin{pmatrix}
-    1\\1
+    2^{-1/2}\\2^{-1/2}
     \end{pmatrix}
     =
     2^{-1/2}r_\sigma^4 r_\pi^4
@@ -765,16 +709,9 @@ Therefore, the Jones vector after all reflections is:
     \end{pmatrix}.
 \end{equation}
 
-The intensities are (for 1000 rays)
-\begin{itemize}
-    \item $\sigma$-polarized $I_\sigma=|2^{-1/2}~r_\sigma^4 r_\pi^4|^2$=7.38~ 10$^{-21}$
-    \item $\pi$-polarized: the same 
-    \item total 1.47~ 10$^{-21}$
-\end{itemize}
-in good agreement with NEW SHADOW4.
+The intensities are the same as for case 1, and also here SHADOW4 results agree well. 
 
-
-\section{Polarizers based on $\theta_B$=$\pi$/4. A practical case.}\label{sec:polarizers45degPractical}
+\subsection{A practical case}\label{sec:polarizers45degPractical}
 
 For an X-ray beam within a polarizer utilizing multiple consecutive reflections in channel-cut crystals with a scattering angle of $2\theta_B$=90$^\circ$, despite each reflection yielding a $\pi$-polarization reflectivity of $r_\pi\approx 0$, achieving perfect linear polarization is not feasible for a divergent beam.
 Even with an ideal polarizer, the achievable limit for linear polarization purity is governed by (Schulze, 2018)
@@ -783,18 +720,20 @@ Even with an ideal polarizer, the achievable limit for linear polarization purit
 \end{equation}
 where $\sigma_{h,v}$ are the rms angular divergences in horizontal and vertical directions incidence on polarizer.
 
-We demonstrate a practical example as shown in Fig~1 in ref (Schulze et al., 2022), not only verify the linear purity can be reached by this setting, but also the validity of equation (27).
-An X-ray source before the polarizer is created with rms divergence parameters of $\sigma_h$=273~nrad and $\sigma_v$=0.
+We demonstrate a practical example as shown in Fig~1 in ref (Schulze et al., 2022), not only verify the linear purity can be reached by this setting, but also the validity of equation (\ref{eq:polarizer}).
+
+An X-ray source before the polarizer is created with rms divergence parameters of $\sigma_h$=\SI{273}{\nano\radian} and $\sigma_v$=0.
 The photon energy is \SI{6457}{eV} (0.01\% bandwidth), and the polarizer and analyser are using channel cut crystals Si400.
-$\sigma_h$ is much less than the Darwin-width of \SI{26}{\micro\radian} of Si400 at SI{6457}{eV}.
-With the specified divergence data, the polarization purity limit is calculated to be 7.45 $\times~10^{-14}$.
+$\sigma_h$ is much smaller than the Darwin-width of \SI{26}{\micro\radian} of Si400 at \SI{6457}{eV}.
 
-To simulate the linear purity, the analyser is rotated around the primary beam direction for an angle of 0 or 90 degrees to set parallel or crossed to the polarizer, thus the obtained ray-tracing intensities at the detector downstream the analyser are $I_\text{para}$ and $I_\text{cross}$, for parallel and crossed setting, respectively.
-Then the actual linear purity achieved by these polarizer and analyser pair is expressed as $I_\text{cross}/I_\text{para}$.
-A number of 250K rays are generated at the source, the intensities of  are 22173.3 and 1.63$~\times~10^{-9}$, respectively, the ratio gives linear purity of 7.35$~\times~10^{-14}$, which agrees well the prediction value by equation (27).
+To simulate the linear purity, the analyser (crystals 5 to 8) is rotated with respect to the primary beam direction after the polariser (crystals 1 to 4) an angle of 0 or 90$^\circ$ to set parallel or crossed to the polarizer, then calculating the ray-tracing intensities $I_\text{parallel}$ and $I_\text{cross}$ at the detector downstream from the analyser, for parallel and crossed setting respectively.
+Then the actual linear purity achieved by these polarizer and analyser pair is expressed as $I_\text{cross}/I_\text{parallel}$.
 
-In the simulation above, we assume the electric field vector lies in the horizontal plane, with the polarizer’s crystal plane oriented upwards.
-For a vacuum birefringence experiment, to achieve the required 45° linear polarization instead of horizontal polarization as specified by \cite{Shen2018}, the polarizer needs to be rotated by 45$^\circ$ around the primary beam direction.
+A number of 250K rays are generated at the source, the intensities are $I_\text{parallel}=22348.6$ \inred{(BEFORE: 22173.3)} and $I_\text{cross}=1.667~\times~10^{-9}$ \inred{BEFORE: 1.63$~\times~10^{-9}$}.
+Their ratio gives a linear purity of $P=7.46~\times~10^{-14}$ \inred{BEFORE: 7.35$~\times~10^{-14}$}, which agrees very well the prediction value by equation (\ref{eq:polarizer}) of $P=7.45~\times~10^{-14}$.
+
+In the simulation above, we assumed that the electric vector at the source lies in the horizontal plane, with the polarizer’s crystal plane oriented upwards.
+For a vacuum birefringence experiment, to achieve the required 45$^\circ$ linear polarization instead of horizontal polarization as specified by \cite{Shen2018}, the polariser has to be rotated 45$^\circ$ around the primary beam direction.
 This rotation introduces an additional 50\% intensity loss compared to the previous, unrotated setup.
 This loss occurs because half of the beam’s intensity projected onto the crystal’s incident plane is suppressed due to diminished reflectivity of the $\pi$-polarized component.
 
@@ -815,8 +754,20 @@ This trend suggests that equation (\ref{eq:polarizer}) holds only for a polarize
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
-yyyyyyy
+\cite{Bouchenoire2003}
+\cite{Bouchenoire2012}
+\cite{Detlefs2012}
+\cite{Suzuki2023} 
 
+Beamlines: \cite{Francoual2013} \cite{Freeland2002} \cite{Suzuki2014}
+
+% -----------------------------------------------------------------
+% -----------------------------------------------------------------
+\section{Polarization effects in mirror reflections}\label{sec:phasesifters}
+% -----------------------------------------------------------------
+% -----------------------------------------------------------------
+
+\cite{Nayar1997}
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------

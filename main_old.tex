@@ -108,7 +108,7 @@
 
 \cauthor[1]{\jsrblue{Manuel}}{\jsrblue{Sanchez del Rio}}{srio@esrf.eu}{address if different from \aff}
 \author[1]{\jsrblue{Juan}}{\jsrblue{Reyes-Herrera}}
-\author[2]{\jsrblue{Xiaojian}}{\jsrblue{Yu}}
+\author[2]{\jsrblue{Xiaojiang}}{\jsrblue{Yu}}
 
 \aff[1]{ESRF - The European Synchrotron, 71 Avenue des Martyrs, 38000 Grenoble, \country{France}}
 \aff[2]{Singapore Synchrotron Light Source,National University of Singapore, 5 Research Link, Singapore 117603 \country{Singapore}}
@@ -598,11 +598,15 @@ We want
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
-\section{Polarizers based on $\theta_B$=$\pi$/4: Benchmarks}\label{sec:polarizers45degBenchmark}
+\section{X-ray crystal polarizers based on $\theta_B$=$\pi$/4:}\label{sec:polarizers45deg}
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
-We want to study the polarization produced in an x-ray beam by a series of reflections with $\theta_B=\pi/4$. In this case, the crystal reflectivity (in amplitudes) is $r_\sigma \approx 1$ and $r_\pi \approx 0$. The interest of multiple reflections is to eliminate the $\pi$ component by successive reflections (i.e. multiplication) by $r_\pi$. We consider the Si800 crystal that for $\theta_B=45^{\circ}$ the corresponding photon energy is 12914.734732580844~eV. For practical purposes we consider the beam at photon energy 12914~eV. The Bragg angle at this energy is $\theta_B=44.99999630280492^{\circ}$, and the ``corrected Bragg angle" (at which the crystal is positioned) is $\theta_{Bc}=45.00033074818061^{\circ}$. At this corrected Bragg angle, the reflectivities are $r_\sigma=-0.024724229926740865-0.9700768156818347j$ and $r_\pi=0.0009332843711563077+0.0011002464391183318j$. The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.9416603158688784$ and 
+We want to study the polarization produced in an x-ray beam by a series of reflections with $\theta_B=\pi/4$. In this case, the crystal reflectivity (in amplitudes) is $r_\sigma \approx 1$ and $r_\pi \approx 0$. The interest of multiple reflections is to eliminate the $\pi$ component by successive reflections (i.e. multiplication) by $r_\pi$. 
+
+\subsection{Benchmarks}\label{sec:polarizers45degBenchmark}
+
+We consider the Si800 crystal that for $\theta_B=45^{\circ}$ the corresponding photon energy is 12914.734732580844~eV. For practical purposes we consider the beam at photon energy 12914~eV. The Bragg angle at this energy is $\theta_B=44.99999630280492^{\circ}$, and the ``corrected Bragg angle" (at which the crystal is positioned) is $\theta_{Bc}=45.00033074818061^{\circ}$. At this corrected Bragg angle, the reflectivities are $r_\sigma=-0.024724229926740865-0.9700768156818347j$ and $r_\pi=0.0009332843711563077+0.0011002464391183318j$. The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.9416603158688784$ and 
 $R_\pi=|r_\pi|^2=2.0815619442371935~10^{-06}$.
 
 Let us use 8 crystals, divided in two packs of 4 crystals each. A pack has the crystals in non dispersive configuration $(+,-,+,-)$. The second pack is rotated 90$^\circ$ with respect to the first pack. Therefore we consider all the crystals as a single rigid body, with all crystals well aligned. We now have to define the incident beam and the orientation of the first crystal with respect to this beam. For our first tests we define an idealized pencil beam (zero cross section, and zero divergence), with a given polarization $P$. In our ray tracing source, all rays are identical. We consider two cases that will be referred as case 1 and case 2 respectively (see Fig.~\ref{fig:sketch}):
@@ -611,7 +615,7 @@ Let us use 8 crystals, divided in two packs of 4 crystals each. A pack has the c
     \item a source linearly polarized with $P=0.5$ (Jones vector of each ray $(2^{-1/2},2^{-1/2})^T$) and first crystal is facing up.    
 \end{enumerate}
 
-\subsection{Case 1}
+\subsubsection{Case 1}
 The Jones vector of the incident ray is $(1,0)^T$ and first crystal is rotated -45$^\circ$. Following equation~(\ref{eq:Jalpha}), the Jones matrices of the first crystal is: 
 
 \begin{equation}\label{eq:Jcase1_xtal1}
@@ -695,7 +699,7 @@ The intensities are (for 1000 rays)
 \end{itemize}
 in good agreement with SHADOW4.
 
-\subsection{Case 2}
+\subsubsection{Case 2}
 The Jones vector of the incident ray is $(1/\sqrt{2},1/\sqrt{2})^T$ and first crystal is rotated 0$^\circ$. Following equation~(\ref{eq:Jalpha}), the Jones matrices of the eight crystals are: 
 
 \begin{equation}\label{eq:Jcase2}
@@ -743,7 +747,7 @@ Note that
 \end{itemize}
 }
 
-\section{Polarizers based on $\theta_B$=$\pi$/4. A practical case. case}\label{sec:polarizers45degPractical}
+\subsection{Polarizers based on $\theta_B$=$\pi$/4. A practical case. case}\label{sec:polarizers45degPractical}
 
 For an X-ray beam within a polarizer utilizing multiple consecutive reflections in channel-cut crystals with a scattering angle of $2\theta_B$=90$^\circ$, despite each reflection yielding a $\pi$-polarization reflectivity of $r_\pi\approx 0$, achieving perfect linear polarization is not feasible for a divergent beam.
 Even with an ideal polarizer, the achievable limit for linear polarization purity is governed by (Schulze, 2018)
@@ -795,6 +799,65 @@ Which is  agree with the ray-tracing data, 5.798e-17
 
 The ray tracing data of case 2 is same as case 1, 5.798e-17
 }
+
+
+% -----------------------------------------------------------------
+% -----------------------------------------------------------------
+\section{Mirror polarizers in the visible range}\label{sec:mirror}
+% -----------------------------------------------------------------
+% -----------------------------------------------------------------
+
+Polarizing light using mirror reflection exploits the phenomenon of Brewster's angle. The Brewster angle emerges naturally from the Fresnel equations \cite{born_wolf}, which describe the reflection and transmission of light at the interface between two media. At the Brewster angle, the reflection coefficient for p-polarized light becomes zero, leading to complete transmission of the p-polarized component into the second medium. This phenomenon results in the reflected light being completely s-polarized.
+
+To check that we creates in S4 a point source with vertical divergence 90 degrees. We send the beam to a plane mirror oriented at 45 deg from the beam direction. Using refraction index of $n$=1.51 we display the intensities of the s and p components versus the incident angle. The results are in Fig.~\ref{fig:visibleR}, which compares directly with Fig. 1.12 in \cite{born_wolf} (6th edition). The change of phase (s minus p) is $\pi$ in the total reflection zone, and zero elsewhere (Fig.~\ref{fig:visiblePhase}).
+
+\begin{figure}\label{fig:visibleR}
+\centering
+\includegraphics[width=0.95\linewidth]{figures/visibleR.png}
+\caption{Ray intensity of the s and p components after reflection as a function of the incident (or reflected) angle.}
+\end{figure}
+
+\begin{figure}\label{fig:visiblePhase}
+\centering
+\includegraphics[width=0.95\linewidth]{figures/visiblePhase.png}
+\caption{Change of phase (s minus p) after reflection as a function of the incident (or reflected) angle.}
+\end{figure}
+
+Some examples of exploiting the Brewster angle for applications are:
+\begin{itemize}
+    \item Photography: Polarizing filters reduce glare by blocking light reflected at the Brewster angle, e.g., from water or glass.
+    \item Laser Systems: Brewster windows ensure lasers emit linearly polarized light with minimal reflection.
+    \item Polarizing Beam Splitters: Separate s and p polarized light for optical experiments.
+    \item Sunglasses: Polarized lenses block glare from horizontal surfaces, strongest at the Brewster angle.
+    \item Refractive Index Measurement: Calculate $n=\tan⁡(\theta_B)$ by measuring the Brewster angle.   
+\end{itemize}
+
+The reflection at Brewster angle is used for obtaining linearly polarized beams. If one wants to convert linear to circular or elliptical polarized beams one has to play with the phase. This can be done using the internal reflection (i.e. the reflection surface is less dense than the media where the beam travels). The reflectivity and phase change are in Figs.~\ref{fig:internalR} and  \ref{fig:internalPhase}.
+
+\begin{figure}\label{fig:internalR}
+\centering
+\includegraphics[width=0.95\linewidth]{figures/internalR.png}
+\caption{Ray intensity of the s and p components after internal reflection as a function of the incident (or reflected) angle.}
+\end{figure}
+
+\begin{figure}\label{fig:internalPhase}
+\centering
+\includegraphics[width=0.95\linewidth]{figures/internalPhase.png}
+\caption{Change of phase (s minus p) after internal reflection as a function of the incident (or reflected) angle.}
+\end{figure}
+
+It can be appreciated in \ref{fig:internalPhase} an important change of phase in the total reflection zone. To pass from loner polarization (zero phase) to circular or elliptical (90 deg phase) we need a change of 90 degrees that is not available. But we can use two consecutive reflections adding a phase of 45 deg each, by selecting the appropriated incident angle (54.617 deg), as done in the ``Fresnel rhomb" (see Fig.~ 1.16 in \cite{born_wolf}).
+
+The Fresnel Rhomb in Jones is....
+    
+
+    
+
+    
+
+    
+
+    
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------

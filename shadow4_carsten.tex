@@ -1,0 +1,206 @@
+\documentclass{article}
+
+\begin{document}
+
+\title{Summary of discussion on 11/12/2024}
+\author{M. Sanchez del Rio and C. Detlefs}
+
+\section{Source}
+
+The electric field emitted by the source is given by
+
+\begin{equation}
+  \vec{E}_s
+  =
+  E_{\sigma,s} e^{i \phi_{\sigma,s}} \hat{u}_{\sigma,s}
+  +
+  E_{\pi,s} e^{i \phi_{\pi,s}} \hat{u}_{\pi,s}.
+  \label{eq1}
+\end{equation}
+
+$E_{\sigma,s}$, $E_{\pi,s}$, $\phi_{\sigma,s}$ and $\phi_{\pi,s}$ are real scalars.
+$\hat{u}_{\sigma,s}$ and $\hat{u}_{\pi,s}$ are real 3D unit vectors.
+
+In general, the components of $\vec{E}$ will be complex. It is implicitly assumed that only the real part of $\vec{E}$ has a physical meaning.
+
+\section{Optical component}
+
+Assume an optical component that scatters an incident beam along $\hat{k}_i$ to the new direction $\hat{k}_f$.
+
+$\hat{k}_i$ and $\hat{k}_f$ are real unit 3D vectors.
+
+\subsection{Define the coordinate system}
+
+The $\sigma$ and $\pi$ directions of polarization are defined by the scattering plane spanned by $\hat{k}_i$ and $\hat{k}_f$.
+
+\begin{eqnarray}
+  \hat{u}_{\sigma,i} = \hat{u}_{\sigma,f}
+  &=&
+  \frac{\hat{k}_i \times \hat{k}_f}{\left| \hat{k}_i \times \hat{k}_f \right|}
+  \\
+  \hat{u}_{\pi,i}
+  &=&
+  \frac{\hat{k}_i \times \hat{u}_{\sigma,i}}{\left| \hat{k}_i \times \hat{u}_{\sigma,i} \right|}
+  \\
+  \hat{u}_{\pi,f}
+  &=&
+  \frac{\hat{k}_f \times \hat{u}_{\sigma,f}}{\left| \hat{k}_f \times \hat{u}_{\sigma,f} \right|}.
+\end{eqnarray}
+
+All $\hat{u}$ are real 3D unit vectors.
+
+Note: Signs or order of the cross products may be chosen differently, depending on how you want to define a right-handed coordinate system with these 3 vectors as basis.
+
+Note: In forward scattering, $\hat{k}_i = \hat{k}_f$, the scattering plane is ill defined, and an arbitrary direction has to be chosen to define $\vec{u}_{\sigma,i}$.
+
+\subsection{Project $\vec{E}_s$ onto $\hat{u}_{\sigma,i}$ and $\hat{u}_{\pi,i}$}
+
+The electric field amplitudes along the $\sigma$ and $\pi$ polarization axes are
+
+\begin{eqnarray}
+  E_{\sigma,i}
+  &=
+  \vec{E}_s \cdot \hat{u}_{\sigma,i}
+  \label{eq5}
+  \\
+  E_{\pi,i}
+  &=
+  \vec{E}_s \cdot \hat{u}_{\pi,i}.
+  \label{eq6}
+\end{eqnarray}
+
+$E_{\sigma,i}$ and $E_{\pi,i}$ are, in general, complex scalars.
+I do not think it is useful to separate them into amplitude and phase, as the Jones matrices can also be complex.
+
+In vector form, this can be written as:
+
+\begin{equation}
+  \left( \begin{array}{c}
+    E_{\sigma,i} \\
+    E_{\pi,i}
+  \end{array} \right)
+  =
+  \underbrace{
+  \left( \begin{array}{cc}
+    \hat{u}_{\sigma,i} \cdot \hat{u}_{\sigma,s} &
+    \hat{u}_{\sigma,i} \cdot \hat{u}_{\pi,s} \\
+    \hat{u}_{\pi,i} \cdot \hat{u}_{\sigma,s} &
+    \hat{u}_{\pi,i} \cdot \hat{u}_{\pi,s} 
+  \end{array} \right)
+  }_{R(\alpha)}
+  \cdot
+  \left( \begin{array}{c}
+    E_{\sigma,s} e^{i \phi_{\sigma,i}} \\
+    E_{\pi,s} e^{i \phi_{\pi,i}}
+  \end{array} \right).
+\end{equation}
+
+The $2\times 2$ matrix is a coordinate transform that can be seen as a rotation
+
+\begin{equation}
+  R(\alpha)
+  =
+  \left( \begin{array}{cc}
+    \cos(\alpha) & -\sin(\alpha) \\
+    \sin(\alpha) & \cos(\alpha)
+ \end{array} \right)
+\end{equation}
+
+\subsection{Apply the Jones matrix}
+
+Let the Jones matrix be
+\begin{equation}
+  J = \left(\begin{array}{cc}
+    r_{\sigma\sigma} & r_{\sigma\pi} \\
+    r_{\pi\sigma} & r_{\pi\pi}
+    \end{array}\right).
+\end{equation}
+
+Then
+
+\begin{equation}
+  \left( \begin{array}{c}
+    E_{\sigma,f} \\
+    E_{\pi,f}
+  \end{array} \right)
+  =
+  J \cdot
+  \left( \begin{array}{c}
+    E_{\sigma,i} \\
+    E_{\pi,i}
+  \end{array} \right)
+  =
+  J \cdot R(\alpha) \cdot
+  \left( \begin{array}{c}
+    E_{\sigma,s} e^{i \phi_{\sigma,i}} \\
+    E_{\pi,s} e^{i \phi_{\pi,i}}
+  \end{array} \right).
+\end{equation}
+
+$E_{\sigma,f}$ and $E_{\pi,f}$ are complex scalars.
+
+\subsection{Assemble the 3D electric field vector of the scattered beam}
+
+Analogous to eq.~\ref{eq1} we have
+
+\begin{equation}
+  \vec{E}_f
+  =
+  E_{\sigma,f} \hat{u}_{\sigma,f}
+  +
+  E_{\pi,f} \hat{u}_{\pi,f}.
+\end{equation}
+
+This vector can be used as input electric field for the following optical element, see eqs.~\ref{eq5} and \ref{eq6}.
+
+Again, the components of this 3D vector are likely complex.
+
+\section{Deriving the electric field vector from the Poincar{\'e}-Stokes parameters}
+
+Consider the polarization elipse \cite{Detlefs2012} for a fully polarized beam. For simplicity, we assume unit intensity, i.e.~$\left|V\right|_1^2 + \left|V_2\right|^2=1$.
+
+The Poincar{\'e}-Stokes parameters are given by \cite{Detlefs20212}
+
+\begin{eqnarray}
+  P_1 &=& \cos(2\chi) \cos(2\psi) \label{p1} \\
+  P_2 &=& \cos(2\chi) \sin(2\chi) \label{p2} \\
+  P_3 &=& \sin(2\chi). \label{p3}
+\end{eqnarray}
+
+Inverting these relations, $\chi$ and $\psi$ can be obtained from the Poincar{\'e}-Stokes paramters:
+
+\begin{eqnarray}
+  \tan(2\chi) &=& \frac{P_3}{\sqrt{P_1^2 + P_2^2}} \\
+  \tan(2\phi) &=& \frac{P_1}{P_2},
+\end{eqnarray}
+where, as always, we recommend to use the \texttt{arctan2} function to avoid division by zero and ambiguity of the sector.
+
+Setting the absolute phase to zero, the electric field components $V_1$ and $V_2$ corresponding to $\chi$ and $\psi$ are (thanks Mathematica!)
+
+\begin{eqnarray}
+  V_1 &=& \cos(\chi) \cos(\psi) + i \sin(\chi) \sin(\psi) \\
+  V_2 &=& \cos(\chi) \sin(\psi) - i \sin(\chi) \cos(\psi)
+\end{eqnarray}
+
+By inserting this into the definition of the Poincar{\'e}-Stokes parameters,
+
+\begin{eqnarray}
+  P_1
+  &=&
+  \left| V_1^2 \right|^2 - \left|V_2\right|^2 \\
+  P_2
+  &=&
+  \frac{1}{2} \left( \left| V_1 + V_2 \right|^2 - \left| V_1 - V_2\right|^2 \right) \\
+  P_3
+  &=&
+  \frac{1}{2} \left( \left| V_1 + i V_2 \right|^2 - \left| V_1 - i V_2\right|^2 \right) ,
+\end{eqnarray}
+we obtain eqs.\ref{p1}, \ref{p2} and \ref{p3}. qed.
+
+\begin{thebibliography}{9}
+
+\bibitem{Detlefs2021} C. Detlefs, M. Sanchez del Rio, and C. Mazzoli, "X-ray polarization: General formalism and polarization analysis", Eur. Phys. J. Special Topics \textbf{208}, 359--371 (2012). 
+
+\end{thebibliography}
+
+\end{document}
