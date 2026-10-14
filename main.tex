@@ -833,9 +833,9 @@ We want to study the polarization produced in an x-ray beam by a series of refle
 \subsection{Benchmarking}
 
 In this paragraph we consider the Si800 crystal that for $\theta_B=45^{\circ}$ the corresponding photon energy is 12914.735~eV. The Bragg angle at this energy is $\theta_B=44.999996^{\circ}$, and the ``corrected Bragg angle" (at which the crystal is positioned) is $\theta_{Bc}=45.000331^{\circ}$.
-At this corrected Bragg angle, the reflectivities are $r_\sigma=-0.0247-0.970 i$ and $r_\pi=0.000933+0.001100 i$.
-The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.941660$ and 
-$R_\pi=|r_\pi|^2=2.081562~10^{-06}$.
+At this corrected Bragg angle, the reflectivities (calculated with {\it crystalpy} for a thick crystal, using {\it xraylib} for the structure factors) are $r_\sigma=-0.0247-0.970 i$ and $r_\pi=(-1.06-1.25 i)~10^{-6}$.
+The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.941667$ and
+$R_\pi=|r_\pi|^2=2.682019~10^{-12}$.
 
 Let us use 8 crystals, divided in two packs of 4 crystals each (the ``polariser" and the ``analyser"). A pack has the crystals in non-dispersive configuration $(+,-,+,-)$. The second pack is rotated 90$^\circ$ with respect to the first pack. Therefore we consider all the crystals as a single rigid body, with all crystals well aligned.
 
@@ -874,8 +874,9 @@ and
 \begin{pmatrix}
 0 & r_\sigma\\
 -r_\pi& 0
-\end{pmatrix}
+\end{pmatrix}.
 \end{equation}
+Strictly, the crystals in the non-dispersive configuration $(+,-)$ are oriented at $\alpha=180^\circ$ with respect to the previous one, so their Jones matrix is $\textbf{J}_e\cdot\textbf{R}(180^\circ)=-\textbf{J}_e$. The six factors $-1$ (crystals 2, 3, 4, 6, 7 and 8) give an overall factor $+1$, and other equivalent choices of the orientation angles (e.g., $270^\circ$ instead of $90^\circ$ for crystal 5) only change the global sign of the final Jones vector, which has no effect on the intensities or on the polarization state. The same applies to case 2.
 
 Therefore, the Jones vector after all reflections is:
 \begin{equation}\label{eq:JVcase1_S4}
@@ -903,9 +904,9 @@ Therefore, the Jones vector after all reflections is:
 
 The intensities are (for 1000 rays)
 \begin{itemize}
-    \item $\sigma$-polarized $I_\sigma=|2^{-1/2}~r_\sigma^4 r_\pi^4|^2$=7.38~ 10$^{-21}$
+    \item $\sigma$-polarized $I_\sigma=|2^{-1/2}~r_\sigma^4 r_\pi^4|^2$=2.03~ 10$^{-44}$
     \item $\pi$-polarized: the same
-    \item total 1.47~ 10$^{-20}$.
+    \item total 4.07~ 10$^{-44}$.
 \end{itemize}
 SHADOW4 results are in good agreement.
 
@@ -959,13 +960,13 @@ The intensities are the same as for case 1, and also here SHADOW4 results agree 
 \subsection{A practical case}\label{sec:polarizers45degPractical}
 
 For an X-ray beam within a polarizer utilizing multiple consecutive reflections in channel-cut crystals with a scattering angle of $2\theta_B$=90$^\circ$, despite each reflection yielding a $\pi$-polarization reflectivity of $r_\pi\approx 0$, achieving perfect linear polarization is not feasible for a divergent beam.
-Even with an ideal polarizer, the achievable limit for linear polarization purity is governed by (Schulze, 2018)
+Even with an ideal polarizer, the achievable limit for the linear polarization purity $\mathcal{P}$ (ratio of the intensities of the unwanted and wanted linear polarizations) is governed by \cite{Schulze2018}
 \begin{equation}\label{eq:polarizer}
-    P = \sigma_h^2 + \sigma_v^2,
+    \mathcal{P} = \sigma_h^2 + \sigma_v^2,
 \end{equation}
-where $\sigma_{h,v}$ are the rms angular divergences in horizontal and vertical directions incidence on polarizer.
+where $\sigma_{h,v}$ are the rms angular divergences in the horizontal and vertical directions of the beam incident on the polarizer.
 
-We demonstrate a practical example as shown in Fig~1 in ref (Schulze et al., 2022), not only verify the linear purity can be reached by this setting, but also the validity of equation (\ref{eq:polarizer}).
+We simulate the practical example shown in Fig.~1 of \cite{Schulze2022}, to verify both the linear purity that can be reached with this setup and the validity of equation~(\ref{eq:polarizer}).
 
 An X-ray source before the polarizer is created with rms divergence parameters of $\sigma_h$=\SI{273}{\nano\radian} and $\sigma_v$=0.
 The photon energy is \SI{6457}{eV} (0.01\% bandwidth), and the polarizer and analyser are using channel cut crystals Si400.
@@ -974,18 +975,19 @@ $\sigma_h$ is much smaller than the Darwin-width of \SI{26}{\micro\radian} of Si
 To simulate the linear purity, the analyser (crystals 5 to 8) is rotated with respect to the primary beam direction after the polariser (crystals 1 to 4) an angle of 0 or 90$^\circ$ to set parallel or crossed to the polarizer, then calculating the ray-tracing intensities $I_\text{parallel}$ and $I_\text{cross}$ at the detector downstream from the analyser, for parallel and crossed setting respectively.
 Then the actual linear purity achieved by these polarizer and analyser pair is expressed as $I_\text{cross}/I_\text{parallel}$.
 
-A number of 250K rays are generated at the source, the intensities are $I_\text{parallel}=22348.6$ \inred{(BEFORE: 22173.3)} and $I_\text{cross}=1.667~\times~10^{-9}$ \inred{BEFORE: 1.63$~\times~10^{-9}$}.
-Their ratio gives a linear purity of $P=7.46~\times~10^{-14}$ \inred{BEFORE: 7.35$~\times~10^{-14}$}, which agrees very well the prediction value by equation (\ref{eq:polarizer}) of $P=7.45~\times~10^{-14}$.
+A number of 250K rays are generated at the source, the intensities are $I_\text{parallel}=22348.6$ and $I_\text{cross}=1.667~\times~10^{-9}$.
+Their ratio gives a linear purity of $\mathcal{P}=7.46~\times~10^{-14}$, which agrees very well with the value predicted by equation~(\ref{eq:polarizer}), $\mathcal{P}=7.45~\times~10^{-14}$.
 
 In the simulation above, we assumed that the electric vector at the source lies in the horizontal plane, with the polarizer’s crystal plane oriented upwards.
 For a vacuum birefringence experiment, to achieve the required 45$^\circ$ linear polarization instead of horizontal polarization as specified by \cite{Shen2018}, the polariser has to be rotated 45$^\circ$ around the primary beam direction.
 This rotation introduces an additional 50\% intensity loss compared to the previous, unrotated setup.
 This loss occurs because half of the beam’s intensity projected onto the crystal’s incident plane is suppressed due to diminished reflectivity of the $\pi$-polarized component.
 
-\begin{figure}\label{fig:polarizer}
+\begin{figure}
 \centering
 \includegraphics[width=0.95\linewidth]{figures/polarizer.png}
 \caption{The linear purity simulation for polariser rotation in angular range of 0 to 60 degrees (legend: Simulation), and the calculation value with equation~(\ref{eq:polarizer}) at 45$^\circ$.}
+\label{fig:polarizer}
 \end{figure}
 
 The simulated intensity of  $I_\text{parallel}$ aligns well with expectations, showing a reduction to half of its original value without polarizer rotation.
