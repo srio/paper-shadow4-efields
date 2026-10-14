@@ -704,14 +704,14 @@ Snell’s law:
 n_1 \sin\theta_1 = n_2 \sin\theta_2
 \end{equation}
 
-\textbf{S-polarization Reflectivity}
+\textbf{S-polarization reflection coefficient (amplitude)}
 \begin{equation}
 r_s =
 \frac{n_1 \cos\theta_1 - n_2 \cos\theta_2}
      {n_1 \cos\theta_1 + n_2 \cos\theta_2}
 \end{equation}
 
-\textbf{P-polarization Reflectivity}
+\textbf{P-polarization reflection coefficient (amplitude)}
 \begin{equation}
 r_p =
 \frac{n_2 \cos\theta_1 - n_1 \cos\theta_2}
@@ -719,95 +719,94 @@ r_p =
 \end{equation}
 
 These are the Fresnel equations \cite{born_wolf}. They come from the exact Maxwell boundary-condition solutions. They are valid for X-rays and also for visible light and complex refractive indices.
+The sign of $r_p$ corresponds to the SHADOW convention for the $\pi$ versors of the incident and reflected rays [equations~(\ref{eq:u_i}) and (\ref{eq:u_f})]: at grazing incidence ($\theta_1\rightarrow 90^\circ$) $\hat{u}_{\pi,f}\approx\hat{u}_{\pi,i}$ and $r_p\rightarrow r_s\rightarrow -1$, whereas at normal incidence $\hat{u}_{\pi,f}=-\hat{u}_{\pi,i}$ and $r_p=-r_s$, so that the reflected electric vector is the same for any polarization direction, as expected.
+For complex refractive indices, $\cos\theta_2=(1-\sin^2\theta_2)^{1/2}$ is a complex number; the root with positive imaginary part of $n_2\cos\theta_2$ is taken, which corresponds to a transmitted wave decaying inside medium 2 with the time dependence $e^{-i\omega t}$ used in this paper [for X-rays $n = 1 - \delta + i\beta$, with $\delta,\beta>0$].
 
-The Brewster Angle is defined by vanishing p-polarized reflection: $r_p = 0$.
-
-From the numerator of $r_p$:
-
+The Brewster angle $\theta_{Bw}$ is defined by vanishing p-polarized reflection: $r_p = 0$.
+For real refractive indices, from the numerator of $r_p$:
 \begin{equation}
-\tan\theta_{Bw} = \frac{n_2}{n_1}
+\theta_{Bw} = \arctan\left(\frac{n_2}{n_1}\right).
 \end{equation}
-
-\begin{equation}
-\theta_B = \arctan\left(\frac{n_2}{n_1}\right)
-\end{equation}
-
-At Brewster angle $\theta_{Bw}$:
+At the Brewster angle $\theta_{Bw}$:
 i) The reflected and refracted rays are perpendicular.
 ii) The $p$-polarized reflection vanishes.
 iii) Only the $s$-polarization remains reflected.
 
-The Phases of $r_s$ and $r_p$ are
-obtained from the complex 
+The phases of $r_s$ and $r_p$ are
+obtained from the complex
 reflection coefficients:
-$r = |r| e^{i\phi}$. 
+$r = |r| e^{i\phi}$.
 
-When going from a ligh to dense medium ($n_1<n_2$, e.g. air to glass with visible light), the coefficients are real, so, $\phi = 0$ or $\phi = \pi$:
-
+When going from a light to a dense medium ($n_1<n_2$, e.g., air to glass with visible light), the coefficients are real, so $\phi = 0$ or $\phi = \pi$:
 \begin{itemize}
 \item $r_s < 0 \Rightarrow \phi_s = \pi$
-\item $r_p$ changes sign at $\theta_B$ ($\pi$ phase jump)
+\item $r_p$ changes sign at $\theta_{Bw}$ ($\pi$ phase jump): $r_p>0$ for $\theta_1<\theta_{Bw}$ and $r_p<0$ for $\theta_1>\theta_{Bw}$.
 \end{itemize}
 
-For $n_1 > n_2$ (e.g. glass to air with visible light) there is total internal reflection for grazing angles smaller that the critical angle:
-
+For $n_1 > n_2$ (e.g., glass to air with visible light) there is total internal reflection for incidence angles (measured from the normal) larger than the critical angle
 \begin{equation}
-\theta_c = \arcsin\left(\frac{n_2}{n_1}\right)
+\theta_c = \arcsin\left(\frac{n_2}{n_1}\right).
 \end{equation}
-
-For total internal reflection $\theta_1 > \theta_c$:
-
+For total internal reflection, $\theta_1 > \theta_c$,
 \begin{equation}
 |r_s| = |r_p| = 1
 \end{equation}
-
-and the phase expressions are:
-
+and the phases are (with the time dependence $e^{-i\omega t}$):
 \begin{equation}\label{eq:mirrorphases}
 \tan\left(\frac{\phi_s}{2}\right)
 =
-\frac{\sqrt{\sin^2\theta_1 - (n_2/n_1)^2}}
-     {\cos\theta_1}
+-\frac{\sqrt{\sin^2\theta_1 - (n_2/n_1)^2}}
+     {\cos\theta_1},
 \end{equation}
-
 \begin{equation}\label{eq:mirrorphasep}
 \tan\left(\frac{\phi_p}{2}\right)
 =
-\frac{n_1^2}{n_2^2}
+-\frac{n_1^2}{n_2^2}
 \frac{\sqrt{\sin^2\theta_1 - (n_2/n_1)^2}}
-     {\cos\theta_1}
+     {\cos\theta_1}.
 \end{equation}
+(The opposite signs are found in references using the time dependence $e^{+i\omega t}$.)
+Thus $\phi_s \neq \phi_p$, and the phase difference $\phi_s-\phi_p$ transforms a linear polarization into an elliptical one.
 
-Thus $\phi_s \neq \phi_p$, producing ellipticity.
-
-A note on Parratt Approximation, valid for Grazing-Incidence X-rays: For X-rays:
-
+A note on the grazing-incidence approximation for X-rays, used in the Parratt formalism \cite{parratt}. For X-rays,
 \begin{equation}
-n = 1 - \delta + i\beta
+n = 1 - \delta + i\beta,
 \end{equation}
-
-At grazing angle $\phi$:
-
+with $\delta,\beta \ll 1$. For a small grazing angle $\theta_g=\pi/2-\theta_1$, the normal component of the wavevector in a medium of index $n_j$ is $k_{z,j}=k_0 (n_j^2-\cos^2\theta_g)^{1/2}\approx k_0 f_j$, with
 \begin{equation}
-k_z^2 \approx k_0^2(\phi^2 - 2\delta - 2i\beta)
+f_j = \sqrt{\theta_g^2 - 2\delta_j + 2i\beta_j},
 \end{equation}
-
-Parratt reflection coefficient \cite{parratt}:
-
+and the reflection coefficient of the interface between media 1 and 2 is
 \begin{equation}
-r = \frac{f_1 - f_2}{f_1 + f_2}
+r = \frac{f_1 - f_2}{f_1 + f_2},
 \end{equation}
-
-with
-
-\begin{equation}
-f = \sqrt{\phi^2 - 2\delta - 2i\beta}
-\end{equation}
-
-The Parratt approximation is valid for grazing-incidence X-ray reflectivity and multilayers. It fails for large angles and does not reproduce Brewster physics.
+with $f_1=\theta_g$ if medium 1 is vacuum. In this approximation $r_p=r_s$. It is valid for grazing-incidence X-ray reflectivity and multilayers, where it is the basis of Parratt's recursive formalism, but it fails for large angles and does not reproduce the Brewster physics.
 
 \subsection{Perfect Crystals}
-\todo{.... based on Guigay and Sanchez del Rio}
+
+The complex reflection amplitudes of perfect crystals are calculated in SHADOW4 with the {\it crystalpy} library, which implements the solution of the Takagi--Taupin equations for a plane wave incident on an undeformed crystal plate \cite{Guigay2024}. We summarize here the main results, with the notation of \cite{Guigay2024}.
+
+The crystal is characterized by the Fourier components $\chi_0$, $\chi_h$ and $\chi_{-h}$ of the electric susceptibility for the reflection $\mathbf{h}$, written as $u_{0,h,-h}=(k/2)\chi_{0,h,-h}$, with $k=2\pi/\lambda$. The geometry is described by the asymmetry factor $b=\gamma_0/\gamma_h$, with $\gamma_{0,h}$ the direction cosines of the incident and diffracted waves with respect to the inward normal of the crystal surface ($b<0$ for Bragg and $b>0$ for Laue geometry), and by the deviation from the Bragg condition,
+\begin{equation}
+\Omega = \frac{bh}{2}(\sin\theta - \sin\theta_B) + \frac{b-1}{2}u_0,
+\end{equation}
+where $h=|\mathbf{h}|$, $\theta$ is the glancing angle of the incident wave on the reflecting planes and $\theta_B$ the Bragg angle ($\Omega$ is denoted $\omega$ in \cite{Guigay2024}). With $a=(bu_hu_{-h}+\Omega^2)^{1/2}$ and $T=t_c/\gamma_0$, where $t_c$ is the crystal thickness, the reflection amplitudes are
+\begin{equation}\label{eq:rbragg}
+r_{\mathrm{B}} = \frac{-i b u_h \sin(aT)}{a\cos(aT)+i\Omega\sin(aT)}
+\end{equation}
+for the Bragg case, and
+\begin{equation}\label{eq:rlaue}
+r_{\mathrm{L}} = i b u_h \frac{\sin(aT)}{a} \exp[iT(u_0+\Omega)]
+\end{equation}
+for the Laue case. For a thick crystal in Bragg geometry, equation~(\ref{eq:rbragg}) reduces to $r_{\mathrm{B}}^{\mathrm{thick}} = -bu_h/(a+\Omega)$, where the sign of $a$ is chosen such that $|r_{\mathrm{B}}|\rightarrow 0$ far from the Bragg position. The transmitted (forward-diffracted) amplitudes are also obtained from the transfer matrix of the crystal plate \cite{Guigay2024}.
+
+These expressions are written for the $\sigma$ polarization. For the $\pi$ polarization, $\chi_h$ and $\chi_{-h}$ are replaced by $C\chi_h$ and $C\chi_{-h}$, with the polarization factor $C=\cos(2\theta_B)$. Note that $C$ is taken with its sign (it is negative for $\theta_B>45^\circ$). This is consistent with the SHADOW definition of the $\pi$ versors, for which $\hat{u}_{\pi,i}\cdot\hat{u}_{\pi,f}=\cos\Theta=\cos(2\theta_B)$ for a symmetric Bragg reflection (section~\ref{sec:S4}). Therefore, the amplitudes $r_\sigma$ and $r_\pi$ calculated by {\it crystalpy} can be directly used as the diagonal elements of the Jones matrix $\textbf{J}_e$ in equation~(\ref{eq:J}). The off-diagonal elements are zero for the charge scattering by a crystal with a scalar susceptibility.
+
+The intensity of the diffracted beam is the reflectance $\mathcal{R}=|r|^2/|b|$, where the factor $1/|b|$ is the ratio of the cross sections of the reflected and incident beams. As SHADOW rays carry intensities, not intensity densities, the elements of the Jones matrix used for the diffracted beams are $r_\sigma/\sqrt{|b|}$ and $r_\pi/\sqrt{|b|}$ (the amplitudes are returned with this factor by {\it crystalpy}).
+
+The amplitudes $r_\sigma$ and $r_\pi$ have, in general, different moduli and different phases, which vary across the diffraction profile. This difference is the basis of the crystal polarization optics: at $\theta_B=45^\circ$ we have $C=0$ and $r_\pi=0$, so the crystal is a linear polarizer (section~\ref{sec:polarizers45degBenchmark}), and the phase difference between $r_\sigma$ and $r_\pi$ in the tails of the diffraction profile is used in crystal phase retarders \cite{PolarizationDraft}.
+
+In the ray tracing, the amplitudes are calculated for each ray, with its own incidence direction and photon energy, and the local normal to the crystal surface at the intercept point. For curved crystals this assumes that the local reflectivity is that of a flat crystal \cite{Guigay2024}. The direction of the diffracted ray is $\mathbf{k}_{out}=\mathbf{k}_h+\beta\mathbf{n}$, with $\mathbf{k}_h=\mathbf{k}_0+\mathbf{h}$, $\mathbf{n}$ the unit vector along the inward normal to the crystal exit surface, and $\beta$ obtained from the condition $|\mathbf{k}_{out}|=k$ \cite{Guigay2024}.
 
 
 
