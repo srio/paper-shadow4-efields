@@ -798,13 +798,25 @@ for the Bragg case, and
 \begin{equation}\label{eq:rlaue}
 r_{\mathrm{L}} = i b u_h \frac{\sin(aT)}{a} \exp[iT(u_0+\Omega)]
 \end{equation}
-for the Laue case. For a thick crystal in Bragg geometry, equation~(\ref{eq:rbragg}) reduces to $r_{\mathrm{B}}^{\mathrm{thick}} = -bu_h/(a+\Omega)$, where the sign of $a$ is chosen such that $|r_{\mathrm{B}}|\rightarrow 0$ far from the Bragg position. The transmitted (forward-diffracted) amplitudes are also obtained from the transfer matrix of the crystal plate \cite{Guigay2024}.
+for the Laue case. For a thick crystal in Bragg geometry, equation~(\ref{eq:rbragg}) reduces to $r_{\mathrm{B}}^{\mathrm{thick}} = -bu_h/(a+\Omega)$, where the sign of $a$ is chosen such that $|r_{\mathrm{B}}|\rightarrow 0$ far from the Bragg position.
+
+The transmitted (forward-diffracted) amplitudes, i.e., the amplitudes of the wave leaving the crystal along the incident direction, are also obtained from the transfer matrix of the crystal plate \cite{Guigay2024}. They are
+\begin{equation}\label{eq:tbragg}
+t_{\mathrm{B}} = \frac{a \exp[iT(u_0+\Omega)]}{a\cos(aT)+i\Omega\sin(aT)}
+\end{equation}
+for the Bragg case, and
+\begin{equation}\label{eq:tlaue}
+t_{\mathrm{L}} = \left[\cos(aT) - i\frac{\Omega}{a}\sin(aT)\right] \exp[iT(u_0+\Omega)]
+\end{equation}
+for the Laue case. Far from the Bragg position ($|\Omega|\gg|bu_hu_{-h}|^{1/2}$, so $a\simeq\pm\Omega$), both reduce to $\exp(iTu_0)$, the amplitude of a wave refracted and absorbed along the path $T$ in the crystal, which is the same for the $\sigma$ and $\pi$ polarizations. Close to the Bragg position the transmitted amplitudes $t_\sigma$ and $t_\pi$ differ in modulus and phase, because the diffraction couples the transmitted and diffracted waves with different strengths for both polarizations. This is the basis of the X-ray phase retarders (phase shifters) working in transmission, which use thin crystal plates (typically diamond) in Laue or Bragg geometry, slightly detuned from the Bragg position, where the absorption of the transmitted beam is small and the phase difference $\arg(t_\sigma)-\arg(t_\pi)$ is large \cite{PolarizationDraft}.
 
 These expressions are written for the $\sigma$ polarization. For the $\pi$ polarization, $\chi_h$ and $\chi_{-h}$ are replaced by $C\chi_h$ and $C\chi_{-h}$, with the polarization factor $C=\cos(2\theta_B)$. Note that $C$ is taken with its sign (it is negative for $\theta_B>45^\circ$). This is consistent with the SHADOW definition of the $\pi$ versors, for which $\hat{u}_{\pi,i}\cdot\hat{u}_{\pi,f}=\cos\Theta=\cos(2\theta_B)$ for a symmetric Bragg reflection (section~\ref{sec:S4}). Therefore, the amplitudes $r_\sigma$ and $r_\pi$ calculated by {\it crystalpy} can be directly used as the diagonal elements of the Jones matrix $\textbf{J}_e$ in equation~(\ref{eq:J}). The off-diagonal elements are zero for the charge scattering by a crystal with a scalar susceptibility.
 
-The intensity of the diffracted beam is the reflectance $\mathcal{R}=|r|^2/|b|$, where the factor $1/|b|$ is the ratio of the cross sections of the reflected and incident beams. As SHADOW rays carry intensities, not intensity densities, the elements of the Jones matrix used for the diffracted beams are $r_\sigma/\sqrt{|b|}$ and $r_\pi/\sqrt{|b|}$ (the amplitudes are returned with this factor by {\it crystalpy}).
+The intensity of the diffracted beam is the reflectance $\mathcal{R}=|r|^2/|b|$, where the factor $1/|b|$ is the ratio of the cross sections of the reflected and incident beams. As SHADOW rays carry intensities, not intensity densities, the elements of the Jones matrix used for the diffracted beams are $r_\sigma/\sqrt{|b|}$ and $r_\pi/\sqrt{|b|}$ (the amplitudes are returned with this factor by {\it crystalpy}). The transmitted beam keeps the cross section of the incident beam, so the transmission amplitudes $t_\sigma$ and $t_\pi$ are used without this factor.
 
-The amplitudes $r_\sigma$ and $r_\pi$ have, in general, different moduli and different phases, which vary across the diffraction profile. This difference is the basis of the crystal polarization optics: at $\theta_B=45^\circ$ we have $C=0$ and $r_\pi=0$, so the crystal is a linear polarizer (section~\ref{sec:polarizers45degBenchmark}), and the phase difference between $r_\sigma$ and $r_\pi$ in the tails of the diffraction profile is used in crystal phase retarders \cite{PolarizationDraft}.
+For the transmitted beam, the incident and outgoing directions coincide ($\vec{v}'=\vec{v}$), and the scattering plane defined in section~\ref{sec:S4} is not defined. However, the $\sigma$ and $\pi$ directions of $t_\sigma$ and $t_\pi$ are those of the diffraction plane, spanned by $\mathbf{k}_0$ and $\mathbf{k}_h$. Therefore, the Jones matrix $\textbf{J}_e=\mathrm{diag}(t_\sigma,t_\pi)$ of a transmitting crystal must be applied using $\hat{u}_{\sigma,i}=\hat{u}_{\sigma,f}=\mathbf{k}_0\times\mathbf{k}_h/|\mathbf{k}_0\times\mathbf{k}_h|$ in equations~(\ref{eq:u_i}) and (\ref{eq:u_f}) [with $\hat{u}_{\pi,i}=\hat{u}_{\pi,f}=\hat{u}_{\sigma,i}\times\vec{v}$], and not with the arbitrary choice used for forward scattering in section~\ref{sec:S4}, which is only valid when $t_\sigma=t_\pi$.
+
+The amplitudes $r_\sigma$ and $r_\pi$ have, in general, different moduli and different phases, which vary across the diffraction profile. This difference is the basis of the crystal polarization optics: at $\theta_B=45^\circ$ we have $C=0$ and $r_\pi=0$, so the crystal is a linear polarizer (section~\ref{sec:polarizers45degBenchmark}), and the phase difference between $t_\sigma$ and $t_\pi$ (and also between $r_\sigma$ and $r_\pi$) in the tails of the diffraction profile is used in crystal phase retarders \cite{PolarizationDraft}.
 
 In the ray tracing, the amplitudes are calculated for each ray, with its own incidence direction and photon energy, and the local normal to the crystal surface at the intercept point. For curved crystals this assumes that the local reflectivity is that of a flat crystal \cite{Guigay2024}. The direction of the diffracted ray is $\mathbf{k}_{out}=\mathbf{k}_h+\beta\mathbf{n}$, with $\mathbf{k}_h=\mathbf{k}_0+\mathbf{h}$, $\mathbf{n}$ the unit vector along the inward normal to the crystal exit surface, and $\beta$ obtained from the condition $|\mathbf{k}_{out}|=k$ \cite{Guigay2024}.
 
@@ -820,7 +832,7 @@ We want to study the polarization produced in an x-ray beam by a series of refle
 
 \subsection{Benchmarking}
 
-In this paragraph we consider the Si800 crystal that for $\theta_B=45^{\circ}$ the corresponding photon energy is 12914.735~eV. For practical purposes we consider the beam at photon energy 12914~eV. The Bragg angle at this energy is $\theta_B=44.999996^{\circ}$, and the ``corrected Bragg angle" (at which the crystal is positioned) is $\theta_{Bc}=45.000331^{\circ}$.
+In this paragraph we consider the Si800 crystal that for $\theta_B=45^{\circ}$ the corresponding photon energy is 12914.735~eV. The Bragg angle at this energy is $\theta_B=44.999996^{\circ}$, and the ``corrected Bragg angle" (at which the crystal is positioned) is $\theta_{Bc}=45.000331^{\circ}$.
 At this corrected Bragg angle, the reflectivities are $r_\sigma=-0.0247-0.970 i$ and $r_\pi=0.000933+0.001100 i$.
 The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.941660$ and 
 $R_\pi=|r_\pi|^2=2.081562~10^{-06}$.
