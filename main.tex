@@ -280,7 +280,7 @@ The degrees of polarization (total, linear and circular) are
 The SHADOW variables can be used with a standard formalism defined in a right-handed frame (with $\hat{x}\times\hat{y}=\hat{k}$, $\hat{k}$ the propagation direction), as defined before, by taking the right-handed basis $(\hat{u}_\sigma, -\hat{u}_\pi, \vec{v})$, i.e., replacing the Jones vector $(\mathcal{E}_\sigma,\mathcal{E}_\pi)^T$ by $(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$ (equivalently, adding $\pi$ to $\phi_\pi$). This is how SHADOW4 computes the Stokes parameters. 
 Also, a positive rotation angle measured from $\hat{u}_\sigma$ toward $\hat{u}_\pi$ corresponds to a negative angle in the right-handed frame.
 
-SHADOW4 computes the Stokes parameters of each ray (columns 30 to 33, and the normalized parameters $S_k/S_0$, $k=1,2,3$, in columns 42 to 44) from the $\sigma$ and $\pi$ components of the electric field as:
+SHADOW4 computes the Stokes parameters of each ray (columns 30 to 33, and the normalized parameters $P_k=S_k/S_0$, $k=1,2,3$, in columns 42 to 44; $P_{1,2,3}$ are the Poincar\'e--Stokes parameters of \cite{Detlefs2012}, not to be confused with the polarization degree $P$ of the geometrical source in section~\ref{sec:polarization_shadow}) from the $\sigma$ and $\pi$ components of the electric field as:
 \begin{eqnarray}\label{eq:stokes_columns}
     S_0 &=& |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2 \quad \text{(column 30)}, \nonumber \\
     S_1 &=& |\vec{E}_\sigma|^2 - |\vec{E}_\pi|^2 \quad \text{(column 31)}, \nonumber \\
@@ -309,6 +309,20 @@ This is done in the geometrical sources by using the {\tt vector\_default\_efiel
 \end{eqnarray}
 with $\times$ the cross product, and  $\hat{u}_x\text{=}(1,0,0)$ the unitary vector along the horizontal direction at the source plane ($x$ axis).
 Note that $\vec{v} \times (\hat{u}_x \times \vec{v}) = \hat{u}_x - (\hat{u}_x\cdot\vec{v})\,\vec{v}$ is the projection of $\hat{u}_x$ onto the plane perpendicular to $\vec{v}$, with modulus $\sqrt{1-v_1^2}$, therefore $\hat{u}_\sigma=\hat{u}_x$ only for rays with $v_1=0$. The second equation is the SHADOW convention of equation~(\ref{eq:upi}).
+
+\paragraph{SHADOW calculation of polarization ellipse.}
+The polarization state of a ray can be visualized with the polarization ellipse \cite{Detlefs2012}: the curve described during one period by the tip of the real electric field in the plane perpendicular to the ray direction. Using the right-handed basis $\hat{\epsilon}_1=\hat{u}_\sigma$, $\hat{\epsilon}_2=-\hat{u}_\pi$ (section~\ref{sec:definitions}), and the components $E_1=\mathcal{E}_\sigma$, $E_2=-\mathcal{E}_\pi$ of the standard Jones vector, the real field is
+\begin{equation}\label{eq:ellipse_field}
+    \mathcal{E}_{j}(\tau)=\Re\left[E_j e^{-i\tau}\right]=|E_j|\cos(\tau-\phi_j), \qquad j=1,2,
+\end{equation}
+with $\tau=\omega t - k z$. The ellipse is drawn in the $(\hat{\epsilon}_1,\hat{\epsilon}_2)$ plane, as seen by an observer looking into the source. The angle $\psi$ between its major axis and $\hat{\epsilon}_1$, and its ellipticity angle $\chi$ ($\tan|\chi|=b/a$, with $a$ and $b$ the semi-axes), are given by the Stokes parameters \cite{Detlefs2012}
+\begin{equation}\label{eq:ellipse_angles}
+    2\psi=\arg(S_1+iS_2), \qquad \sin(2\chi)=\frac{S_3}{S_0},
+\end{equation}
+i.e., $\tan(2\psi)=S_2/S_1$, with the quadrant given by the signs of $S_1$ and $S_2$ (taking the argument in $[0,2\pi)$, so that $0\le\psi<\pi$), and $-\pi/4\le\chi\le\pi/4$. The semi-axes verify $a^2+b^2=S_0$, therefore $a=\sqrt{S_0}\cos\chi$ and $b=\sqrt{S_0}|\sin\chi|$. The field rotates counter-clockwise (left-handed polarization) for $\chi>0$ ($S_3>0$), and clockwise (right-handed) for $\chi<0$.
+
+In SHADOW4, the ellipse of each ray can be obtained either by tracing equation~(\ref{eq:ellipse_field}) with the standard Jones vector of the ray ({\tt S4Beam.get\_jones\_components} with {\tt use\_standard=1}), or from its Stokes parameters (columns 30 to 33) with equation~(\ref{eq:ellipse_angles}). Every ray is fully polarized, and therefore has its own ellipse. For a beam, the ellipse of the polarized part is obtained in the same way from the Stokes parameters summed over the (good) rays, using the polarized intensity $\sqrt{S_1^2+S_2^2+S_3^2}=\mathrm{DOP}\,S_0$ instead of $S_0$ for the semi-axes. When the rays have different polarizations, this ellipse is smaller than the ellipses of the rays (DOP$<1$), and it is not an average of them. As for the sum of the Stokes parameters, this assumes that the $\hat{u}_\sigma$ directions of the rays are approximately parallel.
+These calculations are done in the script {\tt shadow4\_polarization\_ellipse.py}, used for the examples in Figs.~\ref{fig:ellipse_geometrical} and \ref{fig:ellipse_bm}.
 
 
 \subsection{Polarization in SHADOW's geometrical sources}
@@ -341,11 +355,11 @@ with $P\in[0,1]$. These expressions verify, as expected, $|\vec{E}_\sigma|^2 + |
 \end{equation}
 This is a non-standard definition of the polarization degree: it is defined with the amplitudes and not with the intensities, and it is not the degree of polarization DOP of equation~(\ref{eq:dop}). $P=1$ gives a pure $\sigma$ field, $P=0$ a pure $\pi$ field, and $P=0.5$ equal amplitudes.
 
-The ratio of amplitudes in equation~(\ref{eq:Pdef}) can also be expressed with an auxiliary angle $\chi\in[0,90^\circ]$, defined by $\tan\chi=|\vec{E}_\pi|/|\vec{E}_\sigma|=(1-P)/P$, i.e.,
+The ratio of amplitudes in equation~(\ref{eq:Pdef}) can also be expressed with an auxiliary angle $\gamma\in[0,90^\circ]$, defined by $\tan\gamma=|\vec{E}_\pi|/|\vec{E}_\sigma|=(1-P)/P$, i.e.,
 \begin{equation}
-   P = \frac{\cos \chi}{\cos \chi + \sin \chi}.
+   P = \frac{\cos \gamma}{\cos \gamma + \sin \gamma}.
 \end{equation}
-Note that $\chi$ is not used in the code (only $P$ and $\Phi$ are inputs), and that it should not be confused with $\Phi$. For linearly polarized light ($\Phi=0$), $\chi$ is the angle between the electric vector $\vec{E}$ and $\hat{u}_\sigma$, measured toward $\hat{u}_\pi$. For other values of $\Phi$, $\chi$ only gives the ratio of amplitudes, and not the orientation of the polarization ellipse.
+Note that $\gamma$ is not used in the code (only $P$ and $\Phi$ are inputs), and that it should not be confused with $\Phi$, nor with the angles $\psi$ and $\chi$ of the polarization ellipse [equation~(\ref{eq:ellipse_angles})]. For linearly polarized light ($\Phi=0$), $\gamma$ is the angle between the electric vector $\vec{E}$ and $\hat{u}_\sigma$, measured toward $\hat{u}_\pi$. For other values of $\Phi$, $\gamma$ only gives the ratio of amplitudes, and not the orientation of the polarization ellipse.
 
 \paragraph{Examples.}
 Some combinations of the inputs $(P, \Phi)$ are listed in Table~\ref{tab:source_polarization}, with the corresponding Stokes parameters calculated with equation~(\ref{eq:stokes_from_P}).
@@ -386,18 +400,7 @@ For example, $P=0.5$ and $\Phi=90^\circ$ give $S_3=-1$ (RCP), in agreement with 
 
 Every ray is fully polarized (DOP=1). The random phase $\phi_\sigma$ of an incoherent beam does not change the Stokes parameters of a ray, which depend only on $P$ and $\Phi$. A partially polarized beam is described by an ensemble of rays with different $(P,\Phi)$, and its Stokes parameters are the sums over the rays. Note that the Stokes parameters of each ray are defined in its own $(\hat{u}_\sigma,\hat{u}_\pi)$ frame, therefore this sum is exact only if the $\hat{u}_\sigma$ directions of all rays are parallel. This is approximately the case at the source (the small differences come from the ray divergences), but not necessarily after beamline elements where the scattering plane changes from ray to ray (e.g., curved surfaces).
 
-\paragraph{Polarization ellipse.}
-The polarization state of a ray can be visualized with the polarization ellipse \cite{Detlefs2012}: the curve described during one period by the tip of the real electric field in the plane perpendicular to the ray direction. Using the right-handed basis $\hat{\epsilon}_1=\hat{u}_\sigma$, $\hat{\epsilon}_2=-\hat{u}_\pi$ (section~\ref{sec:definitions}), and the components $E_1=\mathcal{E}_\sigma$, $E_2=-\mathcal{E}_\pi$ of the standard Jones vector, the real field is
-\begin{equation}\label{eq:ellipse_field}
-    \mathcal{E}_{j}(\tau)=\Re\left[E_j e^{-i\tau}\right]=|E_j|\cos(\tau-\phi_j), \qquad j=1,2,
-\end{equation}
-with $\tau=\omega t - k z$. The ellipse is seen in this plane by an observer looking into the source. Its major axis forms an angle $\psi$ with $\hat{\epsilon}_1$, and its ellipticity angle $\chi$ ($\tan|\chi|=b/a$, with $a$ and $b$ the semi-axes) are given by the Stokes parameters \cite{Detlefs2012}
-\begin{equation}\label{eq:ellipse_angles}
-    \tan(2\psi)=\frac{S_2}{S_1}, \qquad \sin(2\chi)=\frac{S_3}{S_0},
-\end{equation}
-with $a^2+b^2=S_0$. The field rotates counter-clockwise (left-handed polarization) for $\chi>0$ ($S_3>0$), and clockwise (right-handed) for $\chi<0$.
-For a beam, the ellipse of the polarized part is obtained in the same way from the Stokes parameters summed over the rays, with $\sqrt{S_1^2+S_2^2+S_3^2}=\mathrm{DOP}\,S_0$ instead of $S_0$.
-
+\paragraph{Polarization ellipse of the geometrical source.}
 Fig.~\ref{fig:ellipse_geometrical} shows the example of Fig.~1 in \cite{Detlefs2012}, $\psi=\chi=30^\circ$, created with a geometrical source. The corresponding Stokes parameters are $(S_1,S_2,S_3)=(0.250, 0.433, 0.866)$, and equation~(\ref{eq:P_from_stokes}) gives the source inputs $P=0.5635$ and $\Phi=-116.57^\circ$. All the rays of a geometrical source have the same polarization, so they have the same ellipse, and the ellipse obtained from the Stokes parameters of the beam coincides with them (DOP=1).
 
 \begin{figure}

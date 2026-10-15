@@ -40,7 +40,8 @@ def ellipse_from_beam(beam):
     """Stokes parameters summed over the good rays, and the ellipse of the polarized part."""
     S0, S1, S2, S3 = [beam.get_column(col, nolost=1).sum() for col in [30, 31, 32, 33]]
     dop = numpy.sqrt(S1 ** 2 + S2 ** 2 + S3 ** 2) / S0
-    psi = 0.5 * numpy.arctan2(S2, S1)                    # azimuth of the major axis from e1
+    psi = numpy.mod(0.5 * numpy.arctan2(S2, S1), numpy.pi)     # azimuth of the major axis from e1, [0, pi)
+    if numpy.isclose(psi, numpy.pi): psi = 0.0                  # psi = pi - epsilon is the same direction as 0
     chi = 0.5 * numpy.arcsin(S3 / (dop * S0))            # ellipticity angle, > 0 for left-handed
     intensity = dop * S0                                  # polarized intensity
     a = numpy.sqrt(intensity) * numpy.cos(chi)            # semi-axes
