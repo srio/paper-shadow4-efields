@@ -386,6 +386,42 @@ For example, $P=0.5$ and $\Phi=90^\circ$ give $S_3=-1$ (RCP), in agreement with 
 
 Every ray is fully polarized (DOP=1). The random phase $\phi_\sigma$ of an incoherent beam does not change the Stokes parameters of a ray, which depend only on $P$ and $\Phi$. A partially polarized beam is described by an ensemble of rays with different $(P,\Phi)$, and its Stokes parameters are the sums over the rays. Note that the Stokes parameters of each ray are defined in its own $(\hat{u}_\sigma,\hat{u}_\pi)$ frame, therefore this sum is exact only if the $\hat{u}_\sigma$ directions of all rays are parallel. This is approximately the case at the source (the small differences come from the ray divergences), but not necessarily after beamline elements where the scattering plane changes from ray to ray (e.g., curved surfaces).
 
+\paragraph{Polarization ellipse.}
+The polarization state of a ray can be visualized with the polarization ellipse \cite{Detlefs2012}: the curve described during one period by the tip of the real electric field in the plane perpendicular to the ray direction. Using the right-handed basis $\hat{\epsilon}_1=\hat{u}_\sigma$, $\hat{\epsilon}_2=-\hat{u}_\pi$ (section~\ref{sec:definitions}), and the components $E_1=\mathcal{E}_\sigma$, $E_2=-\mathcal{E}_\pi$ of the standard Jones vector, the real field is
+\begin{equation}\label{eq:ellipse_field}
+    \mathcal{E}_{j}(\tau)=\Re\left[E_j e^{-i\tau}\right]=|E_j|\cos(\tau-\phi_j), \qquad j=1,2,
+\end{equation}
+with $\tau=\omega t - k z$. The ellipse is seen in this plane by an observer looking into the source. Its major axis forms an angle $\psi$ with $\hat{\epsilon}_1$, and its ellipticity angle $\chi$ ($\tan|\chi|=b/a$, with $a$ and $b$ the semi-axes) are given by the Stokes parameters \cite{Detlefs2012}
+\begin{equation}\label{eq:ellipse_angles}
+    \tan(2\psi)=\frac{S_2}{S_1}, \qquad \sin(2\chi)=\frac{S_3}{S_0},
+\end{equation}
+with $a^2+b^2=S_0$. The field rotates counter-clockwise (left-handed polarization) for $\chi>0$ ($S_3>0$), and clockwise (right-handed) for $\chi<0$.
+For a beam, the ellipse of the polarized part is obtained in the same way from the Stokes parameters summed over the rays, with $\sqrt{S_1^2+S_2^2+S_3^2}=\mathrm{DOP}\,S_0$ instead of $S_0$.
+
+Fig.~\ref{fig:ellipse_geometrical} shows the example of Fig.~1 in \cite{Detlefs2012}, $\psi=\chi=30^\circ$, created with a geometrical source. The corresponding Stokes parameters are $(S_1,S_2,S_3)=(0.250, 0.433, 0.866)$, and equation~(\ref{eq:P_from_stokes}) gives the source inputs $P=0.5635$ and $\Phi=-116.57^\circ$. All the rays of a geometrical source have the same polarization, so they have the same ellipse, and the ellipse obtained from the Stokes parameters of the beam coincides with them (DOP=1).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\linewidth]{figures/polarization_ellipse_geometrical.png}
+\caption{Polarization ellipse of a beam from a geometrical source with $P=0.5635$ and $\Phi=-116.57^\circ$ ($\psi=\chi=30^\circ$, left-handed elliptical polarization), seen by an observer looking into the source. The electric field of a sample of 20 rays (thin lines), and of one of them (thick line, with the arrow indicating the sense of rotation), coincide with the ellipse obtained from the Stokes parameters of the beam (dashed line), with its major and minor axes. The dotted rectangle has sides $2|E_1|$ and $2|E_2|$.}
+\label{fig:ellipse_geometrical}
+\end{figure}
+
+\subsection{Polarization of a bending magnet source}
+\label{sec:polarization_bm}
+
+In a bending magnet source the polarization of each ray depends on its emission direction. SHADOW samples the ray directions and energies from the synchrotron emission, and sets the amplitudes of the $\sigma$ and $\pi$ components (horizontal and vertical, respectively) from the emission functions of the two polarizations at the vertical angle of the ray. The radiation is linearly polarized in the plane of the orbit, and elliptically polarized out of it, with phase difference $\Phi=\pm 90^\circ$ (the sign changes with the sign of the vertical angle), therefore with opposite handedness above and below the orbit plane.
+
+Fig.~\ref{fig:ellipse_bm} shows the polarization ellipses for a bending magnet of the ESRF (electron energy 6.04~GeV, magnetic field 0.8~T, critical energy 19.4~keV) at the photon energy of 8~keV. Every ray is fully polarized, but the ellipses of the rays are different: from nearly linear horizontal polarization (rays close to the orbit plane) to elliptical polarization with a large vertical component and either handedness (rays at larger vertical angles). All ellipses have their axes along $\hat{\epsilon}_{1}$ and $\hat{\epsilon}_{2}$ ($\Phi=\pm90^\circ$).
+The Stokes parameters of the beam (5000 rays) are $P_1=0.674$, $P_2=0.000$ and $P_3=-0.014$: the contributions of the two handednesses cancel ($P_3\approx 0$ for a beam symmetric with respect to the orbit plane), and the beam is partially polarized, with DOP=0.674, although every ray is fully polarized. The ellipse of the polarized part degenerates to a horizontal line: the polarized part of the beam is linearly polarized in the orbit plane.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\linewidth]{figures/polarization_ellipse_bending_magnet.png}
+\caption{Polarization ellipses for an ESRF bending magnet (6.04~GeV, 0.8~T) at 8~keV, seen by an observer looking into the source: electric field of a sample of 20 rays (thin lines) and of one of them (thick line, the arrow indicates the sense of rotation). The ellipse of the polarized part of the beam, obtained from the summed Stokes parameters (dashed line), degenerates to a horizontal line (DOP=0.674).}
+\label{fig:ellipse_bm}
+\end{figure}
+
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 \section{Change of reference frame}
