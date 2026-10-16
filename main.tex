@@ -1045,19 +1045,17 @@ The intensity is reduced as $\cos^2\beta$ (a factor 2 for $\beta=\pm45^\circ$), 
 
 Polarizing light using mirror reflection exploits the phenomenon of Brewster's angle. The Brewster angle emerges naturally from the Fresnel equations \cite{born_wolf}, which describe the reflection and transmission of light at the interface between two media. At the Brewster angle, the reflection coefficient for $\pi$-polarized light becomes zero, leading to complete transmission of the $\pi$-polarized component into the second medium. This phenomenon results in the reflected light being completely $\sigma$-polarized.
 
-To check that we created in SHADOW4 a point source with vertical divergence 90 degrees. We send the beam to a plane mirror oriented at 45 deg from the beam direction. Using refraction index of $n$=1.51 we display the intensities of the $\sigma$ and $\pi$ components versus the incident angle. The results are in Fig.~\ref{fig:visibleR}, which compares directly with Fig. 1.12 in \cite{born_wolf} (6th edition).
-The change of phase ($\sigma$ minus $\pi$) is $\pi$ below the Brewster angle, and zero elsewhere (Fig.~\ref{fig:visiblePhase}).
+To check this, we created in SHADOW4 a pencil beam (point source, zero divergence and monochromatic), where all rays are identical, with horizontal linear polarization ($P=1$, $\Phi=0$). We send the beam to a plane glass mirror (refraction index $n$=1.51) rotated azimuthally by $\alpha=-45^\circ$, and we scan the incident angle (each point comes from a different SHADOW4 run). The intensities of the $\sigma$ and $\pi$ components of the reflected ray versus the incident angle are shown in Fig.~\ref{fig:visible}(a). As the incident ray has equal $\sigma$ and $\pi$ intensities (0.5 each) with respect to the scattering plane of the mirror, these intensities are $|r_s|^2/2$ and $|r_p|^2/2$, which compare directly with the reflectances in Fig. 1.12 of \cite{born_wolf} (6th edition). The intensity of the $\pi$ component vanishes at the Brewster angle $\theta_{Bw}=\arctan(1.51)=56.5^\circ$.
+This system is physically equivalent to a beam linearly polarized at 45$^\circ$ ($P=0.5$, $\Phi=0$, i.e., electric field along $\hat{u}_\sigma+\hat{u}_\pi$) reflected by the mirror with zero azimuthal angle. It has been verified that SHADOW4 gives the same results for both systems (Fig.~\ref{fig:visible} and script {\tt shadow4\_visible\_polarizer3.py}).
+%Note that the orientation angle must be $-45^\circ$: with $\alpha=+45^\circ$ the intensities are the same, but the phase difference changes by $\pi$, because then the field corresponds to $P=0.5$ and $\Phi=180^\circ$ (along $\hat{u}_\sigma-\hat{u}_\pi$).
+The change of phase ($\sigma$ minus $\pi$) is $\pi$ below the Brewster angle, and zero above it (Fig.~\ref{fig:visible}(b)).
 
-\begin{figure}\label{fig:visibleR}
+\begin{figure}
 \centering
 \includegraphics[width=0.95\linewidth]{figures/visibleR.png}
-\caption{Ray intensity of the s and p components after reflection as a function of the incident (or reflected) angle.}
-\end{figure}
-
-\begin{figure}\label{fig:visiblePhase}
-\centering
 \includegraphics[width=0.95\linewidth]{figures/visiblePhase.png}
-\caption{Change of phase ($\sigma$ minus $\pi$) after reflection as a function of the incident (or reflected) angle.}
+\caption{Reflection of a linearly polarized ray by a glass mirror ($n$=1.51), as a function of the incident (or reflected) angle: (a) intensities of the $\sigma$ and $\pi$ components after reflection; (b) change of phase ($\sigma$ minus $\pi$). Lines: beam linearly polarized at 45$^\circ$ and mirror with $\alpha=0$; dots: beam with horizontal linear polarization and mirror with $\alpha=-45^\circ$. The dotted vertical line marks the Brewster angle.}
+\label{fig:visible}
 \end{figure}
 
 Some examples of exploiting the Brewster angle for applications are:
@@ -1066,7 +1064,7 @@ Some examples of exploiting the Brewster angle for applications are:
     \item Laser Systems: Brewster windows ensure lasers emit linearly polarized light with minimal reflection.
     \item Polarizing Beam Splitters: Separate s and p polarized light for optical experiments.
     \item Sunglasses: Polarized lenses block glare from horizontal surfaces, strongest at the Brewster angle.
-    \item Refractive Index Measurement: Calculate $n=\tan⁡(\theta_B)$ by measuring the Brewster angle.   
+    \item Refractive Index Measurement: Calculate $n=\tan(\theta_{Bw})$ by measuring the Brewster angle.
 \end{itemize}
 
 
