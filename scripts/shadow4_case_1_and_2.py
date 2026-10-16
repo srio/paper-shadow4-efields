@@ -527,8 +527,7 @@ if __name__ == '__main__':
     beam1 = run_case_1()
     beam2 = run_case_2()
 
-
-for i, pol in enumerate(['total','s','p']):
-    print("Case 1 (%s-polarization): ", beam1.get_intensity(polarization=i) / beam1.N)
-    print("case 2 (%s-polarization): ", beam2.get_intensity(polarization=i) / beam2.N)
-    print("\n")
+    for i, pol in enumerate(['total', 's', 'p']):
+        print("Case 1 per ray (%s-polarization): %.4e" % (pol, beam1.get_intensity(polarization=i) / beam1.N))
+        print("Case 2 per ray (%s-polarization): %.4e" % (pol, beam2.get_intensity(polarization=i) / beam2.N))
+        print("\n")

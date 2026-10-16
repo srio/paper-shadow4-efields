@@ -44,4 +44,7 @@ if __name__ == "__main__":
             print("   %-11s (thick crystal, at theta_Bc): r_s = %+.6f %+.6fi, r_p = %+.6e %+.6ei, "
                   "R_s = %.6f, R_p = %.6e" %
                   (name, r_s.real, r_s.imag, r_p.real, r_p.imag, abs(r_s) ** 2, abs(r_p) ** 2))
+            Is = (abs(r_s**4 * r_p**4 / numpy.sqrt(2))) ** 2
+            print("   %-11s intensity per ray (s, p, total) after 8 crystals (see paper): %.4e %.4e %.4e" %
+                  (name, Is, Is, 2 * Is))
         print()
