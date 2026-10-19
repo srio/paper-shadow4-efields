@@ -356,14 +356,14 @@ The ratio of amplitudes in equation~(\ref{eq:Pdef}) can also be expressed with a
 \begin{equation}
    P = \frac{\cos \gamma}{\cos \gamma + \sin \gamma}.
 \end{equation}
-Note that $\gamma$ is not used in the code (only $P$ and $\Phi$ are inputs), and that it should not be confused with $\Phi$, nor with the angles $\psi$ and $\chi$ of the polarization ellipse [equation~(\ref{eq:ellipse_angles})]. For linearly polarized light ($\Phi=0$), $\gamma$ is the angle between the electric vector $\vec{E}$ and $\hat{u}_\sigma$, measured toward $\hat{u}_\pi$. For other values of $\Phi$, $\gamma$ only gives the ratio of amplitudes, and not the orientation of the polarization ellipse.
+Note that $\gamma$ is not used in the code (only $P$ and $\Phi$ are inputs), and that it should not be confused with $\Phi$, nor with the angles $\psi$ and $\chi$ of the polarization ellipse [equation~(\ref{eq:ellipse_angles})]. For linearly polarized light ($\Phi=0$), $\gamma$ is the angle between the electric vector $\vec{E}$ and $\hat{u}_\sigma$, \todo{CHECK: measured toward $\hat{u}_\pi$}. For other values of $\Phi$, $\gamma$ only gives the ratio of amplitudes, and not the orientation of the polarization ellipse.
 
 \paragraph{Examples.}
 Some combinations of the inputs $(P, \Phi)$ are listed in Table~\ref{tab:source_polarization}, with the corresponding Stokes parameters calculated with equation~(\ref{eq:stokes_from_P}).
 
 \begin{table}
 \centering
-\caption{Examples of polarization states created by the geometrical source with the inputs $P$ and $\Phi$, and the corresponding Stokes parameters [equation~(\ref{eq:stokes_from_P})]. The angles $\pm45^\circ$ in the last column refer to an observer looking toward the source.}
+\caption{Examples of polarization states created by the geometrical source with the inputs $P$ and $\Phi$, and the corresponding Stokes parameters [equation~(\ref{eq:stokes_from_P})]. \todo{EXPLAIN. IS THIS $\chi$? The angles $\pm45^\circ$ in the last column refer to an observer looking toward the source.}}
 \label{tab:source_polarization}
 \small
 \begin{tabular}{rr rrrr p{3.4cm}}
