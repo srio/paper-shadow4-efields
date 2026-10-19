@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="geometrical source polarization" description="" working_directory="/home/srio/Oasys2">
+	<nodes>
+		<node id="0" name="Geometrical Source" qualified_name="orangecontrib.shadow4.widgets.sources.ow_geometrical.OWGeometrical" project_name="OASYS2-SHADOW4" version="" title="Geometrical Source" position="(216.0, 159.0)" />
+		<node id="1" name="Python Script" qualified_name="oasys2.widgets.tools.ow_python_script.OWPythonScript" project_name="oasys2" version="" title="Python Script" position="(459.0, 122.0)" />
+		<node id="2" name="Plot XY" qualified_name="orangecontrib.shadow4.widgets.tools.ow_plot_xy.PlotXY" project_name="OASYS2-SHADOW4" version="" title="Plot XY" position="(453.0, 271.0)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="0" sink_node_id="1" source_channel="Shadow Data" sink_channel="In Object #1" enabled="true" source_channel_id="shadow_data" sink_channel_id="object_1" />
+		<link id="1" source_node_id="0" sink_node_id="2" source_channel="Shadow Data" sink_channel="Shadow Data" enabled="true" source_channel_id="shadow_data" sink_channel_id="shadow_data" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'angular_distribution': 4, 'angular_distribution_limits': 0, 'coherent_beam': 1, 'cone_external_half_aperture': 0.002, 'cone_internal_half_aperture': 0.001, 'controlAreaVisible': True, 'depth': 0, 'ell_semiaxis_x': 0.1, 'ell_semiaxis_z': 0.2, 'gauss_sigma_x': 0.001, 'gauss_sigma_z': 0.001, 'gaussian_central_value': 0.0, 'gaussian_maximum': 0.0, 'gaussian_minimum': 0.0, 'gaussian_sigma': 0.0, 'horizontal_div_x_minus': 5e-07, 'horizontal_div_x_plus': 5e-07, 'horizontal_lim_x_minus': 1e-05, 'horizontal_lim_x_plus': 1e-05, 'horizontal_sigma_x': 0.001, 'is_automatic_run': True, 'line_int_1': 0.0, 'line_int_10': 0.0, 'line_int_2': 0.0, 'line_int_3': 0.0, 'line_int_4': 0.0, 'line_int_5': 0.0, 'line_int_6': 0.0, 'line_int_7': 0.0, 'line_int_8': 0.0, 'line_int_9': 0.0, 'line_value_1': 1000.0, 'line_value_10': 0.0, 'line_value_2': 1010.0, 'line_value_3': 0.0, 'line_value_4': 0.0, 'line_value_5': 0.0, 'line_value_6': 0.0, 'line_value_7': 0.0, 'line_value_8': 0.0, 'line_value_9': 0.0, 'max_number_of_rejected_rays': 10000000, 'number_of_lines': 0, 'number_of_rays': 1, 'optimize_file_name': 'NONESPECIFIED', 'optimize_source': 0, 'phase_diff': -90.0, 'photon_energy_distribution': 0, 'polarization_degree': 0.5, 'rect_height': 0.2, 'rect_width': 0.1, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\x00\xff\xff\xff\xda\x00\x00\x05\x0f\x00\x00\x02\xbe\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x05\x0f\x00\x00\x02\xbe\x00\x00\x00\x00\x02\x00\x00\x00\x05V\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x05\x0f\x00\x00\x02\xbe', 'seed': 5676561, 'sigma_y': 0.001, 'single_line_value': 1000.0, 'source_depth_y': 0.002, 'spatial_type': 0, 'uniform_maximum': 1010.0, 'uniform_minimum': 1000.0, 'units': 0, 'user_defined_file': 'energy_spectrum.dat', 'user_defined_maximum': 0.0, 'user_defined_minimum': 0.0, 'user_defined_refining_factor': 5, 'user_defined_spectrum_binning': 10000, 'vertical_div_z_minus': 5e-06, 'vertical_div_z_plus': 5e-06, 'vertical_lim_z_minus': 1e-05, 'vertical_lim_z_plus': 1e-05, 'vertical_sigma_z': 0.0001, 'view_type': 2, '__version__': 1}</properties>
+		<properties node_id="1" format="pickle">gASVnAMAAAAAAAB9lCiMDGF1dG9fZXhlY3V0ZZSJjBJjb250cm9sQXJlYVZpc2libGWUiIwSY3Vy
+cmVudFNjcmlwdEluZGV4lEsAjAlmb250X3NpemWUSwSMEWxpYnJhcnlMaXN0U291cmNllF2UjCVv
+YXN5czIud2lkZ2V0cy50b29scy5vd19weXRob25fc2NyaXB0lIwGU2NyaXB0lJOUKYGUfZQojARu
+YW1llIwLSGVsbG8gd29ybGSUjAZzY3JpcHSUWEQCAABwcmludCgnSGVsbG8gd29ybGQnKQpibCA9
+IGluX29iamVjdF8xLmJlYW1saW5lLmdldF9saWdodF9zb3VyY2UoKQpiZWFtID0gaW5fb2JqZWN0
+XzEuYmVhbQpFcyA9IGJlYW0uZ2V0X2NvbHVtbnMoWzcsOCw5XSkKRXAgPSBiZWFtLmdldF9jb2x1
+bW5zKFsxNiwxNywxOF0pCnByaW50KCJcblxuUCwgXFBoaTogIiwgYmwuX3BvbF9kZWcsIGJsLl9w
+b2xfYW5nbGUsICkKcHJpbnQoIkVzOiAiLCBFcyApCnByaW50KCJFcDogIixFcCApCnByaW50KCJK
+OiAiLCBiZWFtLmdldF9qb25lcygpICkKcHJpbnQoIkpzdGQ6ICIsIGJlYW0uZ2V0X2pvbmVzKHVz
+ZV9zdGFuZGFyZD0xKSApCnByaW50KCJTMCxTMSxTMixTMzogIiwgYmVhbS5nZXRfY29sdW1ucyhb
+MzAsMzEsMzIsMzNdKSkKcHJpbnQoIlAxLFAyLFAzOiAiLCBiZWFtLmdldF9jb2x1bW5zKFs0Miw0
+Myw0NF0pKQoKZnJvbSBzcnhyYXlsaWIucGxvdC5nb2wgaW1wb3J0IHBsb3QKCnBsb3QoWzAsRXNb
+MF1bMF1dLCBbMCxFc1syXVswXV0sIFswLEVwWzBdWzBdXSwgWzAsRXBbMl1bMF1dLCB4cmFuZ2U9
+Wy0xLDFdLCB5cmFuZ2U9Wy0xLDFdLCBsZWdlbmQ9WyJFcyIsIkVwIl0plIwFZmxhZ3OUSwCMCGZp
+bGVuYW1llE51YmGME3NhdmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAP////X////PAAADKgAA
+AmIAAAAAAAAAAAAAAx8AAAJXAAAAAAAAAAAFVgAAAAAAAAAAAAADHwAAAleUjA1zcGxpdHRlclN0
+YXRllE6MC19fdmVyc2lvbl9flEsBdS4=
+</properties>
+		<properties node_id="2" format="literal">{'autosave': 0, 'autosave_file_name': 'autosave_xy_plot.hdf5', 'autosave_partial_results': 0, 'cartesian_axis': 0, 'controlAreaVisible': True, 'conversion_active': 1, 'flip_h': 0, 'flip_v': 0, 'image_plane': 0, 'image_plane_new_position': 10.0, 'is_automatic_run': True, 'keep_result': 0, 'number_of_bins_h': 100, 'number_of_bins_v': 100, 'rays': 1, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\xff\xff\xff\xf5\xff\xff\xff\xcf\x00\x00\x05\x1e\x00\x00\x02\xc6\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x05\x13\x00\x00\x02\xbb\x00\x00\x00\x00\x00\x00\x00\x00\x05V\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x05\x13\x00\x00\x02\xbb', 'title': 'X,Z', 'weight_column_index': 23, 'x_column_index': 0, 'x_range': 0, 'x_range_max': 0.0, 'x_range_min': 0.0, 'y_column_index': 2, 'y_range': 0, 'y_range_max': 0.0, 'y_range_min': 0.0, '__version__': 1}</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>
