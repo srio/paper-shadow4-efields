@@ -1,7 +1,7 @@
 #!/bin/bash
 # Build and display the paper. Default target is main (the current paper);
 # pass a target name to build another one, e.g.:  ./compile.sh main_desy   (or main_desy.tex)
-MAIN=${1:-main}
+MAIN=${1:-main2}
 MAIN=${MAIN%.tex}
 
 pdflatex --interaction=nonstopmode $MAIN.tex

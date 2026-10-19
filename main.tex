@@ -759,7 +759,7 @@ r_p =
 
 These are the Fresnel equations \cite{born_wolf}. They come from the exact Maxwell boundary-condition solutions. They are valid for X-rays and also for visible light and complex refractive indices.
 The sign of $r_p$ corresponds to the SHADOW convention for the $\pi$ versors of the incident and reflected rays [equations~(\ref{eq:u_i}) and (\ref{eq:u_f})]: at grazing incidence ($\theta_1\rightarrow 90^\circ$) $\hat{u}_{\pi,f}\approx\hat{u}_{\pi,i}$ and $r_p\rightarrow r_s\rightarrow -1$, whereas at normal incidence $\hat{u}_{\pi,f}=-\hat{u}_{\pi,i}$ and $r_p=-r_s$, so that the reflected electric vector is the same for any polarization direction, as expected.
-For complex refractive indices, $\cos\theta_2=(1-\sin^2\theta_2)^{1/2}$ is a complex number; the root with positive imaginary part of $n_2\cos\theta_2$ is taken, which corresponds to a transmitted wave decaying inside medium 2 with the time dependence $e^{-i\omega t}$ used in this paper [for X-rays $n = 1 - \delta + i\beta$, with $\delta,\beta>0$].
+For complex refractive indices, $\cos\theta_2=(1-\sin^2\theta_2)^{1/2}$ is a complex number, and the root is chosen so that the transmitted wave in medium 2 (with the time dependence $e^{-i\omega t}$ used in this paper) is outgoing [$\mathrm{Re}(n_2\cos\theta_2)\geq0$] when it propagates, and decaying [$\mathrm{Im}(n_2\cos\theta_2)\geq0$] when it is evanescent (total reflection). For X-rays ($n = 1 - \delta + i\beta$, with $\delta,\beta>0$) this is the root with positive imaginary part of $n_2\cos\theta_2$. The principal square root does not always satisfy these conditions, e.g., for total internal reflection with an absorbing incident medium (section~\ref{sec:visible_phaseshifters}).
 
 The Brewster angle $\theta_{Bw}$ is defined by vanishing p-polarized reflection: $r_p = 0$.
 For real refractive indices, from the numerator of $r_p$:
@@ -1119,10 +1119,10 @@ To convert linear into circular or elliptical polarization, a phase difference b
 \label{fig:internal}
 \end{figure}
 
-It can be appreciated in Fig.~\ref{fig:internal}(b) an important change of phase in the total reflection zone. To pass from linear polarization (zero phase difference) to circular polarization (phase difference of $90^\circ$), a change of $90^\circ$ is needed, which is not available with a single reflection: the maximum phase change is $45.94^\circ$, at $51.34^\circ$.
+Fig.~\ref{fig:internal}(b) shows an important change of phase in the total reflection zone. To pass from linear polarization (zero phase difference) to circular polarization (phase difference of $90^\circ$), a change of $90^\circ$ is needed, which is not available with a single reflection: the maximum phase change is $45.94^\circ$, at $51.34^\circ$.
 But we can use two consecutive reflections adding a phase of $45^\circ$ each, by selecting the appropriate incident angle, as done in the ``Fresnel rhomb" [see Fig.~1.16 in \cite{born_wolf}]. Solving $\phi_\sigma-\phi_\pi=\pi/4$ with equations (\ref{eq:mirrorphases}) and (\ref{eq:mirrorphasep}) gives two solutions, $48.62^\circ$ and $54.62^\circ$ (i.e., $48^\circ37'$ and $54^\circ37'$ as in \cite{born_wolf}).
 
-In the Jones calculus, each total reflection is a phase retarder with a phase difference $\delta=\phi_\sigma-\phi_\pi=\pi/4$, and the Fresnel rhomb is its $n^\text{th}$ power ($n$=2 for two reflections). Applying the rhomb to light linearly polarized at $45^\circ$, with Jones vector $(1,1)^T/\sqrt{2}$ in the SHADOW basis ($P=0.5$, $\Phi=0$),
+In the Jones calculus, each total reflection is a phase retarder with a phase difference $\delta=\phi_\sigma-\phi_\pi=\pi/4$, and the Fresnel rhomb is its $N^\text{th}$ power ($N$=2 for two reflections). Applying the rhomb to light linearly polarized at $45^\circ$, with Jones vector $(1,1)^T/\sqrt{2}$ in the SHADOW basis ($P=0.5$, $\Phi=0$, i.e., electric field along $\hat{u}_\sigma+\hat{u}_\pi$; $P_2=-1$ in the standard basis),
 \begin{equation}\label{eq:Jrhomb}
 \begin{pmatrix}
 1  &
@@ -1153,7 +1153,7 @@ Phase shifters in the X-ray range, which use the transmitted beam of perfect cry
 
 
 
-Last, we mention that for making more friendly the use of SHADOW4 for calculations with wavelenghts and material with $n>1$ we implemented tools to retrieve data from the refractive index database \cite{RefractiveIndexDatabase2024} and create SHADOW4 preprocessor files. 
+Last, we mention that, to make SHADOW4 easier to use for calculations with wavelengths and materials with $n>1$, we implemented tools to retrieve data from the refractive index database \cite{RefractiveIndexDatabase2024} and create SHADOW4 preprocessor files. 
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
@@ -1162,7 +1162,19 @@ Last, we mention that for making more friendly the use of SHADOW4 for calculatio
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
-zzzzzzz
+We have described how the SHADOW4 ray tracing code represents, transports and modifies the electric field of the rays, and how the polarization of the beam is obtained from it. Each ray carries two electric vectors, along the $\sigma$ and $\pi$ directions, and their phases. SHADOW4 keeps the convention of SHADOW3, in which the triad $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})$ is left-handed. We have made explicit the relation with the standard (right-handed) formalism of polarization optics: the standard Jones vector is $(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$, and the Stokes parameters calculated by SHADOW4, for each ray and for the beam, follow the standard definitions and conventions. They can be used to obtain the polarization ellipse of every ray and of the beam, as shown for a geometrical source and for a bending magnet source.
+
+The interaction of the rays with the optical elements is described with the Jones calculus. For each ray, the incident electric field is projected onto the $\sigma$ and $\pi$ directions of its own scattering plane, multiplied by the complex amplitudes of the element, and expressed along the $\sigma$ and $\pi$ directions of the outgoing ray. This is valid for any orientation of the element with respect to the polarization of the incident beam. The amplitudes are calculated with the Fresnel equations for mirrors, and with the dynamical theory of diffraction ({\it crystalpy}) for perfect crystals, both for the diffracted and the transmitted (forward-diffracted) beams. For the Fresnel equations, the root of $n_2\cos\theta_2$ must correspond to an outgoing or decaying transmitted wave, which is not always the principal root.
+
+The examples show that SHADOW4 reproduces the polarization properties of polarizers and phase shifters in the X-ray and visible ranges:
+\begin{itemize}
+\item {\it X-ray polarizers.} A polarizer and analyzer made of crystals at $\theta_B\simeq45^\circ$ (Si 800) gives results in agreement with the analytical Jones calculation, for two physically equivalent configurations of the incident polarization and the orientation of the crystals. For the polarimeter used at the European XFEL, the simulated linear polarization purity ($7.24\times10^{-14}$) agrees with the limit imposed by the divergence of the beam ($7.45\times10^{-14}$) and with the theoretical limit given in \cite{Schulze2022} for this setup.
+\item {\it Visible polarizers.} The reflection of linearly polarized light by a glass mirror reproduces the Fresnel reflectances and the change of phase at the Brewster angle, and the results do not depend on whether the polarization of the light or the orientation of the mirror is rotated.
+\item {\it X-ray phase plates.} A new optical element calculates the transmitted beam of a perfect crystal plate in Bragg geometry, detuned from the Bragg angle. It agrees with direct calculations with {\it crystalpy}, and reproduces the transmission and phase retardation of a Si 220 plate at 10~keV used as phase retarder. A comparison with polarization measurements of a Si 111 phase plate at the P09 beamline of PETRA III is presented in \cite{SanchezdelRio2026desy}.
+\item {\it Visible phase shifters.} Two total internal reflections in a Fresnel rhomb convert linear into circular polarization at the incidence angles predicted by the Fresnel equations, with the handedness given by the Jones calculus. The absorption of the glass has a negligible effect on the polarization.
+\end{itemize}
+
+The simulations of this paper can be reproduced with the scripts available as supplementary material, and most of them also with the SHADOW4 widgets of the OASYS environment. The electric fields of the rays carry their phases, which are preserved through the beamline; this opens the possibility of using them for the simulation of partially coherent beams, a topic that will be addressed in future work. \todo{check: extension of the Jones treatment to gratings and multilayers}
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
