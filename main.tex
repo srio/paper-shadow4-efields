@@ -1108,50 +1108,49 @@ The SHADOW4 phase plate has also been compared with the polarization of the beam
 % -----------------------------------------------------------------
 \section{Phase-shifters for the visible range: The Fresnel rhomb}\label{sec:visible_phaseshifters}
 
-As shown in section~\ref{sec:visible_polarizers}, the mirror reflection at Brewster angle is used for obtaining linearly polarized beams when $n_1<n_2$ (e.g. from air to glass with visible light). 
-If one wants to convert linear to circular or elliptical polarized beams one has to play with the phase. This can be done using the internal reflection $n_1>n_2$ (the media of the reflection surface is less dense than the media where the beam travels). The reflectivity and phase change are in Figs.~\ref{fig:internalR} and  \ref{fig:internalPhase}.
+As shown in section~\ref{sec:visible_polarizers}, the mirror reflection at Brewster angle is used for obtaining linearly polarized beams when $n_1<n_2$ (e.g. from air to glass with visible light).
+To convert linear into circular or elliptical polarization, a phase difference between the $\sigma$ and $\pi$ components is needed. This can be obtained with the total internal reflection, when the beam travels in a denser medium ($n_1>n_2$, e.g. from glass to air) and the incidence angle is larger than the critical angle $\theta_c=\arcsin(n_2/n_1)$. The intensities and the phase change for a single internal reflection glass--air ($n_1=1.51$, $n_2=1$, $\theta_c=41.47^\circ$) calculated with SHADOW4 are shown in Fig.~\ref{fig:internal}. They are obtained in a single run, with a point source emitting 5000 rays at $\lambda=446$~nm, linearly polarized at $45^\circ$ ($P=0.5$, $\Phi=0$), with a uniform vertical divergence of $\pm0.8$~rad around an incidence angle of $45^\circ$, so that the incidence angle covers the interval $0$--$90^\circ$. Below the critical angle the reflection is partial, and the $\pi$ intensity vanishes at the internal Brewster angle $\arctan(n_2/n_1)=33.5^\circ$, where the phase difference jumps from $180^\circ$ to $0$. Above the critical angle the reflection is total for both polarizations, and the phase change $\phi_\sigma-\phi_\pi$ given by equations~(\ref{eq:mirrorphases}) and (\ref{eq:mirrorphasep}) is positive.
 
-\begin{figure}\label{fig:internalR}
+\begin{figure}
 \centering
 \includegraphics[width=0.95\linewidth]{figures/internalR.png}
-\caption{Ray intensity of the $\sigma$ and $\pi$ components after a single internal reflection as a function of the incident (or reflected) angle.}
-\end{figure}
-
-\begin{figure}\label{fig:internalPhase}
-\centering
 \includegraphics[width=0.95\linewidth]{figures/internalPhase.png}
-\caption{Change of phase ($\sigma$ minus $\pi$) after a single internal reflection as a function of the incident (or reflected) angle.}
+\caption{Single internal reflection glass--air ($n_1=1.51$, $n_2=1$) of a ray linearly polarized at $45^\circ$, as a function of the incident (or reflected) angle: (a) ray intensity of the $\sigma$ and $\pi$ components (0.5 each for the incident ray); (b) change of phase ($\sigma$ minus $\pi$). The dotted vertical line marks the critical angle, and the dashed horizontal line in (b) the phase change of $45^\circ$. The inset in (b) shows the two incidence angles giving a phase change of $45^\circ$ ($48.62^\circ$ and $54.62^\circ$).}
+\label{fig:internal}
 \end{figure}
 
-It can be appreciated in Fig.~\ref{fig:internalPhase} an important change of phase in the total reflection zone. To pass from linear polarization (zero phase) to circular or elliptical (90 deg phase) we need a change of 90 degrees that is not available.
-But we can use two consecutive reflections adding a phase of 45 deg each, by selecting the appropriated incident angle (this means solving $\phi_p-\phi_s=\pi/4$ using equations (\ref{eq:mirrorphases}) and (\ref{eq:mirrorphasep}), giving 54.617 deg), as done in the ``Fresnel rhomb" [see Fig.~ 1.16 in \cite{born_wolf}].
+It can be appreciated in Fig.~\ref{fig:internal}(b) an important change of phase in the total reflection zone. To pass from linear polarization (zero phase difference) to circular polarization (phase difference of $90^\circ$), a change of $90^\circ$ is needed, which is not available with a single reflection: the maximum phase change is $45.94^\circ$, at $51.34^\circ$.
+But we can use two consecutive reflections adding a phase of $45^\circ$ each, by selecting the appropriate incident angle, as done in the ``Fresnel rhomb" [see Fig.~1.16 in \cite{born_wolf}]. Solving $\phi_\sigma-\phi_\pi=\pi/4$ with equations (\ref{eq:mirrorphases}) and (\ref{eq:mirrorphasep}) gives two solutions, $48.62^\circ$ and $54.62^\circ$ (i.e., $48^\circ37'$ and $54^\circ37'$ as in \cite{born_wolf}).
 
-The Fresnel Rhomb in Jones calculus is represented by a reflection modeled as a phase retarders of angle $\delta$ (in our example $\delta=\pi/4$), then to the $n^\text{th}$ power ($n$=2 in our case of two reflections). Applying the defined rhomb to linearly polarized light (1,1),
-
+In the Jones calculus, each total reflection is a phase retarder with a phase difference $\delta=\phi_\sigma-\phi_\pi=\pi/4$, and the Fresnel rhomb is its $n^\text{th}$ power ($n$=2 for two reflections). Applying the rhomb to light linearly polarized at $45^\circ$, with Jones vector $(1,1)^T/\sqrt{2}$ in the SHADOW basis ($P=0.5$, $\Phi=0$),
 \begin{equation}\label{eq:Jrhomb}
 \begin{pmatrix}
 1  &
 0 \\
-0& 
-e^{i\pi/4}
-\end{pmatrix}^2  
-\begin{pmatrix}
+0&
+e^{-i\pi/4}
+\end{pmatrix}^2
+\frac{1}{\sqrt{2}}\begin{pmatrix}
 1  \\
 1
-\end{pmatrix} = \begin{pmatrix}
+\end{pmatrix} = \frac{1}{\sqrt{2}}\begin{pmatrix}
 1  \\
-i
+-i
 \end{pmatrix},
 \end{equation}
-therefore obtaining circularly polarized light (1,$i$). We checked SHADOW4 by ray-tracing two internal reflections and incident beam of divergence 40$^\circ$ and incident angle (to the normal) $\theta$=60$^\circ$. We evaluate the degree of circular polarization as the ration of the Stokes parameters $S3$ (difference in intensities of right-handed and left-handed circularly polarized components) to S0 (Total intensity of the light). Ray tracing results are in Fig.~\ref{fig:rtrhomb}
+which, in the standard basis (section~\ref{sec:definitions}), is $(1,i)^T/\sqrt{2}$: left-handed circular polarization, with $P_3=S_3/S_0=+1$.
+We checked this with SHADOW4 by ray tracing two internal reflections, with the second surface rotated by $\alpha=180^\circ$ so that the beam exits parallel to the incident one, as in the rhomb. The incidence angle is scanned from $0.1^\circ$ to $89.9^\circ$ (in steps of $0.1^\circ$), tracing for each angle a pencil beam (a single ray) at $\lambda=446$~nm, linearly polarized at $45^\circ$ ($P=0.5$, $\Phi=0$). We evaluate the degree of circular polarization as the ratio $P_3=S_3/S_0$, where $S_3$ is the difference between the intensities of the left-handed and right-handed circularly polarized components and $S_0$ the total intensity. The ray tracing results are shown in Fig.~\ref{fig:rtrhomb}: after the two reflections, $P_3=+1$ (left-handed) at the two solutions above. The same results are obtained in a single run with a point source emitting a fan of rays (uniform vertical divergence of $\pm0.8$~rad around an incidence angle of $45^\circ$), as used for Fig.~\ref{fig:internal}. As for the polarizer in section~\ref{sec:visible_polarizers}, this system is physically equivalent to a beam with horizontal linear polarization ($P=1$, $\Phi=0$) and the rhomb rotated by $\alpha=-45^\circ$ around the beam: the Stokes parameters of the two systems coincide to machine precision (Fig.~\ref{fig:rtrhomb}). With $\alpha=+45^\circ$ the signs of $P_2$ and $P_3$ are reversed, and the light becomes right-handed. Note that this equivalence cannot be verified with the fan beam, because a vertical fan is not contained in the plane of incidence of the rotated rhomb.
 
 \begin{figure}\label{fig:rtrhomb}
 \centering
 \includegraphics[width=0.95\linewidth]{figures/rtrhomb.png}
-\caption{Degree of circular polarization (S3 of Stokes) for incident linear polarizaed light after two internal reflections at different incident angles. We observe that this Fresnel rhomb is usable for a wide interval of incidence angle (47-60$^\circ$).}
+\caption{Degree of circular polarization $P_3=S_3/S_0$ after two internal reflections glass--air ($n_1=1.51$, $n_2=1$), as a function of the incident angle. Scans of the incidence angle with pencil beams. Line: incident light linearly polarized at $45^\circ$ and rhomb at $\alpha=0$; circles: horizontal linear polarization and rhomb at $\alpha=-45^\circ$. The Fresnel rhomb is usable over a wide interval of incidence angles: $P_3>0.99$ from $45.9^\circ$ to $59.8^\circ$. The dotted vertical line marks the critical angle.}
 \end{figure}
 
-\todo{discuss transmisison phase shifters} 
+The previous calculations neglect the absorption of the glass. It can be included in the refraction index of the glass, $n_1=1.51+ik$. The relative index of the glass--air interface used by SHADOW4 is then $n_2/n_1=1/(1.51+ik)\simeq1/1.51-ik/1.51^2$, i.e., the equivalent $\beta=-k/n_1^2$ is negative, because the absorbing medium is the incident one. In this case, the root of $n_2\cos\theta_2$ must be chosen with care (section~\ref{sec:mirrorandcrystals}): the outgoing wave for partial reflection and the decaying (evanescent) wave for total reflection. The principal square root, used in previous versions of SHADOW4, gives a growing evanescent wave for total reflection when $\beta<0$, which reverses the phases of $r_\sigma$ and $r_\pi$, and therefore the handedness of the light produced by the rhomb. For the N-BK7 glass at 446~nm, $k=1.08\times10^{-8}$ \cite{RefractiveIndexDatabase2024} and $\beta=-4.7\times10^{-9}$, and the Stokes parameters after the rhomb change by less than $3\times10^{-6}$ at all incidence angles. Even with an absorption $10^5$ times larger ($k=10^{-3}$), $P_3$ changes by less than $2\times10^{-5}$ in the working interval of the rhomb (incidence angles larger than $45^\circ$), and the interval with $P_3>0.99$ is unchanged; the largest changes are found close to the critical angle. Note that, for an absorbing incident medium, the Fresnel equations give a reflectance slightly larger than one in total reflection (for $k=10^{-3}$, the intensity after the two reflections exceeds the incident one by up to 1.8\% for incidence angles larger than $45^\circ$), which is a known consequence of the definition of the reflectance when the incident wave is attenuated, and not a gain. In a real rhomb, the absorption is mainly due to the path of the beam inside the glass (about 0.6\% for 2~cm of N-BK7 at 446~nm), which is the same for the $\sigma$ and $\pi$ components and does not change the polarization; it is not included in the reflection by the SHADOW4 mirror. These calculations are included in the script {\tt shadow4\_fresnel\_rhomb.py}.
+
+Phase shifters in the X-ray range, which use the transmitted beam of perfect crystals, are discussed in section~\ref{sec:phasesifters}.
+
 
 
 Last, we mention that for making more friendly the use of SHADOW4 for calculations with wavelenghts and material with $n>1$ we implemented tools to retrieve data from the refractive index database \cite{RefractiveIndexDatabase2024} and create SHADOW4 preprocessor files. 
