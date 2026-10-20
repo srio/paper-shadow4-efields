@@ -15,6 +15,7 @@
 % \usepackage{afterpage}
 % \usepackage{sansmath}
 \usepackage{mathtools}
+\usepackage{array}
 % \usepackage{parskip}
 % \usepackage{tikz}
 % \usepackage{tikzorbital}
@@ -98,20 +99,22 @@
 
 \begin{document}  % DO NOT DELETE THIS LINE
 
-\title{Ray tracing analyses of polarization. Applications to X-ray and visible light polarizers and phase-shifters}
+\title{Ray tracing of polarized light in SHADOW4: application to polarizers and phase shifters for X-rays and visible light}
 
 \cauthor[1]{{Manuel}}{{Sanchez del Rio}}{srio@esrf.eu}{address if different from \aff}
 \author[1]{{Carsten}}{{Detlefs}}
 \author[1]{{Daniel}}{{Fiole}}
 \author[2]{{Sonia}}{{Francoual}}
-\author[1,3]{{Juan}}{{Reyes-Herrera}}
-\author[4]{{Xiaojiang}}{{Yu}}
+\author[3]{{Luca}}{{Rebuffi}}
+\author[4]{{Juan}}{{Reyes-Herrera}}
+\author[5]{{Xiaojiang}}{{Yu}}
 
 
 \aff[1]{ESRF - The European Synchrotron, 71 Avenue des Martyrs, 38000 Grenoble, \country{France}}
-\aff[2]{DESY, Hamburg \country{Germany}}
-\aff[3]{Sincrotrone Trieste \country{Italy}}
-\aff[4]{Singapore Synchrotron Light Source, National University of Singapore, 5 Research Link, Singapore 117603 \country{Singapore}}
+\aff[2]{Deutsches Elektronen-Synchrotron DESY, Notkestra{\ss}e 85, 22607 Hamburg, \country{Germany}}
+\aff[3]{Argonne National Laboratory, 9700 S. Cass Avenue, Lemont, IL 60439, \country{USA}}
+\aff[4]{Elettra -- Sincrotrone Trieste, S.S. 14 km 163.5 in AREA Science Park, 34149 Basovizza, Trieste, \country{Italy}}
+\aff[5]{Singapore Synchrotron Light Source, National University of Singapore, 5 Research Link, Singapore 117603 \country{Singapore}}
 
 \maketitle   % DO NOT DELETE THIS LINE
 
@@ -119,14 +122,14 @@
 % -----------------------------------------------------------------
 
 \begin{synopsis}
-We explain how SHADOW manipulates the electric vectors. We present some examples of simulations on X-ray polarizers and phase shifters. 
+SHADOW4 tracks the complex $\sigma$ and $\pi$ amplitudes of the electric field of each ray and transforms them with Jones matrices. Examples cover polarizers and phase shifters for X-rays (perfect crystals, a new crystal phase plate) and for visible light (Brewster mirrors, Fresnel rhomb).
 \end{synopsis}
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
 \begin{abstract}
-We explain here the models implemented in the SHADOW4 ray tracing code to modify and transport the electric fields and related parameters (intensity, polarization). We show some examples of X-ray polarizers and phase shifters.
+SHADOW4 stores in each ray the complex $\sigma$ and $\pi$ amplitudes of the electric field, and transforms them at every optical element with Jones matrices. We describe this formulation, from the polarization at the source to the change of reference frame between optical elements of any orientation. A new optical element computes the beam transmitted by a perfect crystal plate, making possible the simulation of X-ray phase plates. We illustrate the method with polarizers and phase shifters, using perfect crystals for X-rays and reflecting surfaces for visible light, and validate it against analytical and independent calculations.
 \end{abstract}
 
 
@@ -136,13 +139,19 @@ We explain here the models implemented in the SHADOW4 ray tracing code to modify
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
-Many Monte Carlo codes store a parameter ``intensity'' or weight for each ray, which allows to track the energy or intensity of each traced event. As most electromagnetic interactions are better described by the change of the electric field, it is more appropriate to store directly the electric field rather than the intensity, which is the squared modulus of the field. The electric field permits to compute not only the intensity of each ray, but also its polarization, the phase changes, and the coherence properties. To extract usable and accurate information on these parameters, the electric field must be correctly simulated and propagated.
+Ray tracing, combined with the Monte Carlo sampling of the source, has become an essential tool for designing, optimizing, and analyzing optical systems such as synchrotron radiation beamlines.
+Many Monte Carlo codes store in each particle or ray an intensity or weight parameter, which is updated at every event.
+Most electromagnetic interactions are described by the change of the electric field, therefore it is more appropriate to track the electric field rather than the intensity, which is the squared modulus of the field amplitudes.
+The electric field permits to compute not only the intensity of each ray, but also its polarization and the phase changes. To extract usable and accurate information on these parameters, the electric field must be correctly simulated and propagated.
+Here we look at the optical devices that change the polarization state of the beam, and we describe the models used to simulate them in the SHADOW4 \cite{ShadowSRN2023, SHADOW4} ray tracing package.
+Other ray tracing codes for synchrotron beamlines also transport the polarization, e.g. RAY \cite{Schafers2008}, which uses Stokes vectors, and xrt \cite{Klementiev2014}, which uses complex field amplitudes.
 
-Ray tracing simulations are essential tools for designing, optimizing, and analyzing optical systems. Here, we look at the optical devices that change the polarization state of the beam. To simulate them, each ray carries information on the electric field and phases, which are transported along the beamline and modified by the optical elements. We describe the models used to do that.
+SHADOW, already in its first version SHADOW1 \cite{Cerrina1984}, incorporated a full description of the electric field and phases: the two components of the electric field ($\sigma$, perpendicular to the scattering or diffraction plane, and $\pi$, parallel to it) are defined for each ray. This provided the infrastructure for a polarization-dependent treatment of the reflections in the optical elements (e.g. mirrors and perfect crystals). SHADOW2 \cite{Lai1988} included a model for plane crystals in Bragg (reflection) geometry, later upgraded to asymmetric crystals \cite{SanchezdelRio1992} and crystals in Laue (transmission) geometry \cite{SanchezdelRio1994}. In SHADOW3 \cite{codeSHADOW} and its ShadowOui interface \cite{codeSHADOWOUI}, the definition of the crystal parameters was made more user friendly, and external diffraction profiles can be used. SHADOW is therefore used to simulate a great variety of crystal optics: flat and curved crystals in Bragg and Laue geometries (monochromators, polychromators, analyzers), crystal polarizers at Bragg angles close to $45^\circ$, and many crystal structures, including those of interest for tender X-rays \cite{Yu_2022}.
 
-SHADOW, already in its first version SHADOW1 \cite{Cerrina1984}, incorporated a full description of the electric field and phases: the two components of the electric field ($\sigma$, perpendicular to the scattering or diffraction plane, and $\pi$, parallel to it) are defined for each ray. This allowed a correct, ``polarized'', treatment of the reflections in mirrors. SHADOW2 \cite{Lai1988} included a model for plane crystals in Bragg (reflection) geometry, later upgraded to asymmetric crystals \cite{SanchezdelRio1992} and crystals in Laue (transmission) geometry \cite{SanchezdelRio1994}. In SHADOW3 \cite{codeSHADOW} and its ShadowOui interface \cite{codeSHADOWOUI}, the definition of the crystal parameters was made more user friendly, and external diffraction profiles can be used. SHADOW is therefore used to simulate a great variety of crystal optics: flat and curved crystals in Bragg and Laue geometries (monochromators, polychromators, analyzers), crystal polarizers at Bragg angles close to $45^\circ$, and many crystal structures, including those of interest for tender X-rays \cite{Yu_2022}. The reflectivity of curved crystals is calculated for the undistorted crystal, and some effects predicted by the dynamical theory (e.g., the focusing in the Borrmann triangle) are not included. Moreover, SHADOW3 only uses the diffracted beam of the crystals, while the dynamical theory predicts both a diffracted and a transmitted beam. This prevents the simulation of crystal phase shifters, which use the transmitted beam of a crystal plate set close to the Bragg angle.
+The reflectivity of curved crystals is calculated in SHADOW3 (and still in SHADOW4) for the undistorted crystal, and some effects predicted by the dynamical theory (e.g., the focusing in the Borrmann triangle) are not included. Moreover, SHADOW3 only uses the diffracted beam of the crystals, while the dynamical theory predicts both a diffracted and a transmitted beam. This prevents the simulation of crystal phase shifters, which use the transmitted beam of a crystal plate set close to the Bragg angle.
 
-With SHADOW4 \cite{ShadowSRN2023}, a complete refactoring of this popular ray tracing code, we have revisited, reimplemented and improved the methods used to transport the electric fields and to modify them by the optical elements. This paper describes these methods, with special emphasis on crystal optics and on X-ray polarizers and phase shifters.
+With SHADOW4, a complete refactoring of this code, we have revisited and reimplemented the transport of the electric field. Each optical element is described by a Jones matrix applied in its own $\sigma$--$\pi$ frame, with an explicit change of frame between elements of any orientation. A new optical element computes the transmitted beam of a perfect crystal, which allows the simulation of X-ray phase plates. The formalism is not limited to crystals: polarization in mirrors and in the visible range (e.g. Brewster polarizers, Fresnel rhomb) is treated in the same way.
+
 Section~\ref{sec:definitions} describes how the electric field is stored in the SHADOW rays, the conventions used, and how the Stokes parameters and the polarization ellipse are obtained. Section~\ref{sec:source} describes the polarization at the source. Section~\ref{sec:interaction} explains the changes of reference frame and the interaction with the optical elements using the Jones calculus. The following sections show examples of polarizers (section~\ref{sec:polarizers_all}) and phase shifters (section~\ref{sec:phaseshifters_all}), in the visible and X-ray ranges, including the new crystal phase plate of SHADOW4. The reflectivities of mirrors and crystals are summarized in Appendix~\ref{sec:mirrorandcrystals}, the method used in SHADOW3 in Appendix~\ref{sec:S3}, and the scripts used for the examples are listed in Appendix~\ref{sec:scripts}.
 
 
@@ -155,19 +164,27 @@ Section~\ref{sec:definitions} describes how the electric field is stored in the 
 
 A single ray $\vec{R}$ in SHADOW is an array of 18 parameters (called ``columns'' in SHADOW's jargon) stored in the following order:
 \begin{equation}
-   \vec{R}=( \vec{x},\vec{v},\vec{E}_\sigma,f,k,n,opd,\phi_\sigma,\phi_\pi,\vec{E}_\pi)^T,
+   \vec{R}=( \vec{r},\vec{v},\vec{E}_\sigma,f,k,n,opd,\phi_\sigma,\phi_\pi,\vec{E}_\pi)^T,
 \end{equation}
-where $T$ is the transpose operator (we use ``column" vectors), $\vec{x}=(x_1,x_2,x_3)^T$ are the spatial coordinates, $\vec{v}=(v_1,v_2,v_3)^T$ are the director cosines (ray direction) with $|\vec{v}|=1$, $f$ is a flag (good or lost ray), $k$ is the wavevector modulus in $cm^{-1}$ ($k=2\pi / \lambda$, with $\lambda$ the photon wavelength ), $n$ is a counter (from one to the total number of rays), and $opd$ is the optical path (the travelled distance times the refraction index).
+where $T$ is the transpose operator (we use ``column'' vectors), $\vec{r}=(x,y,z)^T$ are the spatial coordinates, $\vec{v}=(v_x,v_y,v_z)^T$ are the direction cosines (ray direction) with $|\vec{v}|=1$, $f$ is a flag (good or lost ray), $k$ is the wavevector modulus in $\mathrm{cm}^{-1}$ ($k=2\pi / \lambda$, with $\lambda$ the photon wavelength), $n$ is a counter (from one to the total number of rays), and $opd$ is the optical path (the travelled distance times the refractive index). The axes of the reference frame are $\hat{x}$, $\hat{y}$ and $\hat{z}$. The beam propagates along the $\hat{y}$ axis; $\hat{z}$ is usually vertical and $\hat{x}$ horizontal, completing a right-handed frame (Fig.~\ref{fig:S4_reference_frame}). Each beamline element has its own reference frame (section~\ref{sec:change_frame}).
+
+\begin{figure}
+    \centering
+\includegraphics[width=0.9\linewidth]{figures/S4_reference_frame.png}
+\caption{SHADOW4 reference frames: source, beamline element, and image coordinates. The rays are expressed in the frame of the source plane or of the image plane (continuation planes), with axes $X$, $Y$, $Z$ corresponding to $\hat{x}$, $\hat{y}$, $\hat{z}$ in the text: the beam propagates along $Y$. The frame of the beamline element ($Z_m$ is the normal to the surface) is described in section~\ref{sec:change_frame}. \todo{regenerate the figure with appropriated symbols}}
+\label{fig:S4_reference_frame}
+\end{figure}
+
 The complex electric vector is expressed as a function of the $\sigma$ and $\pi$ components (perpendicular and parallel to the diffraction or reflection plane, respectively):
 
 \begin{equation}\label{eq:electricfieldray}
    \vec{E}= \vec{E}_\sigma e^{i \phi_\sigma} + \vec{E}_\pi e^{i \phi_\pi},
 \end{equation}
-where it is implicitly assumed that only the real part of $\vec{E}$ has a physical meaning. This equation can be expressed\footnote{
-this is calculated as  
+where the physical field is the real part of $\vec{E}e^{-i\omega t}$ (section~\ref{sec:polarization_stokes}). This equation can be expressed using the direction versors $\hat{u}_\sigma$ and $\hat{u}_\pi$\footnote{
+They are calculated as
 $\hat{u}_\sigma = \vec{E}_\sigma/|\vec{E}_\sigma|$ and $\hat{u}_\pi = (\hat{u}_\sigma \times \vec{v})/|\hat{u}_\sigma \times \vec{v}|$.
-In case that $|\vec{E}_\sigma|=0$ the calculation is $\hat{u}_\pi = \vec{E}_\pi/|\vec{E}_\pi|$ and $\hat{u}_\sigma = (\vec{v} \times \hat{u}_\pi)/|\vec{v} \times \hat{u}_\pi|$. If $|\vec{E}|=0$ then we chose arbitrarily $\hat{u}_\sigma=\vec{v}\times\hat{z}$ (i.e., $\hat{u}_\sigma=(1,0,0)^T$ for a ray along $y$). This is computed in {\tt S4Beam.get\_efield\_directions}.
-} using the direction versors $\hat{u}_\sigma$ and $\hat{u}_\pi$
+In case that $|\vec{E}_\sigma|=0$ the calculation is $\hat{u}_\pi = \vec{E}_\pi/|\vec{E}_\pi|$ and $\hat{u}_\sigma = (\vec{v} \times \hat{u}_\pi)/|\vec{v} \times \hat{u}_\pi|$. If $|\vec{E}|=0$ then we choose arbitrarily $\hat{u}_\sigma=\vec{v}\times\hat{z}$ (i.e., $\hat{u}_\sigma=\hat{x}$ for a ray along $\hat{y}$). This is computed in {\tt S4Beam.get\_efield\_directions}.
+}
 \begin{equation}\label{eq:electricfieldray2}
    \vec{E}=
     \mathcal{E}_\sigma \hat{u}_\sigma + 
@@ -177,10 +194,8 @@ In case that $|\vec{E}_\sigma|=0$ the calculation is $\hat{u}_\pi = \vec{E}_\pi/
 \end{equation}
 with $\mathcal{E}_{\sigma,\pi}$ the complex amplitudes of the electric field and $E_{\sigma,\pi}=|\vec{E}_{\sigma,\pi}|$ the modulus of the complex amplitudes (real).
 
-Note that the names $\sigma$ and $\pi$ are a convention (a definition) when applied to a ray: a ray travelling alone, at the source or between beamline elements, has no real diffraction or reflection plane. They only label two orthogonal directions perpendicular to $\vec{v}$. SHADOW chooses them as if the ray were going to be deflected in an ``imaginary'' diffraction plane, the vertical plane $(y,z)$, which is the deflection plane of a beamline element with orientation angle $\alpha=0$ (see section~\ref{sec:change_frame}). By default $\hat{u}_\sigma$ is along $x$ (typically horizontal), perpendicular to the $(y,z)$ plane; and $\hat{u}_\pi$ lies in the $(y,z)$ plane. This holds exactly for a ray along $y$, and approximately for divergent rays (see section~\ref{sec:source}). This flexibility in the directions of $\vec{E}_\sigma$ and $\vec{E}_\pi$ makes it possible to control the ray polarization in SHADOW precisely, and to propagate it along the optical components.
+Note that the names $\sigma$ and $\pi$ are a convention (a definition) when applied to a ray: a ray travelling alone, at the source or between beamline elements, has no real diffraction or reflection plane. They only label two orthogonal directions perpendicular to $\vec{v}$. SHADOW chooses them as if the ray were going to be deflected in an ``imaginary'' diffraction plane, the vertical plane $(y,z)$, which is the deflection plane of a beamline element with orientation angle $\alpha=0$ (see section~\ref{sec:change_frame}). By default $\hat{u}_\sigma$ is along $\hat{x}$ (typically horizontal), perpendicular to the $(y,z)$ plane; and $\hat{u}_\pi$ lies in the $(y,z)$ plane. This holds exactly for a ray along $\hat{y}$, and approximately for divergent rays (see section~\ref{sec:source}). This flexibility in the directions of $\vec{E}_\sigma$ and $\vec{E}_\pi$ makes it possible to control the ray polarization in SHADOW precisely, and to propagate it along the optical components.
 When the ray interacts with a beamline element, the real scattering plane, spanned by the incident and scattered directions, generally differs from this imaginary plane (for example, for a beamline element with $\alpha\neq 0$, or for divergent rays), and the electric field must be re-expressed in the $\sigma$ and $\pi$ directions of the real scattering plane, as described in section~\ref{sec:S4}.
-
-
 % and of the electric fields for the $\sigma$ and  $\hat{u}_\pi$ can be calculated\footnote{this is done in {\tt S4Beam.get\_efield\_directions}.
 % In case that $|\vec{E}_\sigma|=0$ the calculation is $\hat{u}_\pi = \vec{E}_\pi/|\vec{E}_\pi|$ and $\hat{u}_\sigma = (\vec{v} \times \hat{u}_\pi)/|\vec{v} \times \hat{u}_\pi|$. If $|\vec{E}|=0$ then we chose arbitrarly $\hat{u}_\sigma=(1,0,0)^T$.
 % } as:
@@ -190,18 +205,17 @@ When the ray interacts with a beamline element, the real scattering plane, spann
 % \end{eqnarray}
 % and equation~(\ref{eq:electricfieldray}) becomes 
 
-
-The intensity carried by a single ray is:
-\begin{eqnarray}
-   I=|\vec{E}|^2 = \vec{E}.\vec{E}^* =
+The intensity carried by a single ray is (since $\vec{E}_\sigma \perp \vec{E}_\pi$):
+\begin{equation}
+   I=|\vec{E}|^2 = \vec{E}\cdot\vec{E}^* =
    % (\vec{E}_\sigma e^{i \phi_\sigma} + \vec{E}_\pi e^{i\phi_\pi} ).
    % (\vec{E}_\sigma e^{-i\phi_\sigma} + \vec{E}_\pi e^{-i\phi_\pi} ) =  \nonumber \\
    % |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2 + 2 \vec{E}_\sigma.\vec{E}_\pi \cos(\phi_\sigma-\phi_\pi) =
    |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2.
-\end{eqnarray}
+\end{equation}
+SHADOW also provides derived parameters, computed from the stored columns 1--18, as additional columns. The total intensity of each ray is column 23, computed from columns 7--9 ($\vec{E}_\sigma$) and 16--18 ($\vec{E}_\pi$).
 
-At the source level SHADOW normalizes the total intensity of each ray to one.
-The storage in SHADOW is redundant, which implies that some relationships among the parameters must hold. For example, being the direction a unitary vector, $v_3\text{=}\sqrt{1-v_1^2-v_2^2}$. Concerning the electric fields,
+The storage in SHADOW is redundant, which implies that some relationships among the parameters must hold. For example, since the direction is a unit vector, $v_y\text{=}\sqrt{1-v_x^2-v_z^2}$ (for rays travelling forward along $\hat{y}$). Concerning the electric fields,
 \begin{itemize}
  \item $\vec{E}_\sigma \perp \vec{E}_\pi$, $\vec{E}_\sigma \perp \vec{v}$, $\vec{E}_\pi \perp \vec{v}$
  \item $\vec{E}_\sigma$ and $\vec{E}_\pi$ are real
@@ -222,18 +236,18 @@ Equation~(\ref{eq:upi}) means that the ordered triad $(\hat{u}_\sigma, \vec{v}, 
   = (\hat{u}_\sigma\cdot\vec{v})\,\hat{u}_\sigma - (\hat{u}_\sigma\cdot\hat{u}_\sigma)\,\vec{v}
   = -\vec{v}.
 \end{equation}
-The origin of this choice is the SHADOW reference frame, in which the beam propagates along $y$ in a right-handed $(x,y,z)$ system, with $x$ horizontal and $z$ vertical (Fig.~\ref{fig:S4_reference_frame}). For a ray along $\vec{v}=\hat{y}$ with a horizontal $\hat{u}_\sigma=\hat{x}$, equation~(\ref{eq:upi}) gives $\hat{u}_\pi=\hat{x}\times\hat{y}=\hat{z}$ (vertical, pointing up). Then $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})=(\hat{x},\hat{z},\hat{y})$, an odd permutation of the right-handed $(\hat{x},\hat{y},\hat{z})$. In other words, SHADOW keeps the intuitive assignment ``$\sigma$ horizontal, $\pi$ up'', but because the beam travels along $y$ instead of $z$, this assignment is left-handed. (In the frame commonly used in optics, with the beam along $z$, the same assignment $\hat{u}_\sigma=\hat{x}$, $\hat{u}_\pi=\hat{y}$ is right-handed.)
+The origin of this choice is the SHADOW reference frame (section~\ref{sec:definitions}, Fig.~\ref{fig:S4_reference_frame}), in which the beam propagates along $\hat{y}$. For a ray along $\vec{v}=\hat{y}$ with a horizontal $\hat{u}_\sigma=\hat{x}$, equation~(\ref{eq:upi}) gives $\hat{u}_\pi=\hat{x}\times\hat{y}=\hat{z}$ (vertical, pointing up). Then $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})=(\hat{x},\hat{z},\hat{y})$, an odd permutation of the right-handed $(\hat{x},\hat{y},\hat{z})$. In other words, SHADOW keeps the intuitive assignment ``$\sigma$ horizontal, $\pi$ up'', but because the beam travels along $\hat{y}$ instead of $\hat{z}$, this assignment is left-handed. (In the standard frame of section~\ref{sec:polarization_stokes}, with the beam along $\check{k}$, the assignment $\hat{u}_\sigma=\check{x}$, $\hat{u}_\pi=\check{y}$ would be right-handed.)
 Seen by an observer placed downstream and looking toward the source, $\hat{u}_\sigma$ points to the left and $\hat{u}_\pi$ points up, so the rotation from $\hat{u}_\sigma$ toward $\hat{u}_\pi$ is clockwise; for an observer looking along the beam (from the source side) the same rotation is counter-clockwise.
 
 \subsection{Stokes parameters and polarization ellipse}\label{sec:polarization_stokes}
-\paragraph{Standard definition of Stokes parameters.}
+\paragraph{Standard definition of Stokes parameters and polarization ellipse.}
 
-The standard description of a fully polarized plane wave uses a right-handed frame $(\hat{x},\hat{y},\hat{k})$, with $\hat{x}\times\hat{y}=\hat{k}$ and $\hat{k}$ the propagation direction, and the physical field
+The standard description of a fully polarized plane wave uses a right-handed frame $(\check{x},\check{y},\check{k})$, with $\check{x}\times\check{y}=\check{k}$ and $\check{k}$ the propagation direction (we use inverted hats to distinguish these axes from the SHADOW axes $\hat{x},\hat{y},\hat{z}$), and the physical field
 \begin{equation}\label{eq:physical_wave}
     \vec{\mathcal{E}}(t,\vec{r})
-    = \Re\left[\left(E_x\,\hat{x} + E_y\,\hat{y}\right) e^{-i(\omega t - k z)}\right],
+    = \Re\left[\left(E_x\,\check{x} + E_y\,\check{y}\right) e^{-i(\omega t - k s)}\right],
 \end{equation}
-where $z$ is the coordinate along $\hat{k}$, $E_{x,y}=|E_{x,y}|e^{i\phi_{x,y}}$ are complex amplitudes (we follow the conventions in \cite{Detlefs2012} fully developed in \cite{PolarizationDraft}).
+where $s=\check{k}\cdot\vec{r}$ is the coordinate along $\check{k}$, $E_{x,y}=|E_{x,y}|e^{i\phi_{x,y}}$ are complex amplitudes (we follow the conventions in \cite{Detlefs2012} fully developed in \cite{PolarizationDraft}).
 The Jones vector \cite{Jones1941a} is $\mathbf{E}=(E_x, E_y)^T$, and the Stokes parameters \cite{born_wolf} are
 \begin{eqnarray}\label{eq:stokes_def}
     S_0 &=& |E_x|^2 + |E_y|^2, \nonumber \\
@@ -241,45 +255,45 @@ The Jones vector \cite{Jones1941a} is $\mathbf{E}=(E_x, E_y)^T$, and the Stokes 
 	S_2 &=& 2\,\Re(E_x E_y^*) = 2 |E_x||E_y| \cos(\phi_x-\phi_y), \nonumber \\
 	S_3 &=& 2\,\Im(E_x^* E_y)=2 |E_x||E_y| \sin(\phi_y - \phi_x).
 \end{eqnarray}
-$S_0$ is the intensity, $S_1$ measures the horizontal ($S_1=S_0$) or vertical ($S_1=-S_0$) linear polarization, $S_2$ the linear polarization at $+45^\circ$ ($S_2=S_0$) or $-45^\circ$ ($S_2=-S_0$), and $S_3$ the circular polarization. The sign of $S_3$ depends on a chain of conventions: the time factor $e^{-i\omega t}$, the definition of $S_3$ in equation~(\ref{eq:stokes_def}), and the naming of the handedness by an observer placed downstream and looking toward the source. With these conventions, a Jones vector $(E_x,E_y)^T=(1,i)^T/\sqrt{2}$ has $S_3=+1$, and its field rotates counter-clockwise for this observer: it is left circular polarization (LCP) (see \cite{PolarizationDraft}). Conversely, $\mathbf{E}=(1,-i)^T/\sqrt{2}$ has $S_3=-1$ and is right circular polarization (RCP).
+$S_0$ is the intensity, $S_1$ measures the linear polarization along $\check{x}$ ($S_1=S_0$) or $\check{y}$ ($S_1=-S_0$), $S_2$ the linear polarization at $+45^\circ$ ($S_2=S_0$) or $-45^\circ$ ($S_2=-S_0$) (angles measured from $\check{x}$, counter-clockwise for an observer looking toward the source), and $S_3$ the circular polarization. The sign of $S_3$ depends on a chain of conventions: the time factor $e^{-i\omega t}$, the definition of $S_3$ in equation~(\ref{eq:stokes_def}), and the naming of the handedness by an observer placed downstream and looking toward the source. A Jones vector $(E_x,E_y)^T=(1,i)^T/\sqrt{2}$ has $S_3=+1$, and its field rotates counter-clockwise for this observer: it is left circular polarization (LCP). 
+Conversely, $\mathbf{E}=(1,-i)^T/\sqrt{2}$ has $S_3=-1$ and is right circular polarization (RCP).
 The degrees of polarization (total, linear and circular) are
 \begin{equation}\label{eq:dop}
     \mathrm{DOP} = \frac{\sqrt{S_1^2+S_2^2+S_3^2}}{S_0}, \quad
     \mathrm{DOLP} = \frac{\sqrt{S_1^2+S_2^2}}{S_0}, \quad
-    \mathrm{DOCP} = \frac{S_3}{S_0}.
+    \mathrm{DOCP} = \frac{S_3}{S_0},
 \end{equation}
+where DOCP is signed (positive for left-handed and negative for right-handed polarization).
 
-\paragraph{SHADOW definition of Stokes parameters.}
-The SHADOW variables can be used with a standard formalism defined in a right-handed frame (with $\hat{x}\times\hat{y}=\hat{k}$, $\hat{k}$ the propagation direction), as defined before, by taking the right-handed basis $(\hat{u}_\sigma, -\hat{u}_\pi, \vec{v})$, i.e., replacing the Jones vector $(\mathcal{E}_\sigma,\mathcal{E}_\pi)^T$ by $(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$ (equivalently, adding $\pi$ to $\phi_\pi$). This is how SHADOW4 computes the Stokes parameters. 
-Also, a positive rotation angle measured from $\hat{u}_\sigma$ toward $\hat{u}_\pi$ corresponds to a negative angle in the right-handed frame.
+The polarization state can be visualized with the polarization ellipse \cite{Detlefs2012}: the curve described during one period by the tip of the real electric field in the plane perpendicular to the propagation direction. From equation~(\ref{eq:physical_wave}), the components of the real field are
+\begin{equation}\label{eq:ellipse_field}
+    \mathcal{E}_{j}(\tau)=\Re\left[E_j e^{-i\tau}\right]=|E_j|\cos(\tau-\phi_j), \qquad j=x,y,
+\end{equation}
+with $\tau=\omega t - k s$. The ellipse is drawn in the $(\check{x},\check{y})$ plane, as seen by an observer looking toward the source. The angle $\psi$ between its major axis and $\check{x}$, and its ellipticity angle $\chi$ ($\tan|\chi|=b/a$, with $a$ and $b$ the semi-axes), are given by the Stokes parameters \cite{Detlefs2012}
+\begin{equation}\label{eq:ellipse_angles}
+    2\psi=\arg(S_1+iS_2), \qquad \sin(2\chi)=\frac{S_3}{S_0},
+\end{equation}
+i.e., $\tan(2\psi)=S_2/S_1$, with the quadrant given by the signs of $S_1$ and $S_2$ (taking the argument in $[0,2\pi)$, so that $0\le\psi<\pi$), and $-\pi/4\le\chi\le\pi/4$. The semi-axes verify $a^2+b^2=S_0$, therefore $a=\sqrt{S_0}\cos\chi$ and $b=\sqrt{S_0}|\sin\chi|$. The field rotates counter-clockwise (left-handed polarization) for $\chi>0$ ($S_3>0$), and clockwise (right-handed) for $\chi<0$.
+For partially polarized light (DOP$<1$), the ellipse of the polarized part is obtained in the same way using the polarized intensity $\sqrt{S_1^2+S_2^2+S_3^2}=\mathrm{DOP}\,S_0$ instead of $S_0$ in equation~(\ref{eq:ellipse_angles}) and for the semi-axes. This ellipse is smaller than that of a fully polarized beam with the same intensity.
 
-SHADOW4 computes the Stokes parameters of each ray (columns 30 to 33, and the normalized parameters $P_k=S_k/S_0$, $k=1,2,3$, in columns 42 to 44; $P_{1,2,3}$ are the Poincar\'e--Stokes parameters of \cite{Detlefs2012}, not to be confused with the polarization degree $P$ of the geometrical source in section~\ref{sec:polarization_shadow}) from the $\sigma$ and $\pi$ components of the electric field as:
+\paragraph{Stokes parameters and polarization ellipse in SHADOW4.}
+The SHADOW variables can be used with the standard formalism defined above by taking $(\check{x},\check{y},\check{k})=(\hat{u}_\sigma, -\hat{u}_\pi, \vec{v})$, i.e., replacing the Jones vector $(\mathcal{E}_\sigma,\mathcal{E}_\pi)^T$ by the standard Jones vector $(E_x,E_y)^T=(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$ (equivalently, adding $\pi$ to $\phi_\pi$). Therefore, $S_1=S_0$ corresponds to linear polarization along $\hat{u}_\sigma$ and $S_1=-S_0$ along $\hat{u}_\pi$, and a positive rotation angle measured from $\hat{u}_\sigma$ toward $\hat{u}_\pi$ corresponds to a negative angle in the standard frame.
+With this basis, SHADOW4 computes the Stokes parameters from equation~(\ref{eq:stokes_def}) using the $\sigma$ and $\pi$ components of the electric field for each ray, therefore:
 \begin{eqnarray}\label{eq:stokes_columns}
     S_0 &=& |\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2 \quad \text{(column 30)}, \nonumber \\
     S_1 &=& |\vec{E}_\sigma|^2 - |\vec{E}_\pi|^2 \quad \text{(column 31)}, \nonumber \\
     S_2 &=& -2|\vec{E}_\sigma||\vec{E}_\pi|\cos(\phi_\sigma-\phi_\pi) \quad \text{(column 32)}, \nonumber \\
     S_3 &=& 2|\vec{E}_\sigma||\vec{E}_\pi|\sin(\phi_\sigma-\phi_\pi) \quad \text{(column 33)}.
 \end{eqnarray}
-These are the standard Stokes parameters, with the conventions (and the relation to the left-handed SHADOW frame) described in eq.~\ref{eq:stokes_def}. They apply to any ray, independently of the source that created it. These definitions are consistent with the Jones and Mueller--Stokes treatment of polarization optics in \cite{PolarizationDraft}.
-Note that $S_0$, $S_1$ and $S_3$ are the same as in SHADOW3, but $S_2$ (column 32) has the opposite sign: SHADOW3 computed the Stokes parameters directly in the left-handed basis $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})$, which gives the correct sign of $S_3$ (because SHADOW3 used $\Im(\mathcal{E}_\sigma \mathcal{E}_\pi^*)$ instead of $\Im(\mathcal{E}_\sigma^* \mathcal{E}_\pi)$) but the opposite sign of $S_2$.
+They apply to any ray, independently of the source that created it. The normalized parameters $P_k=S_k/S_0$, $k=1,2,3$, are in columns 42 to 44; they are the Poincar\'e--Stokes parameters of \cite{Detlefs2012}, not to be confused with the polarization degree $P$ of the geometrical source (section~\ref{sec:polarization_shadow}).
+%Note that $S_0$, $S_1$ and $S_3$ are the same as in SHADOW3, but $S_2$ (column 32) has the opposite sign: SHADOW3 computed the Stokes parameters directly in the left-handed basis $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})$, which gives the correct sign of $S_3$ (because SHADOW3 used $\Im(\mathcal{E}_\sigma \mathcal{E}_\pi^*)$ instead of $\Im(\mathcal{E}_\sigma^* \mathcal{E}_\pi)$) but the opposite sign of $S_2$.
 
-\paragraph{Polarization ellipse.}
-The polarization state of a ray can be visualized with the polarization ellipse \cite{Detlefs2012}: the curve described during one period by the tip of the real electric field in the plane perpendicular to the ray direction. Using the right-handed basis $\hat{\epsilon}_1=\hat{u}_\sigma$, $\hat{\epsilon}_2=-\hat{u}_\pi$ (section~\ref{sec:definitions}), and the components $E_1=\mathcal{E}_\sigma$, $E_2=-\mathcal{E}_\pi$ of the standard Jones vector, the real field is
-\begin{equation}\label{eq:ellipse_field}
-    \mathcal{E}_{j}(\tau)=\Re\left[E_j e^{-i\tau}\right]=|E_j|\cos(\tau-\phi_j), \qquad j=1,2,
-\end{equation}
-with $\tau=\omega t - k s$, and $s$ the coordinate along the ray direction $\vec{v}$. The ellipse is drawn in the $(\hat{\epsilon}_1,\hat{\epsilon}_2)$ plane, as seen by an observer looking into the source. The angle $\psi$ between its major axis and $\hat{\epsilon}_1$, and its ellipticity angle $\chi$ ($\tan|\chi|=b/a$, with $a$ and $b$ the semi-axes), are given by the Stokes parameters \cite{Detlefs2012}
-\begin{equation}\label{eq:ellipse_angles}
-    2\psi=\arg(S_1+iS_2), \qquad \sin(2\chi)=\frac{S_3}{S_0},
-\end{equation}
-i.e., $\tan(2\psi)=S_2/S_1$, with the quadrant given by the signs of $S_1$ and $S_2$ (taking the argument in $[0,2\pi)$, so that $0\le\psi<\pi$), and $-\pi/4\le\chi\le\pi/4$. The semi-axes verify $a^2+b^2=S_0$, therefore $a=\sqrt{S_0}\cos\chi$ and $b=\sqrt{S_0}|\sin\chi|$. The field rotates counter-clockwise (left-handed polarization) for $\chi>0$ ($S_3>0$), and clockwise (right-handed) for $\chi<0$.
-
-In SHADOW4, the ellipse of each ray can be obtained either by tracing equation~(\ref{eq:ellipse_field}) with the standard Jones vector of the ray ({\tt S4Beam.get\_jones\_components} with {\tt use\_standard=1}), or from its Stokes parameters (columns 30 to 33) with equation~(\ref{eq:ellipse_angles}). Every ray is fully polarized, and therefore has its own ellipse. For a beam, the ellipse of the polarized part is obtained in the same way from the Stokes parameters summed over the (good) rays, using the polarized intensity $\sqrt{S_1^2+S_2^2+S_3^2}=\mathrm{DOP}\,S_0$ instead of $S_0$ for the semi-axes. When the rays have different polarizations, this ellipse is smaller than the ellipses of the rays (DOP$<1$), and it is not an average of them. As for the sum of the Stokes parameters, this assumes that the $\hat{u}_\sigma$ directions of the rays are approximately parallel.
-These calculations are done in the script {\tt shadow4\_polarization\_ellipse.py}, used for the examples in Figs.~\ref{fig:ellipse_geometrical} and \ref{fig:ellipse_bm}.
-
-\subsection{Summary of conventions}\label{sec:conventions}
+The ellipse of each ray can be obtained either by tracing equation~(\ref{eq:ellipse_field}) with the standard Jones vector of the ray, $E_x=\mathcal{E}_\sigma$, $E_y=-\mathcal{E}_\pi$ ({\tt S4Beam.get\_jones\_components} with {\tt use\_standard=1}), with $s$ the coordinate along the ray direction $\vec{v}$, or from its Stokes parameters (columns 30 to 33) with equation~(\ref{eq:ellipse_angles}). The ellipse is drawn in the $(\hat{u}_\sigma,-\hat{u}_\pi)$ plane. Every ray is fully polarized, and therefore has its own ellipse. For a beam, the ellipse of the polarized part is obtained from the Stokes parameters summed (or averaged) over the (good) rays. When the rays have different polarizations (DOP$<1$), this ellipse is not an average of the ellipses of the rays. As for the sum of the Stokes parameters, this assumes that the $\hat{u}_\sigma$ directions of the rays are approximately parallel.
+SHADOW4 calculates the parameters of the ellipse ($\psi$, $\chi$, $a$, $b$, the Stokes parameters and DOP) with the method {\tt S4Beam.get\_polarization\_ellipse}, from the Stokes parameters averaged over the rays (ellipse of the beam), or for each ray, and the curve of the ellipse for plotting with {\tt S4Beam.get\_polarization\_ellipse\_curve}. The results agree with the ellipses traced from the Jones vectors of the rays [equation~(\ref{eq:ellipse_field})], which is verified in the SHADOW4 test suite.
+These calculations are done in the script {\tt shadow4\_polarization\_ellipse.py}, used for the examples in Figs.~\ref{fig:ellipse_geometrical} and \ref{fig:ellipse_bm}. The values of Table~\ref{tab:source_polarization} are calculated with the script {\tt stokes\_geometrical\_source.py}.
 
 The conventions used in this paper and in SHADOW4 are summarized in Table~\ref{tab:conventions}.
+
 
 \begin{table}
 \caption{Conventions used in SHADOW4 and in this paper.}
@@ -288,11 +302,11 @@ The conventions used in this paper and in SHADOW4 are summarized in Table~\ref{t
 \hline
 Quantity & Convention \\
 \hline
-Reference frame & Right-handed $(x,y,z)$, beam along $y$, $x$ horizontal, $z$ vertical (up) \\
+Reference frame & Right-handed $(\hat{x},\hat{y},\hat{z})$, beam along $\hat{y}$, $\hat{x}$ horizontal, $\hat{z}$ vertical (up) \\
 Polarization versors of a ray & $\hat{u}_\pi=\hat{u}_\sigma\times\vec{v}$; the triad $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})$ is left-handed; by default $\hat{u}_\sigma\simeq\hat{x}$ and $\hat{u}_\pi\simeq\hat{z}$ \\
-Standard (right-handed) basis & $(\hat{u}_\sigma,-\hat{u}_\pi,\vec{v})$; standard Jones vector $(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$ \\
+Standard (right-handed) basis & $(\check{x},\check{y},\check{k})=(\hat{u}_\sigma,-\hat{u}_\pi,\vec{v})$; standard Jones vector $(E_x,E_y)^T=(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$ \\
 Time factor & $e^{-i\omega t}$ \\
-Stokes parameters & $S_2=2\,\Re(E_1E_2^*)$, $S_3=2\,\Im(E_1^*E_2)$ in the standard basis; $S_3>0$: left-handed (counter-clockwise for an observer looking toward the source); $P_k=S_k/S_0$ \\
+Stokes parameters & $S_2=2\,\Re(E_xE_y^*)$, $S_3=2\,\Im(E_x^*E_y)$ in the standard basis; $S_3>0$: left-handed (counter-clockwise for an observer looking toward the source); $P_k=S_k/S_0$ \\
 Geometrical source & Inputs $P$ and $\Phi$: $|\vec{E}_\sigma|\propto P$, $|\vec{E}_\pi|\propto 1-P$ [equation~(\ref{eq:EfromP})], $\phi_\pi=\phi_\sigma+\Phi$. Examples: $P=1$, horizontal linear; $P=0.5$ and $\Phi=0$, linear along $\hat{u}_\sigma+\hat{u}_\pi$ ($P_2=-1$); $P=0.5$ and $\Phi=90^\circ$, right circular ($P_3=-1$) \\
 Angles & Incidence and exit angles measured from the surface normal; grazing angle $\theta_g=\pi/2-\theta$ \\
 Orientation of an element & $\alpha$: rotation around the beam, from $\hat{u}_\sigma$ toward $\hat{u}_\pi$; positive $\alpha$ is clockwise for an observer looking toward the source \\
@@ -310,17 +324,17 @@ Amplitudes & $r_\sigma$, $r_\pi$ referred to the $\sigma$, $\pi$ versors of the 
 % -----------------------------------------------------------------
 
 When simulating a source, SHADOW first samples the ray energy, direction and positions and then sets the electric vectors.
-A first step is to obtain orthogonal unitary vectors $\hat{u}_\sigma$ and $\hat{u}_\pi$ that are normal to $\vec{v}$.
+A first step is to obtain orthogonal unit vectors $\hat{u}_\sigma$ and $\hat{u}_\pi$ that are normal to $\vec{v}$.
 At the source level, there is not yet knowledge of any optical surface to define $\sigma$ and $\pi$ directions, so these directions
-are considered ``mostly'' horizontal and vertical, respectively (see section~\ref{sec:definitions}). The unitary vectors are calculated\footnote{
+are considered ``mostly'' horizontal and vertical, respectively (see section~\ref{sec:definitions}). The unit vectors are calculated\footnote{
 This is done in the geometrical sources by using the {\tt vector\_default\_efields} function found in {\tt shadow4.tools.arrayofvectors}. The synchrotron sources (bending magnet, wiggler and undulator) use the same algorithm.
 } as:
 \begin{eqnarray}
-   \hat{u}_\sigma = \frac{\vec{v} \times (\hat{u}_x \times \vec{v})}{\left|\vec{v} \times (\hat{u}_x \times \vec{v})\right|} \nonumber \\
-   \hat{u}_\pi = \hat{u}_\sigma \times  \vec{v}
+   \hat{u}_\sigma &=& \frac{\vec{v} \times (\hat{x} \times \vec{v})}{\left|\vec{v} \times (\hat{x} \times \vec{v})\right|}, \nonumber \\
+   \hat{u}_\pi &=& \hat{u}_\sigma \times  \vec{v},
 \end{eqnarray}
-with $\times$ the cross product, and  $\hat{u}_x\text{=}(1,0,0)$ the unitary vector along the horizontal direction at the source plane ($x$ axis).
-Note that $\vec{v} \times (\hat{u}_x \times \vec{v}) = \hat{u}_x - (\hat{u}_x\cdot\vec{v})\,\vec{v}$ is the projection of $\hat{u}_x$ onto the plane perpendicular to $\vec{v}$, with modulus $\sqrt{1-v_1^2}$, therefore $\hat{u}_\sigma=\hat{u}_x$ only for rays with $v_1=0$. The second equation is the SHADOW convention of equation~(\ref{eq:upi}).
+with $\times$ the cross product, and $\hat{x}$ the unit vector along the horizontal direction at the source plane.
+Note that $\vec{v} \times (\hat{x} \times \vec{v}) = \hat{x} - (\hat{x}\cdot\vec{v})\,\vec{v}$ is the projection of $\hat{x}$ onto the plane perpendicular to $\vec{v}$, with modulus $\sqrt{1-v_x^2}$, therefore $\hat{u}_\sigma=\hat{x}$ only for rays with $v_x=0$. The second equation is the SHADOW convention of equation~(\ref{eq:upi}).
 
 \subsection{Polarization in SHADOW's geometrical sources}
 \label{sec:polarization_shadow}
@@ -332,7 +346,7 @@ The phase of the $\sigma$ component, $\phi_\sigma$, is set to zero for a coheren
 \begin{equation}\label{eq:Phi}
    \phi_\pi=\phi_\sigma+\Phi.
 \end{equation}
-$\Phi$ (in radians, input {\tt phase\_diff}) is a phase difference, not an angle in space, although it is stored internally as {\tt pol\_angle} (as in SHADOW3). Its main values are:
+$\Phi$ (in radians, input {\tt phase\_diff}) is a phase difference\footnote{$\Phi$ is stored internally as {\tt pol\_angle} (as in SHADOW3), although it is not an angle in space.}. Its main values are:
 \begin{itemize}
  \item $\Phi=0$ for linearly polarized light, with $\vec{E}$ between $\hat{u}_\sigma$ and $\hat{u}_\pi$ (and $\Phi=180^{\circ}$ for linear polarization with $\vec{E}$ between $\hat{u}_\sigma$ and $-\hat{u}_\pi$)
  \item $\Phi=90^{\circ}$ for right (CW) elliptical polarization
@@ -343,8 +357,8 @@ The handedness names assume the time dependence $e^{-i\omega t}$ for the complex
 \paragraph{Polarization degree $P$.}
 $P$ (input {\tt polarization\_degree}) sets the moduli of the electric vectors, which are created as
 \begin{eqnarray}\label{eq:EfromP}
-   \vec{E}_\sigma = \frac{P}{\sqrt{1-2 P+ 2 P^2}} \hat{u}_\sigma, \nonumber \\
-   \vec{E}_\pi    = \frac{1-P}{\sqrt{1-2 P+ 2 P^2}} \hat{u}_\pi,
+   \vec{E}_\sigma &=& \frac{P}{\sqrt{1-2 P+ 2 P^2}} \hat{u}_\sigma, \nonumber \\
+   \vec{E}_\pi    &=& \frac{1-P}{\sqrt{1-2 P+ 2 P^2}} \hat{u}_\pi,
 \end{eqnarray}
 with $P\in[0,1]$. These expressions verify, as expected, $|\vec{E}_\sigma|^2 + |\vec{E}_\pi|^2 = 1$, and
 \begin{equation}\label{eq:Pdef}
@@ -356,26 +370,32 @@ The ratio of amplitudes in equation~(\ref{eq:Pdef}) can also be expressed with a
 \begin{equation}
    P = \frac{\cos \gamma}{\cos \gamma + \sin \gamma}.
 \end{equation}
-Note that $\gamma$ is not used in the code (only $P$ and $\Phi$ are inputs), and that it should not be confused with $\Phi$, nor with the angles $\psi$ and $\chi$ of the polarization ellipse [equation~(\ref{eq:ellipse_angles})]. For linearly polarized light ($\Phi=0$), $\gamma$ is the angle between the electric vector $\vec{E}$ and $\hat{u}_\sigma$, \todo{CHECK: measured toward $\hat{u}_\pi$}. For other values of $\Phi$, $\gamma$ only gives the ratio of amplitudes, and not the orientation of the polarization ellipse.
+Note that $\gamma$ is not used in the code (only $P$ and $\Phi$ are inputs), and that it should not be confused with $\Phi$, nor with the angles $\psi$ and $\chi$ of the polarization ellipse [equation~(\ref{eq:ellipse_angles})]. For linearly polarized light with $\Phi=0$, $\gamma$ is the angle between the electric vector $\vec{E}$ and $\hat{u}_\sigma$, measured from $\hat{u}_\sigma$ toward $\hat{u}_\pi$ (i.e., the azimuth $\psi=-\gamma$ in the standard frame); for $\Phi=180^\circ$, $\vec{E}$ is at an angle $\gamma$ from $\hat{u}_\sigma$ toward $-\hat{u}_\pi$ ($\psi=+\gamma$). For other values of $\Phi$, $\gamma$ only gives the ratio of amplitudes, and not the orientation of the polarization ellipse.
 
 \paragraph{Examples.}
-Some combinations of the inputs $(P, \Phi)$ are listed in Table~\ref{tab:source_polarization}, with the corresponding Stokes parameters calculated with equation~(\ref{eq:stokes_from_P}).
+Some combinations of the inputs $(P, \Phi)$ are listed in Table~\ref{tab:source_polarization}, with the corresponding standard Jones vectors and the Stokes parameters calculated with equation~(\ref{eq:stokes_from_P}).
 
 \begin{table}
 \centering
-\caption{Examples of polarization states created by the geometrical source with the inputs $P$ and $\Phi$, and the corresponding Stokes parameters [equation~(\ref{eq:stokes_from_P})]. \todo{EXPLAIN. IS THIS $\chi$? The angles $\pm45^\circ$ in the last column refer to an observer looking toward the source.}}
+\caption{Examples of polarization states created by the geometrical source with the inputs $P$ and $\Phi$, the corresponding standard Jones vector $(E_x,E_y)^T=(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$ (for a coherent beam, $\phi_\sigma=0$) and Stokes parameters [equation~(\ref{eq:stokes_from_P})]. The rows are grouped in linear, circular and elliptical polarization. The angles $\pm45^\circ$ in the last column are the azimuth $\psi$ [equation~(\ref{eq:ellipse_angles})], measured from $\check{x}=\hat{u}_\sigma$, counter-clockwise for an observer looking toward the source: $-45^\circ$ is along $\hat{u}_\sigma+\hat{u}_\pi$ and $+45^\circ$ along $\hat{u}_\sigma-\hat{u}_\pi$. By default, $\hat{u}_\sigma$ is horizontal and $\hat{u}_\pi$ vertical (up).}
 \label{tab:source_polarization}
-\small
-\begin{tabular}{rr rrrr p{3.4cm}}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{rr c c l}
 \hline
-$P$ & $\Phi$ & $S_0$ & $S_1$ & $S_2$ & $S_3$ & Polarization \\
+$P$ & $\Phi$ & $(E_x,E_y)^T$ & $(S_0,S_1,S_2,S_3)$ & Polarization \\
 \hline
-1    & $0^\circ$    & 1 & 1    & 0  & 0    & Horizontal linear ($\vec{E}$ along $\hat{u}_\sigma$) \\
-0    & $0^\circ$    & 1 & $-1$ & 0  & 0    & Vertical linear ($\vec{E}$ along $\hat{u}_\pi$) \\
-0.5  & $0^\circ$    & 1 & 0    & $-1$ & 0  & Linear, $\vec{E}$ along $\hat{u}_\sigma+\hat{u}_\pi$ (between $+x$ and $+z$, $-45^\circ$) \\
-0.5  & $180^\circ$  & 1 & 0    & 1  & 0    & Linear, $\vec{E}$ along $\hat{u}_\sigma-\hat{u}_\pi$ (between $+x$ and $-z$, $+45^\circ$) \\
-0.5  & $90^\circ$   & 1 & 0    & 0  & $-1$ & Right circular (RCP) \\
-0.75 & $-90^\circ$  & 1 & 0.8  & 0  & 0.6  & Left elliptical, mostly horizontal \\
+1 & $0^\circ$ & $\left(\begin{smallmatrix}1\\0\end{smallmatrix}\right)$ & $(1,1,0,0)$ & Linear $\hat{u}_\sigma$ \\
+0 & $0^\circ$ & $\left(\begin{smallmatrix}0\\-1\end{smallmatrix}\right)$ & $(1,-1,0,0)$ & Linear $\hat{u}_\pi$ \\
+0.5 & $0^\circ$ & $\frac{1}{\sqrt{2}}\left(\begin{smallmatrix}1\\-1\end{smallmatrix}\right)$ & $(1,0,-1,0)$ & Linear $-45^\circ$ \\
+0.5 & $180^\circ$ & $\frac{1}{\sqrt{2}}\left(\begin{smallmatrix}1\\1\end{smallmatrix}\right)$ & $(1,0,1,0)$ & Linear $+45^\circ$ \\
+\hline
+0.5 & $90^\circ$ & $\frac{1}{\sqrt{2}}\left(\begin{smallmatrix}1\\-i\end{smallmatrix}\right)$ & $(1,0,0,-1)$ & RCP \\
+0.5 & $-90^\circ$ & $\frac{1}{\sqrt{2}}\left(\begin{smallmatrix}1\\i\end{smallmatrix}\right)$ & $(1,0,0,1)$ & LCP \\
+\hline
+0.75 & $-90^\circ$ & $\frac{1}{\sqrt{10}}\left(\begin{smallmatrix}3\\i\end{smallmatrix}\right)$ & $(1,0.8,0,0.6)$ & Left elliptical \\
+0.5635 & $-116.57^\circ$ & $\frac{1}{\sqrt{40}}\left(\begin{smallmatrix}5\\\sqrt{3}(1+2i)\end{smallmatrix}\right)$ & $(1,0.25,0.433,0.866)$ & Left elliptical \\
 \hline
 \end{tabular}
 \end{table}
@@ -393,21 +413,24 @@ and, conversely,
     P = \frac{\sqrt{S_0+S_1}}{\sqrt{S_0+S_1}+\sqrt{S_0-S_1}}, \qquad
     \Phi = \arctan2(-S_3, -S_2).
 \end{equation}
-For example, $P=0.5$ and $\Phi=90^\circ$ give $S_3=-1$ (RCP), in agreement with the naming above, and $P=0.5$ and $\Phi=0$ give $S_2=-1$: the field along $\hat{u}_\sigma+\hat{u}_\pi$ (called $45^\circ$ in the examples) is at $-45^\circ$ for an observer looking toward the source, for whom $\hat{u}_\sigma$ points to the left.
+For example, $P=0.5$ and $\Phi=90^\circ$ give $S_3=-1$ (RCP), in agreement with the naming above, and $P=0.5$ and $\Phi=0$ give $S_2=-1$: the field along $\hat{u}_\sigma+\hat{u}_\pi$ is at $-45^\circ$ for an observer looking toward the source, for whom $\hat{u}_\sigma$ points to the left.
 
-Every ray is fully polarized: from equation~(\ref{eq:stokes_columns}), $S_1^2+S_2^2+S_3^2=S_0^2$ (DOP$=1$). The random phase $\phi_\sigma$ of an incoherent beam does not change the Stokes parameters of a ray, which depend only on $P$ and $\Phi$. As all the rays of a geometrical source have the same $P$ and $\Phi$, the beam of a geometrical source is fully polarized. A beam (an ensemble of rays) is partially polarized only when its rays have different polarization states, e.g., for a bending magnet source (section~\ref{sec:source}), or after an optical element whose effect on the polarization depends on the direction or energy of the ray. The Stokes parameters of the beam are the sums over the rays. Note that the Stokes parameters of each ray are defined in its own $(\hat{u}_\sigma,\hat{u}_\pi)$ frame, therefore this sum is exact only if the $\hat{u}_\sigma$ directions of all rays are parallel. This is approximately the case at the source (the small differences come from the ray divergences), but not necessarily after beamline elements where the scattering plane changes from ray to ray (e.g., curved surfaces).
+Every ray is fully polarized: from equation~(\ref{eq:stokes_columns}), $S_1^2+S_2^2+S_3^2=S_0^2$ (DOP$=1$). The random phase $\phi_\sigma$ of an incoherent beam does not change the Stokes parameters of a ray, which depend only on $P$ and $\Phi$. As all the rays of a geometrical source have the same $P$ and $\Phi$, the beam of a geometrical source is fully polarized. A beam (an ensemble of rays) is partially polarized only when its rays have different polarization states, e.g., for a bending magnet source (section~\ref{sec:source_bm}), or after an optical element whose effect on the polarization depends on the direction or energy of the ray. The Stokes parameters of the beam are the sums over the rays. Note that the Stokes parameters of each ray are defined in its own $(\hat{u}_\sigma,\hat{u}_\pi)$ frame, therefore this sum is exact only if the $\hat{u}_\sigma$ directions of all rays are parallel. This is approximately the case at the source (the small differences come from the ray divergences), but not necessarily after beamline elements where the scattering plane changes from ray to ray (e.g., curved surfaces).
 
 \paragraph{Polarization ellipse of the geometrical source.}
-Fig.~\ref{fig:ellipse_geometrical} shows the example of Fig.~1 in \cite{Detlefs2012}, $\psi=\chi=30^\circ$, created with a geometrical source. The corresponding Stokes parameters are $(S_1,S_2,S_3)=(0.250, 0.433, 0.866)$, and equation~(\ref{eq:P_from_stokes}) gives the source inputs $P=0.5635$ and $\Phi=-116.57^\circ$. All the rays of a geometrical source have the same polarization, so they have the same ellipse, and the ellipse obtained from the Stokes parameters of the beam coincides with them (DOP=1).
+Fig.~\ref{fig:ellipse_geometrical}a shows the right circular polarization created with $P=0.5$ and $\Phi=90^\circ$ (Table~\ref{tab:source_polarization}): the field rotates clockwise for an observer looking toward the source. Fig.~\ref{fig:ellipse_geometrical}b shows the example of Fig.~1 in \cite{Detlefs2012}, $\psi=\chi=30^\circ$, created with a geometrical source. The corresponding Stokes parameters are $(S_1,S_2,S_3)=(0.250, 0.433, 0.866)$, and equation~(\ref{eq:P_from_stokes}) gives the source inputs $P=0.5635$ and $\Phi=-116.57^\circ$ (last row of Table~\ref{tab:source_polarization}). All the rays of a geometrical source have the same polarization, so they have the same ellipse, and the ellipse obtained from the Stokes parameters of the beam coincides with them (DOP=1).
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\linewidth]{figures/polarization_ellipse_geometrical.png}
-\caption{Polarization ellipse of a beam from a geometrical source with $P=0.5635$ and $\Phi=-116.57^\circ$ ($\psi=\chi=30^\circ$, left-handed elliptical polarization), seen by an observer looking into the source. The electric field of a sample of 20 rays (thin lines), and of one of them (thick line, with the arrow indicating the sense of rotation), coincide with the ellipse obtained from the Stokes parameters of the beam (dashed line), with its major and minor axes. The dotted rectangle has sides $2|E_1|$ and $2|E_2|$.}
+\includegraphics[width=0.85\linewidth]{figures/polarization_ellipse_geometrical_rcp.png}\\
+(a)\\
+\includegraphics[width=0.85\linewidth]{figures/polarization_ellipse_geometrical.png}\\
+(b)
+\caption{Polarization ellipses of beams from a geometrical source, seen by an observer looking toward the source: (a) $P=0.5$ and $\Phi=90^\circ$ (right circular polarization, $\chi=-45^\circ$); (b) $P=0.5635$ and $\Phi=-116.57^\circ$ ($\psi=\chi=30^\circ$, left-handed elliptical polarization). The electric field of a sample of 20 rays (thin lines), and of one of them (thick line, with the arrow indicating the sense of rotation), coincide with the ellipse obtained from the Stokes parameters of the beam (dashed line), with its major and minor axes (for circular polarization, $\psi$ is undefined and set to zero). The dotted rectangle has sides $2|E_x|$ and $2|E_y|$.}
 \label{fig:ellipse_geometrical}
 \end{figure}
 
-\subsection{Polarization of a bending magnet source}
+\subsection{Polarization of a bending magnet source}\label{sec:source_bm}
 \label{sec:polarization_bm}
 
 In a bending magnet source the polarization of each ray depends on its emission direction. SHADOW samples the ray directions and energies from the synchrotron emission, and sets the amplitudes of the $\sigma$ and $\pi$ components (horizontal and vertical, respectively) from the emission functions of the two polarizations at the vertical angle of the ray. The radiation is linearly polarized in the plane of the orbit, and elliptically polarized out of it, with phase difference $\Phi=\pm 90^\circ$ (the sign changes with the sign of the vertical angle), therefore with opposite handedness above and below the orbit plane.
@@ -418,7 +441,7 @@ The Stokes parameters of the beam (5000 rays) are $P_1=0.674$, $P_2=0.000$ and $
 \begin{figure}
 \centering
 \includegraphics[width=0.85\linewidth]{figures/polarization_ellipse_bending_magnet.png}
-\caption{Polarization ellipses for an ESRF bending magnet (6.04~GeV, 0.8~T) at 8~keV, seen by an observer looking into the source: electric field of a sample of 20 rays (thin lines) and of one of them (thick line, the arrow indicates the sense of rotation). The ellipse of the polarized part of the beam, obtained from the summed Stokes parameters (dashed line), degenerates to a horizontal line (DOP=0.674).}
+\caption{Polarization ellipses for an ESRF bending magnet (6.04~GeV, 0.8~T) at 8~keV, seen by an observer looking toward the source: electric field of a sample of 20 rays (thin lines) and of one of them (thick line, the arrow indicates the sense of rotation). The ellipse of the polarized part of the beam, obtained from the summed Stokes parameters (dashed line), degenerates to a horizontal line (DOP=0.674).}
 \label{fig:ellipse_bm}
 \end{figure}
 
@@ -433,13 +456,6 @@ The interaction of the rays with an optical element is done in three steps: the 
 \subsection{Reference frames and orientation of the element}\label{sec:change_frame}
 SHADOW uses local reference systems associated to the source and image planes and to the beamline elements (see Fig.~\ref{fig:S4_reference_frame}).
 This allows iterating over the beamline elements: each one has two ``continuation planes'': the source and the image.
-
-\begin{figure}
-    \centering
-\includegraphics[width=0.9\linewidth]{figures/S4_reference_frame.png}
-\caption{SHADOW4 reference frame definitions: Source, beamline element, and image coordinates.}
-\label{fig:S4_reference_frame}
-\end{figure}
 
 In SHADOW4 the ``beamline element'' is formed by an ``optical element'' object and a ``coordinates'' object containing three angles: the incidence angle $\theta$ and the exit angle $\theta'$ (both measured from the normal to the surface; they differ for gratings and asymmetric crystals), and the beamline element orientation angle $\alpha$; and two distances: the distance $p$ from the source (or continuation plane from the previous element), and $q$ from the beamline element to its image plane or continuation plane.
 The beamline element orientation angle $\alpha$ is not reset after the scattering in the beamline element (reflection, refraction or diffraction), therefore it influences the orientation of the axis at the image (see Fig.~\ref{fig:S4_orientations}).
@@ -458,7 +474,7 @@ To put the beam in the local reference of the beamline element, these sequential
 \begin{itemize}
     \item rotate the axes by the angle $\alpha$ around $\hat{u}_y$=(0,1,0) (from $x$ toward $z$);
     \item rotate the axes by the grazing angle $\theta_g=\pi/2-\theta$ around $\hat{u}_x$=(1,0,0);
-    \item translate the beam coordinates $\vec{x}$ a distance $p$ backwards along the incident direction, i.e., by $(0, -p\cos\theta_g, p\sin\theta_g)$.
+    \item translate the beam coordinates $\vec{r}$ a distance $p$ backwards along the incident direction, i.e., by $(0, -p\cos\theta_g, p\sin\theta_g)$.
 \end{itemize}
 As an example, see the listed code\footnote{\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beamline.optical_elements.mirrors.html#shadow4.beamline.optical_elements.mirrors.s4_mirror.S4MirrorElement.trace_beam}}.
 For a ray along the axis of the beamline element, the first rotation turns the $\sigma$ direction of the ray by $\alpha$ with respect to the $\sigma$ direction of the beamline element, so $\alpha$ is the angle used in the Jones rotation matrix of section~\ref{sec:S4} [equation~(\ref{eq:rotation})].
@@ -472,7 +488,7 @@ These operations are done by the method {\tt S4Beam.change\_to\_image\_reference
 }
 \begin{itemize}
     \item propagated along their directions up to the image plane, which is perpendicular to the central outgoing ray at a distance $q$ (the outgoing grazing angle $\pi/2-\theta'$ is used), and
-    \item expressed in the image coordinate system, with origin at the center of the image plane. For that, all the vectors ($\vec{x}$, $\vec{v}$ and $\vec{E}_{\sigma,\pi}$) are projected onto the versors of the new reference.
+    \item expressed in the image coordinate system, with origin at the center of the image plane. For that, all the vectors ($\vec{r}$, $\vec{v}$ and $\vec{E}_{\sigma,\pi}$) are projected onto the versors of the new reference.
 \end{itemize}
 The optical path is increased by the propagated distance (times the refraction index).
 
@@ -1584,7 +1600,7 @@ The Python scripts used for the examples are available as supplementary material
 \hline
 Script & Example \\
 \hline
-{\tt stokes\_geometrical\_source.py} & Stokes parameters of the geometrical source (section~\ref{sec:polarization_shadow}) \\
+{\tt stokes\_geometrical\_source.py} & Jones vectors and Stokes parameters of the geometrical source (Table~\ref{tab:source_polarization}) \\
 {\tt shadow4\_polarization\_ellipse.py} & Polarization ellipses (Figs.~\ref{fig:ellipse_geometrical} and \ref{fig:ellipse_bm}) \\
 {\tt shadow4\_visible\_polarizer3.py} & Glass mirror at the Brewster angle (Fig.~\ref{fig:visible}) \\
 {\tt si800\_rs\_rp\_xraylib.py}, {\tt shadow4\_case\_1\_and\_2.py} & Si 800 polarizer and analyzer (section~\ref{sec:polarizers45degBenchmark}) \\
