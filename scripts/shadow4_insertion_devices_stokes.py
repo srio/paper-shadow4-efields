@@ -12,7 +12,7 @@
 # left-handed (S3 > 0), as in F. Schafers, in Modern Developments in X-Ray and Neutron Optics (Springer, 2008), p. 30.
 # This is verified with the Lienard-Wiechert field of an electron on a circular orbit (handedness_lienard_wiechert).
 #
-# Wiggler: 6.084 GeV, K = 20.49, 6 periods of 15 cm, at 50 keV. At each pole the radiation is like that of a bending
+# Wiggler: 6.0 GeV, K = 20.49, 6 periods of 15 cm, at 8 keV. At each pole the radiation is like that of a bending
 # magnet: the handedness above (below) the orbit plane depends on the sense of rotation of the electron at the pole
 # (sign of the trajectory curvature d2x/dy2). The rays are separated by the sign of the curvature at their emission
 # point; the two families have opposite handedness, and S3 cancels for the whole beam.
@@ -24,7 +24,8 @@
 #
 # Usage:
 #   PYTHONPATH=~/OASYS2.0/shadow4 ~/venv/oasys2/bin/python shadow4_insertion_devices_stokes.py
-#   (the figures are written to ../figures/stokes_<source>.png, <source> = bending_magnet, wiggler, undulator)
+#   (the figures are written to ../figures/stokes_<source>.png, <source> = bending_magnet, wiggler, undulator, and
+#   ../figures/stokes_synchrotron_sources.png with the three sources, used in the paper)
 #
 import os
 import numpy
@@ -75,29 +76,30 @@ def handedness_lienard_wiechert(psi_gamma=0.5, gamma=30.0, clockwise=True):
     return int(numpy.sign(L))
 
 
-def plot_stokes(zp, S, file_png=None, title="", analytical=None, groups=None, annotate_handedness=False):
-    """Plots (a) the Stokes parameters S (shape (4, nrays)) summed in bins of zp, and (b) the normalized Stokes
+def draw_stokes(ax1, ax2, zp, S, title="", analytical=None, groups=None, group_component=3,
+                annotate_handedness=False, p_range=None, fs=1.0, legends=True):
+    """Draws (ax1) the Stokes parameters S (shape (4, nrays)) summed in bins of zp, and (ax2) the normalized Stokes
     parameters of the rays, versus zp (rad). analytical: function of psi returning (P1, P2, P3, S0), plotted as lines.
-    groups: list of (mask, label, marker) to plot S3 and P3 separately for families of rays (e.g., wiggler poles)."""
-    import matplotlib
-    if not SHOW_PLOTS: matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
+    groups: list of (mask, label, marker, color) to plot the Stokes parameter group_component (2 or 3) separately for
+    families of rays (e.g., wiggler poles, undulator quadrants). p_range: (min, max) of the axis of ax2 (if not None,
+    the parameters outside it, e.g., P1 ~ 1, are not plotted). fs: scale of the font sizes."""
     P = S[1:] / S[0]
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(5.5, 7.0), sharex=True)
+    names = ['$S_0$', '$S_1$', '$S_2$', '$S_3$']
+    colors = ['k', 'C0', 'C2', 'C3']
 
     # (a) Stokes parameters summed in bins of Z' (angular distributions)
+    if ax1 is None: ax1 = _NullAxes()
     bins = numpy.linspace(zp.min(), zp.max(), 81)
     centers = 0.5 * (bins[1:] + bins[:-1])
     hS = [numpy.histogram(zp, bins=bins, weights=S[k])[0] for k in range(4)]
     norm = hS[0].max()
-    for k, (color, label) in enumerate(zip(['k', 'C0', 'C2', 'C3'], ['$S_0$', '$S_1$', '$S_2$', '$S_3$'])):
-        ax1.plot(1e6 * centers, hS[k] / norm, 'o', ms=5 if k == 0 else 3, color=color, mfc='none' if k == 0 else color,
-                 label=label, zorder=3 if k == 0 else 2)
+    for k in range(4):
+        ax1.plot(1e6 * centers, hS[k] / norm, 'o', ms=(5 if k == 0 else 3) * fs, color=colors[k],
+                 mfc='none' if k == 0 else colors[k], label=names[k], zorder=3 if k == 0 else 2)
     if groups is not None:
         for mask, label, marker, gcolor in groups:
-            h3 = numpy.histogram(zp[mask], bins=bins, weights=S[3][mask])[0]
-            ax1.plot(1e6 * centers, h3 / norm, marker, ms=3, color=gcolor, label='$S_3$, ' + label)
+            hg = numpy.histogram(zp[mask], bins=bins, weights=S[group_component][mask])[0]
+            ax1.plot(1e6 * centers, hg / norm, marker, ms=3 * fs, color=gcolor, label=names[group_component] + ', ' + label)
     if analytical is not None:
         psi = numpy.linspace(zp.min(), zp.max(), 501)
         P1a, P2a, P3a, S0a = analytical(psi)
@@ -105,33 +107,80 @@ def plot_stokes(zp, S, file_png=None, title="", analytical=None, groups=None, an
         ax1.plot(1e6 * psi, P1a * S0a / S0a.max(), '-', color='C0', lw=0.8)
         ax1.plot(1e6 * psi, P3a * S0a / S0a.max(), '-', color='C3', lw=0.8)
     ax1.axhline(0, color='gray', lw=0.5); ax1.axvline(0, color='gray', lw=0.5)
-    ax1.set_ylabel("Stokes parameters (summed in bins of Z')")
-    ax1.legend(fontsize=7, loc='upper right')
-    ax1.text(0.02, 0.95, '(a)', transform=ax1.transAxes, va='top')
-    ax1.set_title(title, fontsize=10)
+    ax1.set_ylabel("Stokes param. (binned)", fontsize=10 * fs)
+    if legends: ax1.legend(fontsize=7 * fs, loc='upper right')
+    ax1.set_title(title, fontsize=10 * fs)
 
     # (b) normalized Stokes parameters of the rays
     step = max(1, zp.size // 1000)
-    for k, (color, label) in enumerate(zip(['C0', 'C2', 'C3'], ['$P_1$', '$P_2$', '$P_3$'])):
-        if k == 2 and groups is not None:
+    pnames = ['$P_1$', '$P_2$', '$P_3$']
+    for k, color in enumerate(['C0', 'C2', 'C3']):
+        if p_range is not None and (numpy.abs(P[k]).min() > max(numpy.abs(p_range))):        # out of range
+            ax2.text(0.98, 0.95, "%s > %.4f (not shown)" % (pnames[k], P[k].min()), transform=ax2.transAxes,
+                     ha='right', va='top', fontsize=8 * fs, color=color)
+            continue
+        if groups is not None and k == group_component - 1:
             for mask, glabel, marker, gcolor in groups:
                 idx = numpy.argwhere(mask).ravel()[::step]
-                ax2.plot(1e6 * zp[idx], P[k][idx], marker, ms=2, color=gcolor, label=label + ', ' + glabel)
+                ax2.plot(1e6 * zp[idx], P[k][idx], marker, ms=2 * fs, color=gcolor, label=pnames[k] + ', ' + glabel)
         else:
-            ax2.plot(1e6 * zp[::step], P[k][::step], '.', ms=2, color=color, label=label + ' (rays)')
+            ax2.plot(1e6 * zp[::step], P[k][::step], '.', ms=2 * fs, color=color, label=pnames[k] + ' (rays)')
     if analytical is not None:
         ax2.plot(1e6 * psi, P1a, '-', color='C0', lw=0.8, label='analytical')
         ax2.plot(1e6 * psi, P3a, '-', color='C3', lw=0.8)
     ax2.axhline(0, color='gray', lw=0.5); ax2.axvline(0, color='gray', lw=0.5)
     if annotate_handedness:
-        ax2.text(0.97 * 1e6 * zp.max(), -0.75, 'RCP\n(above)', ha='right', fontsize=8, color='C3')
-        ax2.text(0.97 * 1e6 * zp.min(), 0.65, 'LCP\n(below)', ha='left', fontsize=8, color='C3')
-    ax2.set_xlabel(r"Z' ($\mu$rad)")
-    ax2.set_ylabel(r"$P_k=S_k/S_0$ of the rays")
-    ax2.set_ylim(-1.05, 1.05)
-    ax2.legend(fontsize=7, loc='lower left')
-    ax2.text(0.02, 0.95, '(b)', transform=ax2.transAxes, va='top')
+        ax2.text(0.97 * 1e6 * zp.max(), -0.75, 'RCP\n(above)', ha='right', fontsize=8 * fs, color='C3')
+        ax2.text(0.97 * 1e6 * zp.min(), 0.45, 'LCP\n(below)', ha='left', fontsize=8 * fs, color='C3')
+    ax2.set_xlabel(r"Z' ($\mu$rad)", fontsize=10 * fs)
+    ax2.set_ylabel(r"$P_k$ of the rays", fontsize=10 * fs)
+    ax2.set_ylim(*(p_range if p_range is not None else (-1.05, 1.05)))
+    if legends: ax2.legend(fontsize=7 * fs, loc='lower left')
+    for ax in (ax1, ax2): ax.tick_params(labelsize=9 * fs)
 
+
+class _NullAxes(object):
+    """Axes that ignore all the drawing calls (to draw only the right column)."""
+    def __getattr__(self, name):
+        return lambda *args, **kwargs: None
+
+
+def plot_stokes(zp, S, file_png=None, **kwargs):
+    """Figure with (a) the Stokes parameters summed in bins of zp and (b) the normalized Stokes parameters of the rays
+    (see draw_stokes)."""
+    import matplotlib
+    if not SHOW_PLOTS: matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(5.5, 7.0), sharex=True)
+    draw_stokes(ax1, ax2, zp, S, **kwargs)
+    ax1.text(0.02, 0.95, '(a)', transform=ax1.transAxes, va='top')
+    ax2.text(0.02, 0.95, '(b)', transform=ax2.transAxes, va='top')
+    fig.tight_layout()
+    if file_png is not None:
+        fig.savefig(file_png, dpi=200)
+        print("File written to disk: %s" % file_png)
+    if SHOW_PLOTS: plt.show()
+
+
+def plot_stokes_all(results, file_png=None):
+    """Figure for the paper: one row per source, with (left) the polarization ellipses of a sample of rays and of the
+    beam, and (right) the normalized Stokes parameters of the rays versus Z'.
+    results: list of (zp, S, kwargs of draw_stokes, (ellS, ellJ, kwargs of draw_ellipse))."""
+    import matplotlib
+    if not SHOW_PLOTS: matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from shadow4_polarization_ellipse import draw_ellipse
+    fig, axs = plt.subplots(len(results), 2, figsize=(11.0, 4.6 * len(results)),
+                            gridspec_kw=dict(width_ratios=[1, 1.25]))
+    for i, (zp, S, kwargs, (ellS, ellJ, ekwargs)) in enumerate(results):
+        kw = dict(kwargs); title = kw.pop("title", "")
+        legend = dict(fontsize=8.5, loc='upper center', ncol=2, framealpha=0.9) if i == 0 else False
+        ek = dict(ekwargs); ek["ray_label"] = ""                 # ray details in the caption of the figure
+        draw_ellipse(axs[i, 0], ellS, ellJ, fs=1.25, title_stokes=False, legend=legend, **ek)
+        draw_stokes(None, axs[i, 1], zp, S, fs=1.25, **kw)
+        axs[i, 0].set_title(title, fontsize=13, loc='left')
+        axs[i, 0].text(0.02, 0.03, '(%s)' % "abcdefgh"[2 * i], transform=axs[i, 0].transAxes, va='bottom', fontsize=13)
+        axs[i, 1].text(0.02, 0.95, '(%s)' % "abcdefgh"[2 * i + 1], transform=axs[i, 1].transAxes, va='top', fontsize=13)
     fig.tight_layout()
     if file_png is not None:
         fig.savefig(file_png, dpi=200)
@@ -151,7 +200,7 @@ def print_stokes(zp, S, groups=None):
 
 
 if __name__ == "__main__":
-    from shadow4_polarization_ellipse import get_beam_bending_magnet, get_beam_wiggler, get_beam_undulator
+    from shadow4_synchrotron_sources import get_beam_bending_magnet, get_beam_wiggler, get_beam_undulator
 
     for clockwise in [True, False]:
         for psi_gamma in [0.5, -0.5]:
@@ -161,23 +210,32 @@ if __name__ == "__main__":
                 "LCP (S3>0)" if h > 0 else "RCP (S3<0)"))
 
     figures_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "figures")
+    results = []
     for SOURCE in ["bending_magnet", "wiggler", "undulator"]:
         print("\n===== %s =====" % SOURCE)
-        groups, analytical, title = None, None, ""
+        groups, analytical, title, kwargs = None, None, "", {}
         if SOURCE == "bending_magnet":
             beam = get_beam_bending_magnet(photon_energy=PHOTON_ENERGY, nrays=20000)
             analytical = stokes_analytical
             title = "Bending magnet (ESRF1, B=-0.8 T, 8 keV)"
+            kwargs = dict(analytical=analytical, annotate_handedness=True)
         elif SOURCE == "wiggler":
             beam, light_source = get_beam_wiggler(return_light_source=True)
             # sign of the trajectory curvature (d2x/dy2) at the emission point of each ray
             traj = light_source._S4WigglerLightSource__result_trajectory
             curv = numpy.interp(beam.get_column(2, nolost=1), traj[1], traj[6])
             groups = [(curv > 0, "e- turning to +x", 'v', 'C3'), (curv < 0, "e- turning to -x", '^', 'C4')]
-            title = "Wiggler (K=20.49, 6 periods, 50 keV)"
+            title = "Wiggler (K=20.49, 6 periods, 8 keV)"
+            kwargs = dict(groups=groups, group_component=3)
         else:
             beam = get_beam_undulator()
+            xp = beam.get_column(4, nolost=1)
+            zp_ = beam.get_column(6, nolost=1)
+            # quadrants: P2 changes sign with X' Z'
+            groups = [(xp * zp_ > 0, "X'Z'>0", 'v', 'C2'), (xp * zp_ < 0, "X'Z'<0", '^', 'C8')]
             title = "Undulator (K=1.656, 111 periods, 8.234 keV)"
+            kwargs = dict(groups=groups, group_component=2, p_range=(-0.06, 0.06))
+        kwargs["title"] = title
 
         zp = beam.get_column(6, nolost=1)                      # Z' (direction cosine ~ vertical angle)
         S = numpy.array([beam.get_column(col, nolost=1) for col in [30, 31, 32, 33]])
@@ -187,5 +245,17 @@ if __name__ == "__main__":
             P1a, P2a, P3a, S0a = analytical(zp)
             print("  max |P - P_analytical| over the rays: P1 %.2e, P2 %.2e, P3 %.2e" %
                   (numpy.abs(P[0] - P1a).max(), numpy.abs(P[1] - P2a).max(), numpy.abs(P[2] - P3a).max()))
-        plot_stokes(zp, S, file_png=os.path.join(figures_dir, "stokes_%s.png" % SOURCE), title=title,
-                    analytical=analytical, groups=groups, annotate_handedness=(SOURCE == "bending_magnet"))
+        plot_stokes(zp, S, file_png=os.path.join(figures_dir, "stokes_%s.png" % SOURCE), **kwargs)
+
+        # polarization ellipses (beam and rays) for the combined figure
+        iray = 0
+        ellS = beam.get_polarization_ellipse(flag_return=0)
+        ellJ = beam.get_polarization_ellipse(flag_return=1)
+        ray_label = " (Z'%s0, %s" % ((">", "above") if zp[iray] > 0 else ("<", "below"))
+        if SOURCE == "wiggler":
+            ray_label += ", e- turning to %sx" % ("+" if curv[iray] > 0 else "-")
+        ray_label += ")"
+        ekwargs = dict(iray=iray, nsample=20, ray_label=ray_label, equal_aspect=(SOURCE != "undulator"))
+        results.append((zp, S, kwargs, (ellS, ellJ, ekwargs)))
+
+    plot_stokes_all(results, file_png=os.path.join(figures_dir, "stokes_synchrotron_sources.png"))
