@@ -28,7 +28,7 @@ def get_beam_bending_magnet_as_wiggler(photon_energy=8000.0, nrays=5000):
     from shadow4.sources.wiggler.s4_wiggler import S4Wiggler
     source = S4Wiggler(
         magnetic_field_periodic=0,  # 0=external, 1=periodic
-        file_with_magnetic_field="/home/srio/Oasys2/Bcte.dat.txt",  # used only if magnetic_field_periodic=0
+        file_with_magnetic_field="Bcte.dat",  # used only if magnetic_field_periodic=0
         K_vertical=10.0,  # syned Wiggler pars: used only if magnetic_field_periodic=1
         period_length=0.1,  # syned Wiggler pars: used only if magnetic_field_periodic=1
         number_of_periods=10,  # syned Wiggler pars: used only if magnetic_field_periodic=1
