@@ -3,7 +3,8 @@
 
 # Fresnel rhomb: two total internal reflections glass -> air.
 # The reflecting surfaces are defined with the relative refraction index n2/n1 = 1/N_GLASS
-# (n1 = N_GLASS glass, n2 = 1 air), with Re(N_GLASS) = 1.51 as in Born & Wolf (Fig. 1.16) and section 8.
+# (n1 = N_GLASS glass, n2 = 1 air), with Re(N_GLASS) = 1.51 as in the Fresnel rhomb of Born & Wolf (Fig. 1.16) and section 6
+# of the paper (the reflectivity curves of section 5, Fig. 1.12 of Born & Wolf, use n = 1.52).
 # USE_ABSORPTION = 1 includes the absorption of the glass, N_GLASS = 1.51 + i K_GLASS (equivalent beta of the
 # relative index -K_GLASS / 1.51^2); K_GLASS = 1.08e-8 is the extinction coefficient of N-BK7 at 446 nm
 # (refractiveindex.info).

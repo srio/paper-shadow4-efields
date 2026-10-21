@@ -1,5 +1,8 @@
 import numpy
 
+# refractive index of the glass, as in Fig. 1.12 of Born & Wolf, Principles of Optics (6th ed.): Brewster angle 56 deg 40'
+N_GLASS = 1.52
+
 def run_beamline1(polarization_degree=0.5, angle_azimuthal=0.0, angle_radial=numpy.pi/4):
     import numpy as np
     from dabax.dabax_xraylib import DabaxXraylib
@@ -25,12 +28,12 @@ def run_beamline1(polarization_degree=0.5, angle_azimuthal=0.0, angle_radial=num
     boundary_shape = None
 
     from shadow4.beamline.optical_elements.mirrors.s4_plane_mirror import S4PlaneMirror
-    optical_element = S4PlaneMirror(name=': use delta=1-n2/n1=1-1.51', boundary_shape=boundary_shape,
+    optical_element = S4PlaneMirror(name=': use delta=1-n2/n1=1-%g' % N_GLASS, boundary_shape=boundary_shape,
                                     f_reflec=1,  # reflectivity of surface: 0=no reflectivity, 1=full polarization
                                     f_refl=1,
                                     # for f_reflec=1: file: 0=prerefl, 2=(mrad, refl), 3=(eV, refl), 4=(eV, mrad, refl); 1=refr index, 5=xraylib, 6=dabax
                                     file_refl='prerefl_glass.dat',  # for f_refl=0,2,3,4
-                                    refraction_index=1.51 + 0j,  # for f_refl=1
+                                    refraction_index=N_GLASS + 0j,  # for f_refl=1
                                     coating_material='Ni', coating_density=8.902,  # for f_refl=5,6
                                     coating_roughness=0,  # for f_refl=0,1,5,6
                                     dabax=None,
@@ -60,7 +63,7 @@ def run_beamline1(polarization_degree=0.5, angle_azimuthal=0.0, angle_radial=num
 
 
 def plot_paper_figures(angles, results, figures_dir):
-    """Figures of the paper (section 8): ray intensities and phase s-p versus the incident angle, for the two
+    """Figures of the paper (section 5, visible polarizer): ray intensities and phase s-p versus the incident angle, for the two
     equivalent cases (case 2 with markers, case 1 with lines)."""
     import os
     import matplotlib
@@ -69,7 +72,7 @@ def plot_paper_figures(angles, results, figures_dir):
     import matplotlib.pyplot as plt
 
     (IS1, IP1, PH1), (IS2, IP2, PH2) = results
-    brewster = numpy.degrees(numpy.arctan(1.51))
+    brewster = numpy.degrees(numpy.arctan(N_GLASS))
 
     fig, ax = plt.subplots(figsize=(5.5, 4))
     ax.plot(angles, IS1, '-', color='C0', lw=1, label=r'$\sigma$ (45$^\circ$-linear, $\alpha$=0)')

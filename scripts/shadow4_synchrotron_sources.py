@@ -94,7 +94,7 @@ def get_beam_wiggler(return_light_source=False):
 def get_beam_undulator():
     # electron beam
     from shadow4.sources.s4_electron_beam import S4ElectronBeam
-    electron_beam = S4ElectronBeam(energy_in_GeV=6.084, energy_spread=0.001, current=0.1)
+    electron_beam = S4ElectronBeam(energy_in_GeV=6.0, energy_spread=0.001, current=0.1)
     electron_beam.set_sigmas_all(sigma_x=0, sigma_y=0, sigma_xp=0, sigma_yp=0)
     electron_beam.set_dispersion_all(0, 0, 0, 0)
 
@@ -104,8 +104,8 @@ def get_beam_undulator():
         K_vertical=1.6563,  # syned Undulator parameter
         period_length=0.018,  # syned Undulator parameter
         number_of_periods=111,  # syned Undulator parameter
-        emin=8233.962924699139,  # Photon energy scan from energy (in eV)
-        emax=8233.962924699139,  # Photon energy scan to energy (in eV)
+        emin=8008.16,  # Photon energy scan from energy (in eV): first harmonic at 6.0 GeV
+        emax=8008.16,  # Photon energy scan to energy (in eV)
         ng_e=1,  # Photon energy scan number of points
         maxangle=1.7970134151911963e-05,  # Maximum radiation semiaperture in RADIANS
         ng_t=100,  # Number of points in angle theta

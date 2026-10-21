@@ -437,7 +437,7 @@ In synchrotron sources the polarization of each ray depends on its emission dire
 
 \paragraph{Bending magnet.}
 For bending magnets \cite{SanchezdelRio2024bm} the amplitudes are given by the emission functions of the two polarizations at the vertical angle of the ray. The radiation is linearly polarized in the plane of the orbit, and elliptically polarized out of it, with phase difference $\Phi=\pm 90^\circ$ (the sign changes with the sign of the vertical angle), therefore with opposite handedness above and below the orbit plane.
-Fig.~\ref{fig:synchrotron}a shows the polarization ellipses for a bending magnet of the old ESRF storage ring (electron energy 6.04~GeV, magnetic field $B=-0.8$~T, radius 25.18~m, critical energy 19.4~keV), the same source used in \cite{SanchezdelRio2024bm}, at the photon energy of 8~keV. Every ray is fully polarized, but the ellipses of the rays are different: from nearly linear horizontal polarization (rays close to the orbit plane) to elliptical polarization with a large vertical component and either handedness (rays at larger vertical angles). All ellipses have their axes along $\check{x}$ and $\check{y}$ ($\Phi=\pm90^\circ$).
+Fig.~\ref{fig:synchrotron}a shows the polarization ellipses for a bending magnet of the old ESRF storage ring (electron energy 6.04~GeV, magnetic field $B=-0.8$~T, radius 25.18~m, critical energy 19.4~keV), the same source used in \cite{SanchezdelRio2024bm}, at the photon energy of 8~keV. Every ray is fully polarized, but the ellipses of the rays are different: from nearly linear horizontal polarization (rays close to the orbit plane) to elliptical polarization with a large vertical component and either handedness (rays at larger vertical angles). All ellipses have their axes along $\check{x}$ and $\check{y}$ ($\Phi=\pm90^\circ$). The ray plotted with a thick line is emitted below the orbit plane ($Z'=-97~\mu$rad) and is left-handed.
 The Stokes parameters of the beam (5000 rays) are $P_1=0.674$, $P_2=0.000$ and $P_3=-0.016$: the contributions of the two handednesses cancel ($P_3\approx 0$ for a beam symmetric with respect to the orbit plane), and the beam is partially polarized, with DOP=0.674, although every ray is fully polarized. The ellipse of the polarized part degenerates to a horizontal line: the polarized part of the beam is linearly polarized in the orbit plane.
 
 Fig.~\ref{fig:synchrotron}b shows the normalized Stokes parameters of the rays versus $Z'$. The normalized Stokes parameters of every ray coincide (to $4\times10^{-6}$) with the expressions of the synchrotron radiation \cite{Jackson1999,xraydatabooklet}, $\mathcal{E}_\sigma\propto(1+X^2)K_{2/3}(\xi)$ and $|\mathcal{E}_\pi|\propto|X|(1+X^2)^{1/2}K_{1/3}(\xi)$, with $X=\gamma\psi_v$, $\xi=(E/2E_c)(1+X^2)^{3/2}$, and a phase difference of $\pm90^\circ$. $P_1$ decreases from 1 in the orbit plane, $P_2=0$, and $|P_3|$ increases with $|Z'|$, reaching $|P_3|\approx1$ in the tails of the angular distribution, where the intensity is small. The sign of $P_3$ changes with the sign of $Z'$. The handedness is set by the sense of rotation of the electrons, i.e., by the sign of the curvature of the trajectory, which is proportional to the magnetic field: $d^2x/dy^2=-|e| B_z/(\gamma m_e c)$ for an electron (charge $-|e|$, Lorentz force $\vec{F}=-|e|\,\vec{v}\times\vec{B}$) travelling along $+\hat{y}$ in a vertical field $B_z$. In this example ($B_z<0$), the electrons are deflected toward $+\hat{x}$, i.e., they turn clockwise seen from above, and the radiation emitted above the orbit plane ($Z'>0$) is right-handed ($S_3<0$), and below it left-handed ($S_3>0$). The averages are $P_3=-0.638$ for the rays above and $+0.638$ for the rays below the orbit plane, while $P_3\approx0$ for the whole beam. This agrees with the literature, where the radiation emitted upward has negative helicity (RCP, $S_3<0$) when the electrons travel clockwise seen from above \cite{Schafers2008}, and with a direct calculation of the Li\'enard--Wiechert field of an electron on the same orbit, which shows that the electric field above the orbit plane rotates clockwise for an observer looking toward the source. For electrons travelling counter-clockwise, the handedness is reversed. A beam with circular polarization of a given handedness can therefore be obtained by selecting with a slit the rays above or below the orbit plane, at the expense of intensity.
@@ -446,17 +446,17 @@ Fig.~\ref{fig:synchrotron}b shows the normalized Stokes parameters of the rays v
 In a wiggler, each pole emits like a bending magnet, with the local radius of curvature of the trajectory, and the handedness of the radiation out of the orbit plane is set by the sense of rotation of the electron at the pole, i.e., by the sign of the curvature $d^2x/dy^2$ of the trajectory at the emission point. As the curvature is proportional to the local magnetic field (see the bending magnet), the handedness is set by the sign of the magnetic field at the emission point. The poles where the electron turns toward $+\hat{x}$ (clockwise seen from above) emit right-handed radiation above the orbit plane, as the bending magnet of the previous example, and the poles where it turns toward $-\hat{x}$ emit left-handed radiation above the plane. We consider a wiggler with $K=20.49$, 6 periods of 15~cm, in a 6.0~GeV ring, at 8~keV. Fig.~\ref{fig:synchrotron}c shows that the ellipses of the rays are similar to those of the bending magnet (here the ray plotted with a thick line is emitted below the orbit plane, at a pole where the electron turns toward $-\hat{x}$, and it is right-handed). Fig.~\ref{fig:synchrotron}d shows the Stokes parameters separated by the sign of the curvature at the emission point: each family has the behaviour of a bending magnet ($P_3=-0.66$ above and $+0.66$ below the orbit plane for the poles turning toward $+\hat{x}$, and the opposite for the others), but the two families have the same intensity and opposite handedness, so that $P_3\approx0$ at every angle $Z'$, and not only for the whole beam. Therefore, a slit above or below the orbit plane does not select circular polarization in a planar wiggler. The beam has $P_1=0.645$ and DOP$=0.645$.
 
 \paragraph{Undulator.}
-For undulators \cite{SanchezdelRio2025undulators}, the emission codes (internal, pySRU or SRW) calculate the complex amplitudes of the horizontal and vertical components of the electric field in the far field, in a grid of polar angles covering one quadrant. SHADOW4 interpolates the normalized Stokes parameters of the emission at the angles of each ray, and obtains the moduli of the electric vectors and the phase difference with equation~(\ref{eq:P_from_stokes}). The other quadrants are obtained by the symmetry of a planar undulator: $P_2$ changes sign with the sign of $X'Z'$ and $P_3$ with the sign of $Z'$. The radiation of a planar undulator is mainly linearly polarized, with the polarization direction slightly rotated off axis ($P_2\ne0$, with opposite signs in contiguous quadrants), and a small $P_3$ off axis (finite number of periods, photon energy off resonance). These calculations have been verified with an independent time-domain calculation of the Li\'enard--Wiechert field of the electron trajectory. We consider an undulator with $K=1.656$, 111 periods of 18~mm, in a 6.084~GeV ring, at the resonance energy 8.234~keV, with rays within an angle of 18~$\mu$rad, i.e., $0.21/\gamma$ (the central cone). Fig.~\ref{fig:synchrotron}e shows that the rays are almost linearly polarized in the horizontal direction. Fig.~\ref{fig:synchrotron}f shows $P_1\ge0.9987$ for all the rays, $P_2$ up to $\pm0.05$ at the largest angles (with mean values $\pm0.005$ in the quadrants $X'Z'>0$ and $X'Z'<0$), and $|P_3|<0.02$. The beam is linearly polarized in the horizontal direction ($P_1=1.000$, DOP$=0.99997$).
+For undulators \cite{SanchezdelRio2025undulators}, the emission codes (internal, pySRU or SRW) calculate the complex amplitudes of the horizontal and vertical components of the electric field in the far field, in a grid of polar angles covering one quadrant. SHADOW4 interpolates the normalized Stokes parameters of the emission at the angles of each ray, and obtains the moduli of the electric vectors and the phase difference with equation~(\ref{eq:P_from_stokes}). The other quadrants are obtained by the symmetry of a planar undulator: $P_2$ changes sign with the sign of $X'Z'$ and $P_3$ with the sign of $Z'$. The radiation of a planar undulator is mainly linearly polarized, with the polarization direction slightly rotated off axis ($P_2\ne0$, with opposite signs in contiguous quadrants), and a small $P_3$ off axis (finite number of periods, photon energy off resonance). These calculations have been verified with an independent time-domain calculation of the Li\'enard--Wiechert field of the electron trajectory. We consider an undulator with $K=1.656$, 111 periods of 18~mm, in a 6.0~GeV ring, at the resonance energy 8.008~keV, with rays within an angle of 18~$\mu$rad, i.e., $0.21/\gamma$ (the central cone). Fig.~\ref{fig:synchrotron}e shows that the rays are almost linearly polarized in the horizontal direction: the ellipses are very flat, and slightly tilted, with opposite tilts in contiguous quadrants. Fig.~\ref{fig:synchrotron}f shows $P_1\ge0.9988$ for all the rays, $P_2$ up to $\pm0.05$ at the largest angles (with mean values $\pm0.005$ in the quadrants $X'Z'>0$ and $X'Z'<0$), and $|P_3|<0.02$. The beam is linearly polarized in the horizontal direction ($P_1=1.000$, DOP$=0.99997$).
 
 The polarization of the undulator is very different from that of the bending magnet and of the wiggler, although the three sources are made of curved trajectories. For the bending magnet (and for each wiggler pole), the observer receives a short pulse emitted by an arc of one curvature: the horizontal field is even in time and the vertical field (due to the apparent vertical motion of the electron for an observer out of the orbit plane) is odd, giving the phase difference of $\pm90^\circ$ and the elliptical polarization, with ellipse axes along $\check{x}$ and $\check{y}$, and with an ellipticity that is already large at small angles ($|P_3|\approx0.3$ at $\gamma\psi_v=0.2$ for the bending magnet of Fig.~\ref{fig:synchrotron}b). In the wiggler, the poles of opposite field add incoherently, so each ray is elliptical but the handedness of the rays is mixed at every angle. In the undulator, the field at the harmonic is the coherent sum of the contributions of all the periods, and each period contains two arcs of opposite curvature: the vertical components in quadrature cancel, and the remaining field is in phase with the horizontal one, i.e., the polarization is linear. In the frame moving with the average velocity of the electron, the electron is a dipole oscillating along $x$, and the radiated field is polarized along $\hat{n}'\times(\hat{n}'\times\hat{x})$, the projection of $\hat{x}$ on the plane perpendicular to the direction of observation: it is horizontal on axis, and slightly rotated off axis, with $E_y/E_x\approx 2\gamma^{*2}X'Z'$ ($\gamma^*=\gamma/\sqrt{1+K^2/2}$) to lowest order, in the standard frame, so that $P_2\approx2E_y/E_x$ changes sign with the quadrant ($P_2>0$ for $X'Z'>0$). For our example, at the edge of the aperture ($\gamma\theta\approx0.2$), this gives $|P_2|$ of a few $10^{-2}$, as calculated ($\pm0.05$, i.e., a rotation of the polarization of about $1^\circ$). The residual $P_3$ is due to the finite number of periods and to the photon energy slightly off resonance.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{figures/stokes_synchrotron_sources.png}
-\caption{Polarization of synchrotron sources: (left) polarization ellipses seen by an observer looking toward the source, with the electric field of a sample of 20 rays (thin lines) and of one of them (thick line, the arrow indicates the sense of rotation), colored according to their helicity (orange: left-handed, $P_3>0$; cyan: right-handed, $P_3<0$; gray: nearly linear, $|P_3|<0.05$), and the ellipse of the polarized part of the beam, obtained from the summed Stokes parameters (dashed line); (right) normalized Stokes parameters $P_k=S_k/S_0$ of the rays versus their vertical direction $Z'$ (about 1000 rays are plotted).
-(a,b) ESRF bending magnet (6.04~GeV, $B=-0.8$~T, electrons turning clockwise seen from above) at 8~keV: the thick ray is emitted below the orbit plane ($Z'=-97~\mu$rad) and is therefore left-handed (counter-clockwise); the ellipse of the polarized part degenerates to a horizontal line (DOP=0.674); the lines in (b) are the analytical expressions; the radiation is right-handed ($P_3<0$) above and left-handed ($P_3>0$) below the orbit plane.
-(c,d) Wiggler ($K=20.49$, 6 periods of 15~cm, 6.0~GeV) at 8~keV: the thick ray is emitted below the orbit plane at a pole where the electron turns toward $-\hat{x}$, and is right-handed (DOP=0.645); in (d), $P_3$ is shown separately for the rays emitted at the poles where the electron turns toward $+\hat{x}$ and $-\hat{x}$.
-(e,f) Undulator ($K=1.656$, 111 periods of 18~mm, 6.084~GeV) at 8.234~keV, within 18~$\mu$rad: almost linear horizontal polarization (note the expanded vertical scale in (e)): the ellipses are very flat and slightly tilted, with opposite tilts in contiguous quadrants; in (f), $P_2$ is shown separately for the quadrants $X'Z'>0$ and $X'Z'<0$, and $P_1>0.9987$ is not shown.}
+\caption{Polarization of synchrotron sources (parameters in the text). Left: polarization ellipses seen by an observer looking toward the source, for 20 rays (thin lines) and one of them (thick line, the arrow indicates the sense of rotation), colored by helicity (orange: left-handed; cyan: right-handed; gray: nearly linear), and ellipse of the polarized part of the beam (dashed line). Right: normalized Stokes parameters of the rays versus $Z'$.\newline
+(a,b) Bending magnet; the lines in (b) are the analytical expressions.\newline
+(c,d) Wiggler; $P_3$ is shown separately for the poles where the electron turns toward $+\hat{x}$ and $-\hat{x}$.\newline
+(e,f) Undulator (central cone); note the expanded vertical scale in (e); $P_2$ is shown separately for the quadrants $X'Z'>0$ and $X'Z'<0$.}
 \label{fig:synchrotron}
 \end{figure}
 
@@ -485,11 +485,11 @@ The beamline element orientation angle $\alpha$ is not reset after the scatterin
 
 
 The beam coming from the source or a previous beamline element must be converted into the reference frame of the beamline element for performing the ray tracing.
-This is done with the method {\tt S4Beam.rotate}\footnote{\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beam.html#shadow4.beam.s4_beam.S4Beam.rotate}}, which is a change of coordinates: all the vectors of the rays ($\vec{x}$, $\vec{v}$ and $\vec{E}_{\sigma,\pi}$) are re-expressed in a set of axes rotated by a given angle around a given axis.
+This is done with the method {\tt S4Beam.rotate}\footnote{\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beam.html#shadow4.beam.s4_beam.S4Beam.rotate}}, which is a change of coordinates: all the vectors of the rays ($\vec{r}$, $\vec{v}$ and $\vec{E}_{\sigma,\pi}$) are re-expressed in a set of axes rotated by a given angle around a given axis.
 To put the beam in the local reference of the beamline element, these sequential operations are applied:
 \begin{itemize}
-    \item rotate the axes by the angle $\alpha$ around $\hat{u}_y$=(0,1,0) (from $x$ toward $z$);
-    \item rotate the axes by the grazing angle $\theta_g=\pi/2-\theta$ around $\hat{u}_x$=(1,0,0);
+    \item rotate the axes by the angle $\alpha$ around $\hat{y}$ (from $\hat{x}$ toward $\hat{z}$);
+    \item rotate the axes by the grazing angle $\theta_g=\pi/2-\theta$ around $\hat{x}$ (from $\hat{y}$ toward $\hat{z}$);
     \item translate the beam coordinates $\vec{r}$ a distance $p$ backwards along the incident direction, i.e., by $(0, -p\cos\theta_g, p\sin\theta_g)$.
 \end{itemize}
 As an example, see the listed code\footnote{\tiny \url{https://shadow4.readthedocs.io/en/latest/shadow4.beamline.optical_elements.mirrors.html#shadow4.beamline.optical_elements.mirrors.s4_mirror.S4MirrorElement.trace_beam}}.
@@ -506,23 +506,21 @@ These operations are done by the method {\tt S4Beam.change\_to\_image\_reference
     \item propagated along their directions up to the image plane, which is perpendicular to the central outgoing ray at a distance $q$ (the outgoing grazing angle $\pi/2-\theta'$ is used), and
     \item expressed in the image coordinate system, with origin at the center of the image plane. For that, all the vectors ($\vec{r}$, $\vec{v}$ and $\vec{E}_{\sigma,\pi}$) are projected onto the versors of the new reference.
 \end{itemize}
-The optical path is increased by the propagated distance (times the refraction index).
+The optical path is increased by the propagated distance (times the refractive index).
 
 It is important that the changes of reference system (before and after interaction with the beamline element) do not affect the phases $\phi_\sigma$ and $\phi_\pi$, and conserve the modulus of each electric field component $\vec{E}_\sigma$ and $\vec{E}_\pi$. Being rotations, they also conserve the Stokes parameters of the rays, and do not alter the orthogonality relationships:
-\begin{eqnarray}
+\begin{equation}
 \label{ortho}
-\vec{E}_\sigma \perp \vec{E}_\pi \nonumber \\
-\vec{E}_\sigma \perp \vec{v} \nonumber \\
-\vec{E}_\pi \perp \vec{v}.
-\end{eqnarray}
+\vec{E}_\sigma \perp \vec{E}_\pi, \qquad \vec{E}_\sigma \perp \vec{v}, \qquad \vec{E}_\pi \perp \vec{v}.
+\end{equation}
 
 \subsection{Jones calculus in the scattering plane}\label{sec:S4}
 
-The interaction of the SHADOW beam with the optical element  uses the Jones calculus \cite{Jones1941a, Jones1941b} in SHADOW4. We explain here the theory and implementation. This is new in SHADOW4, and the old implementation in SHADOW3 is described in Appendix~\ref{sec:S3}.
+The interaction of the SHADOW beam with the optical element uses the Jones calculus \cite{Jones1941a, Jones1941b} in SHADOW4. We explain here the theory and implementation. This is new in SHADOW4, and the old implementation in SHADOW3 is described in Appendix~\ref{sec:S3}.
 
 Fully polarized light can be described using the Jones calculus. The polarized electric field is represented by a Jones vector, made by two complex numbers representing the scalar electric field for the $\sigma$ and $\pi$ polarizations. 
 The effect of the beamline elements is represented by Jones matrices.
-In such a way, the light after the interaction with the optical element is found by taking the product of the Jones matrix of the optical element and the Jones vector of the incident light.
+In such a way, the light after the interaction with the optical element is obtained as the product of the Jones matrix of the optical element and the Jones vector of the incident light.
 
 The Jones vector of a ray, following equation~(\ref{eq:electricfieldray2}), is
 \begin{equation}
@@ -553,7 +551,7 @@ In general, a Jones matrix is applied to a Jones vector to get the scattered Jon
     \end{pmatrix}.
 \end{equation}
 
-The Jones matrix that represents a generic beamline element is\footnote{The off-diagonal elements in the most common beamline elements like crystals, gratings, mirrors and multilayer are zero}
+The Jones matrix that represents a generic beamline element is\footnote{The off-diagonal elements in the most common beamline elements like crystals, gratings, mirrors and multilayers are zero.}
 \begin{equation}\label{eq:J}
 \textbf{J}_e = 
 \begin{pmatrix}
@@ -777,7 +775,7 @@ A polarizer transmits (or reflects) one linear polarization and suppresses the o
 \subsection{Visible range: mirrors at the Brewster angle}\label{sec:visible_polarizers}
 Polarizing light using mirror reflection exploits the phenomenon of Brewster's angle. The Brewster angle emerges naturally from the Fresnel equations \cite{born_wolf}, which describe the reflection and transmission of light at the interface between two media. At the Brewster angle, the reflection coefficient for $\pi$-polarized light becomes zero, leading to complete transmission of the $\pi$-polarized component into the second medium. This phenomenon results in the reflected light being completely $\sigma$-polarized.
 
-To check this, we created in SHADOW4 a pencil beam (point source, zero divergence and monochromatic), where all rays are identical, with horizontal linear polarization ($P=1$, $\Phi=0$). We send the beam to a plane glass mirror (refraction index $n$=1.51) rotated azimuthally by $\alpha=-45^\circ$, and we scan the incident angle (each point comes from a different SHADOW4 run). The intensities of the $\sigma$ and $\pi$ components of the reflected ray versus the incident angle are shown in Fig.~\ref{fig:visible}(a). As the incident ray has equal $\sigma$ and $\pi$ intensities (0.5 each) with respect to the scattering plane of the mirror, these intensities are $|r_s|^2/2$ and $|r_p|^2/2$, which compare directly with the reflectances in Fig. 1.12 of \cite{born_wolf} (6th edition). The intensity of the $\pi$ component vanishes at the Brewster angle $\theta_{Bw}=\arctan(1.51)=56.5^\circ$.
+To check this, we created in SHADOW4 a pencil beam (point source, zero divergence and monochromatic), where all rays are identical, with horizontal linear polarization ($P=1$, $\Phi=0$). We send the beam to a plane glass mirror (refractive index $n$=1.52, as in Fig.~1.12 of \cite{born_wolf}) rotated azimuthally by $\alpha=-45^\circ$, and we scan the incident angle (each point comes from a different SHADOW4 run). The intensities of the $\sigma$ and $\pi$ components of the reflected ray versus the incident angle are shown in Fig.~\ref{fig:visible}(a). As the incident ray has equal $\sigma$ and $\pi$ intensities (0.5 each) with respect to the scattering plane of the mirror, these intensities are $|r_s|^2/2$ and $|r_p|^2/2$: twice their values are the reflectivities $\mathcal{R}_\perp$ and $\mathcal{R}_\parallel$ in Fig.~1.12 of \cite{born_wolf} (6th edition), and their sum is the reflectivity for natural light. The intensity of the $\pi$ component vanishes at the Brewster angle $\theta_{Bw}=\arctan(1.52)=56.7^\circ$ ($56^\circ40'$ in \cite{born_wolf}).
 As expected (section~\ref{sec:equivalence}), the same results are obtained with a beam linearly polarized at $45^\circ$ ($P=0.5$, $\Phi=0$) and the mirror at $\alpha=0$ (Fig.~\ref{fig:visible}).
 %Note that the orientation angle must be $-45^\circ$: with $\alpha=+45^\circ$ the intensities are the same, but the phase difference changes by $\pi$, because then the field corresponds to $P=0.5$ and $\Phi=180^\circ$ (along $\hat{u}_\sigma-\hat{u}_\pi$).
 The change of phase ($\sigma$ minus $\pi$) is $\pi$ below the Brewster angle, and zero above it (Fig.~\ref{fig:visible}(b)).
@@ -786,35 +784,28 @@ The change of phase ($\sigma$ minus $\pi$) is $\pi$ below the Brewster angle, an
 \centering
 \includegraphics[width=0.95\linewidth]{figures/visibleR.png}
 \includegraphics[width=0.95\linewidth]{figures/visiblePhase.png}
-\caption{Reflection of a linearly polarized ray by a glass mirror ($n$=1.51), as a function of the incident (or reflected) angle: (a) intensities of the $\sigma$ and $\pi$ components after reflection; (b) change of phase ($\sigma$ minus $\pi$). Lines: beam linearly polarized at 45$^\circ$ and mirror with $\alpha=0$; dots: beam with horizontal linear polarization and mirror with $\alpha=-45^\circ$. The dotted vertical line marks the Brewster angle.}
+\caption{Reflection of a linearly polarized ray by a glass mirror ($n$=1.52), as a function of the incident (or reflected) angle: (a) intensities of the $\sigma$ and $\pi$ components after reflection; (b) change of phase ($\sigma$ minus $\pi$). Lines: beam linearly polarized at 45$^\circ$ and mirror with $\alpha=0$; dots: beam with horizontal linear polarization and mirror with $\alpha=-45^\circ$. The dotted vertical line marks the Brewster angle.}
 \label{fig:visible}
 \end{figure}
 
-Some examples of exploiting the Brewster angle for applications are:
-\begin{itemize}
-    \item Photography: Polarizing filters reduce glare by blocking light reflected at the Brewster angle, e.g., from water or glass.
-    \item Laser Systems: Brewster windows ensure lasers emit linearly polarized light with minimal reflection.
-    \item Polarizing Beam Splitters: Separate s and p polarized light for optical experiments.
-    \item Sunglasses: Polarized lenses block glare from horizontal surfaces, strongest at the Brewster angle.
-    \item Refractive Index Measurement: Calculate $n=\tan(\theta_{Bw})$ by measuring the Brewster angle.
-\end{itemize}
+The Brewster angle is used, e.g., in Brewster windows of lasers, polarizing filters and beam splitters, and to measure refractive indices ($n=\tan\theta_{Bw}$).
 
 \subsection{X-rays: crystals at $\theta_B\simeq45^\circ$}\label{sec:polarizers45degBenchmark}
 We want to study the polarization produced in an x-ray beam by a series of reflections with $\theta_B=\pi/4$. In this case, the crystal reflectivity (in amplitudes) is $r_\sigma \approx 1$ and $r_\pi \approx 0$. The interest of multiple reflections is to eliminate the $\pi$ component by successive reflections (i.e. multiplication) by $r_\pi$.
 
 \subsubsection{Benchmarking}
 
-In this paragraph we consider the Si800 crystal, for which $\theta_B=45^{\circ}$ corresponds to the photon energy 12914.735~eV. There, $\cos(2\theta_B)\approx 0$ and $r_\pi$ practically vanishes. To have a small but non-negligible $\pi$ reflectivity we use the photon energy 12914.0~eV. The Bragg angle at this energy is $\theta_B=45.003257^{\circ}$, and the ``corrected Bragg angle'' (at which the crystal is positioned) is $\theta_{Bc}=45.003592^{\circ}$.
-At this corrected Bragg angle, the reflectivities (calculated with {\it crystalpy} for a thick crystal, using {\it xraylib} for the structure factors) are $r_\sigma=-0.0247-0.970 i$ and $r_\pi=(9.33+11.00 i)~10^{-4}$.
-The squared modulus, or reflectance, are $R_\sigma=|r_\sigma|^2=0.941660$ and
-$R_\pi=|r_\pi|^2=2.081562~10^{-6}$.
+In this paragraph we consider the Si 800 reflection, for which $\theta_B=45^{\circ}$ corresponds to the photon energy 12914.735~eV. There, $\cos(2\theta_B)\approx 0$ and $r_\pi$ practically vanishes. To have a small but non-negligible $\pi$ reflectivity we use the photon energy 12914.0~eV. The Bragg angle at this energy is $\theta_B=45.003257^{\circ}$, and the ``corrected Bragg angle'' (at which the crystal is positioned) is $\theta_{Bc}=45.003592^{\circ}$.
+At this corrected Bragg angle, the reflectivities (calculated with {\it crystalpy} for a thick crystal, using {\it xraylib} for the structure factors) are $r_\sigma=-0.0247-0.970 i$ and $r_\pi=(9.33+11.00 i)\times10^{-4}$.
+The reflectances are $R_\sigma=|r_\sigma|^2=0.941660$ and
+$R_\pi=|r_\pi|^2=2.081562\times10^{-6}$.
 
-Let us use 8 crystals, divided in two packs of 4 crystals each (the ``polariser" and the ``analyser"). A pack has the crystals in non-dispersive configuration $(+,-,+,-)$. The second pack is rotated 90$^\circ$ with respect to the first pack. Therefore we consider all the crystals as a single rigid body, with all crystals well aligned.
+Let us use 8 crystals, divided in two packs of 4 crystals each (the ``polarizer'' and the ``analyzer''). A pack has the crystals in non-dispersive configuration $(+,-,+,-)$. The second pack is rotated 90$^\circ$ with respect to the first pack. We consider all the crystals as a single rigid body, with all crystals well aligned.
 
 We now have to define the incident beam and the orientation of the first crystal with respect to this beam. For our first tests we define an idealized pencil beam (zero cross section, and zero divergence), with a given polarization $P$. In our ray tracing source, all rays are identical. We consider two physically equivalent cases (section~\ref{sec:equivalence}), referred to as case 1 and case 2:
 \begin{enumerate}
-    \item a source linearly polarized with $P=1$ (Jones vector of each ray $(1,0)^T$) and first crystal rotated -45$^\circ$ along the beam direction (zero is facing up).
-    \item a source linearly polarized with $P=0.5$ [Jones vector of each ray $(2^{-1/2},2^{-1/2})^T$] and first crystal is facing up.    
+    \item a source linearly polarized with $P=1$ (Jones vector of each ray $(1,0)^T$) and first crystal rotated by $\alpha=-45^\circ$ around the beam direction ($\alpha=0$: reflection upward).
+    \item a source linearly polarized with $P=0.5$ [Jones vector of each ray $(2^{-1/2},2^{-1/2})^T$] and first crystal with $\alpha=0$ (reflection upward).    
 \end{enumerate}
 
 \paragraph{Case 1.}
@@ -876,9 +867,9 @@ Therefore, the Jones vector after all reflections is:
 
 The intensities (per incident ray of unit intensity) are
 \begin{itemize}
-    \item $\sigma$-polarized $I_\sigma=|2^{-1/2}~r_\sigma^4 r_\pi^4|^2$=7.38~ 10$^{-24}$
+    \item $\sigma$-polarized $I_\sigma=|2^{-1/2}~r_\sigma^4 r_\pi^4|^2=7.38\times10^{-24}$
     \item $\pi$-polarized: the same
-    \item total 1.48~ 10$^{-23}$.
+    \item total $1.48\times10^{-23}$.
 \end{itemize}
 SHADOW4 results are in good agreement (scripts {\tt si800\_rs\_rp\_xraylib.py} and {\tt shadow4\_case\_1\_and\_2.py} in supplementary material).
 
@@ -981,7 +972,7 @@ A phase shifter (or phase retarder) introduces a phase difference between two or
 \subsection{Visible range: the Fresnel rhomb}\label{sec:visible_phaseshifters}
 
 As shown in section~\ref{sec:visible_polarizers}, the mirror reflection at Brewster angle is used for obtaining linearly polarized beams when $n_1<n_2$ (e.g. from air to glass with visible light).
-To convert linear into circular or elliptical polarization, a phase difference between the $\sigma$ and $\pi$ components is needed. This can be obtained with the total internal reflection, when the beam travels in a denser medium ($n_1>n_2$, e.g. from glass to air) and the incidence angle is larger than the critical angle $\theta_c=\arcsin(n_2/n_1)$. The intensities and the phase change for a single internal reflection glass--air ($n_1=1.51$, $n_2=1$, $\theta_c=41.47^\circ$) calculated with SHADOW4 are shown in Fig.~\ref{fig:internal}. They are obtained in a single run, with a point source emitting 5000 rays at $\lambda=446$~nm, linearly polarized at $45^\circ$ ($P=0.5$, $\Phi=0$), with a uniform vertical divergence of $\pm0.8$~rad around an incidence angle of $45^\circ$, so that the incidence angle covers the interval $0$--$90^\circ$. Below the critical angle the reflection is partial, and the $\pi$ intensity vanishes at the internal Brewster angle $\arctan(n_2/n_1)=33.5^\circ$, where the phase difference jumps from $180^\circ$ to $0$. Above the critical angle the reflection is total for both polarizations, and the phase change $\phi_\sigma-\phi_\pi$ given by equations~(\ref{eq:mirrorphases}) and (\ref{eq:mirrorphasep}) is positive.
+To convert linear into circular or elliptical polarization, a phase difference between the $\sigma$ and $\pi$ components is needed. This can be obtained with the total internal reflection, when the beam travels in a denser medium ($n_1>n_2$, e.g. from glass to air) and the incidence angle is larger than the critical angle $\theta_c=\arcsin(n_2/n_1)$. The intensities and the phase change for a single internal reflection glass--air ($n_1=1.51$, as for the Fresnel rhomb in \cite{born_wolf}, $n_2=1$, $\theta_c=41.47^\circ$) calculated with SHADOW4 are shown in Fig.~\ref{fig:internal}. They are obtained in a single run, with a point source emitting 5000 rays at $\lambda=446$~nm, linearly polarized at $45^\circ$ ($P=0.5$, $\Phi=0$), with a uniform vertical divergence of $\pm0.8$~rad around an incidence angle of $45^\circ$, so that the incidence angle covers the interval $0$--$90^\circ$. Below the critical angle the reflection is partial, and the $\pi$ intensity vanishes at the internal Brewster angle $\arctan(n_2/n_1)=33.5^\circ$, where the phase difference jumps from $180^\circ$ to $0$. Above the critical angle the reflection is total for both polarizations, and the phase change $\phi_\sigma-\phi_\pi$ given by equations~(\ref{eq:mirrorphases}) and (\ref{eq:mirrorphasep}) is positive.
 
 \begin{figure}
 \centering
@@ -1013,18 +1004,19 @@ e^{-i\pi/4}
 which, in the standard basis (section~\ref{sec:definitions}), is $(1,i)^T/\sqrt{2}$: left-handed circular polarization, with $P_3=S_3/S_0=+1$.
 We checked this with SHADOW4 by ray tracing two internal reflections, with the second surface rotated by $\alpha=180^\circ$ so that the beam exits parallel to the incident one, as in the rhomb. The incidence angle is scanned from $0.1^\circ$ to $89.9^\circ$ (in steps of $0.1^\circ$), tracing for each angle a pencil beam (a single ray) at $\lambda=446$~nm, linearly polarized at $45^\circ$ ($P=0.5$, $\Phi=0$). We evaluate the degree of circular polarization as the ratio $P_3=S_3/S_0$, where $S_3$ is the difference between the intensities of the left-handed and right-handed circularly polarized components and $S_0$ the total intensity. The ray tracing results are shown in Fig.~\ref{fig:rtrhomb}: after the two reflections, $P_3=+1$ (left-handed) at the two solutions above. The same results are obtained in a single run with a point source emitting a fan of rays (uniform vertical divergence of $\pm0.8$~rad around an incidence angle of $45^\circ$), as used for Fig.~\ref{fig:internal}. As expected (section~\ref{sec:equivalence}), the same Stokes parameters, to machine precision, are obtained with a beam with horizontal linear polarization and the rhomb rotated by $\alpha=-45^\circ$ (Fig.~\ref{fig:rtrhomb}), while with $\alpha=+45^\circ$ the light becomes right-handed. This check uses pencil beams, because the vertical fan is not contained in the plane of incidence of the rotated rhomb.
 
-\begin{figure}\label{fig:rtrhomb}
+\begin{figure}
 \centering
 \includegraphics[width=0.95\linewidth]{figures/rtrhomb.png}
 \caption{Degree of circular polarization $P_3=S_3/S_0$ after two internal reflections glass--air ($n_1=1.51$, $n_2=1$), as a function of the incident angle. Scans of the incidence angle with pencil beams. Line: incident light linearly polarized at $45^\circ$ and rhomb at $\alpha=0$; circles: horizontal linear polarization and rhomb at $\alpha=-45^\circ$. The Fresnel rhomb is usable over a wide interval of incidence angles: $P_3>0.99$ from $45.9^\circ$ to $59.8^\circ$. The dotted vertical line marks the critical angle.}
+\label{fig:rtrhomb}
 \end{figure}
 
-The previous calculations neglect the absorption of the glass. It can be included in the refraction index of the glass, $n_1=1.51+ik$. The relative index of the glass--air interface used by SHADOW4 is then $n_2/n_1=1/(1.51+ik)\simeq1/1.51-ik/1.51^2$, i.e., the equivalent $\beta=-k/n_1^2$ is negative, because the absorbing medium is the incident one. In this case, the root of $n_2\cos\theta_2$ must be chosen with care (Appendix~\ref{sec:mirrorandcrystals}): the outgoing wave for partial reflection and the decaying (evanescent) wave for total reflection. The principal square root, used in previous versions of SHADOW4, gives a growing evanescent wave for total reflection when $\beta<0$, which reverses the phases of $r_\sigma$ and $r_\pi$, and therefore the handedness of the light produced by the rhomb. For the N-BK7 glass at 446~nm, $k=1.08\times10^{-8}$ \cite{RefractiveIndexDatabase2024} and $\beta=-4.7\times10^{-9}$, and the Stokes parameters after the rhomb change by less than $3\times10^{-6}$ at all incidence angles. Even with an absorption $10^5$ times larger ($k=10^{-3}$), $P_3$ changes by less than $2\times10^{-5}$ in the working interval of the rhomb (incidence angles larger than $45^\circ$), and the interval with $P_3>0.99$ is unchanged; the largest changes are found close to the critical angle. Note that, for an absorbing incident medium, the Fresnel equations give a reflectance slightly larger than one in total reflection (for $k=10^{-3}$, the intensity after the two reflections exceeds the incident one by up to 1.8\% for incidence angles larger than $45^\circ$), which is a known consequence of the definition of the reflectance when the incident wave is attenuated, and not a gain. In a real rhomb, the absorption is mainly due to the path of the beam inside the glass (about 0.6\% for 2~cm of N-BK7 at 446~nm), which is the same for the $\sigma$ and $\pi$ components and does not change the polarization; it is not included in the reflection by the SHADOW4 mirror. These calculations are included in the script {\tt shadow4\_fresnel\_rhomb.py}.
+The previous calculations neglect the absorption of the glass. It can be included in the refractive index of the glass, $n_1=1.51+ik$. The relative index of the glass--air interface used by SHADOW4 is then $n_2/n_1=1/(1.51+ik)\simeq1/1.51-ik/1.51^2$, i.e., the equivalent $\beta=-k/n_1^2$ is negative, because the absorbing medium is the incident one. In this case, the root of $n_2\cos\theta_2$ must be chosen with care (Appendix~\ref{sec:mirrorandcrystals}): the outgoing wave for partial reflection and the decaying (evanescent) wave for total reflection. The principal square root, used in previous versions of SHADOW4, gives a growing evanescent wave for total reflection when $\beta<0$, which reverses the phases of $r_\sigma$ and $r_\pi$, and therefore the handedness of the light produced by the rhomb. For the N-BK7 glass at 446~nm, $k=1.08\times10^{-8}$ \cite{RefractiveIndexDatabase2024} and $\beta=-4.7\times10^{-9}$, and the Stokes parameters after the rhomb change by less than $3\times10^{-6}$ at all incidence angles. Even with an absorption $10^5$ times larger ($k=10^{-3}$), $P_3$ changes by less than $2\times10^{-5}$ in the working interval of the rhomb (incidence angles larger than $45^\circ$), and the interval with $P_3>0.99$ is unchanged; the largest changes are found close to the critical angle. Note that, for an absorbing incident medium, the Fresnel equations give a reflectance slightly larger than one in total reflection (for $k=10^{-3}$, the intensity after the two reflections exceeds the incident one by up to 1.8\% for incidence angles larger than $45^\circ$), which is a known consequence of the definition of the reflectance when the incident wave is attenuated, and not a gain. In a real rhomb, the absorption is mainly due to the path of the beam inside the glass (about 0.6\% for 2~cm of N-BK7 at 446~nm), which is the same for the $\sigma$ and $\pi$ components and does not change the polarization; it is not included in the reflection by the SHADOW4 mirror. These calculations are included in the script {\tt shadow4\_fresnel\_rhomb.py}.
 
-Phase shifters in the X-ray range, which use the transmitted beam of perfect crystals, are discussed in the next section.
+Phase shifters in the X-ray range, which use the transmitted beam of perfect crystals, are discussed in the next subsection.
 
 \subsection{X-rays: crystal phase plates}\label{sec:phasesifters}
-X-ray phase plates (phase retarders, or phase shifters) convert the linear polarization of the synchrotron beam into circular or elliptical polarization, and are used routinely at synchrotron beamlines \cite{Freeland2002,Bouchenoire2003,Bouchenoire2012,Francoual2013} and also at free-electron lasers \cite{Suzuki2014}; see \cite{Detlefs2012,Suzuki2023} for the description of the polarization and its control. A widely used phase plate is a thin perfect crystal plate in Bragg geometry, set a few Darwin widths off the Bragg angle, and used in transmission \cite{hirano1993nim,PolarizationDraft}. The transmitted (forward-diffracted) amplitudes $t_\sigma$ and $t_\pi$ (equation~\ref{eq:tbragg}) have similar moduli, but their phase difference $\Delta\phi=\phi_\pi-\phi_\sigma=\arg(t_\pi)-\arg(t_\sigma)$ is large close to the Bragg position, and changes smoothly with the detuning. When the diffraction plane is at $45^\circ$ from the incident linear polarization, the $\sigma$ and $\pi$ components have the same amplitude, and $\Delta\phi=\pm90^\circ$ gives circular polarization (quarter-wave plate).
+X-ray phase plates (phase retarders, or phase shifters) convert the linear polarization of the synchrotron beam into circular or elliptical polarization, and are used routinely at synchrotron beamlines \cite{Freeland2002,Bouchenoire2003,Bouchenoire2012,Francoual2013} and also at free-electron lasers \cite{Suzuki2014}; see \cite{Detlefs2012,Suzuki2023} for the description of the polarization and its control. A widely used phase plate is a thin perfect crystal plate in Bragg geometry, set a few Darwin widths off the Bragg angle, and used in transmission \cite{hirano1993nim,PolarizationDraft}. The transmitted (forward-diffracted) amplitudes $t_\sigma$ and $t_\pi$ [equation~(\ref{eq:tbragg})] have similar moduli, but their phase difference $\Delta\phi=\phi_\pi-\phi_\sigma=\arg(t_\pi)-\arg(t_\sigma)$ is large close to the Bragg position, and changes smoothly with the detuning. When the diffraction plane is at $45^\circ$ from the incident linear polarization, the $\sigma$ and $\pi$ components have the same amplitude, and $\Delta\phi=\pm90^\circ$ gives circular polarization (quarter-wave plate).
 
 \subsubsection{Implementation in SHADOW4}
 
@@ -1048,7 +1040,6 @@ The phase difference has opposite signs on both sides of the Bragg angle. Its si
 
 The phase plate was then used with a pencil beam with horizontal linear polarization ($P=1$, $\Phi=0$), with the crystal detuned by $-5\omega_s$ (where the transmission is 0.34--0.37, Fig.~\ref{fig:phase_plate}a). For the crystal with $\alpha=0$, the $\sigma$ and $\pi$ intensities of the transmitted ray are $|t_\sigma|^2=0.3666$ and $|t_\pi|^2=0.3433$, and $\Delta\phi=-52.29^\circ$. When the crystal is rotated by $\alpha=\pm45^\circ$ around the beam, the Jones vector of the transmitted ray in the standard basis of the crystal (the $\sigma$ and $\pi$ directions of the diffraction plane) is $(t_\sigma, t_\pi)^T/\sqrt{2}$ for $\alpha=+45^\circ$, and $(t_\sigma, -t_\pi)^T/\sqrt{2}$ for $\alpha=-45^\circ$. The Stokes parameters of the transmitted ray calculated by SHADOW4 are $S_0=0.355$, $P_1=S_1/S_0=0.033$, $P_2=\pm0.611$ and $P_3=\mp0.791$ for $\alpha=\pm45^\circ$, in agreement with these Jones vectors [$P_1=(|t_\sigma|^2-|t_\pi|^2)/(|t_\sigma|^2+|t_\pi|^2)$, $P_2=\pm2|t_\sigma||t_\pi|\cos\Delta\phi/(|t_\sigma|^2+|t_\pi|^2)$, $P_3=\pm2|t_\sigma||t_\pi|\sin\Delta\phi/(|t_\sigma|^2+|t_\pi|^2)$]. Therefore, the transmitted beam has a circular polarization of 79\%, right-handed for $\alpha=+45^\circ$ and left-handed for $\alpha=-45^\circ$ (the two mirror-symmetric configurations of section~\ref{sec:equivalence}). The handedness is also reversed when the detuning changes sign. These results are obtained with the script {\tt shadow4\_phase\_plate.py}.
 
-The SHADOW4 phase plate has also been compared with the polarization of the beam transmitted by a Si 111 phase plate, measured at the P09 beamline of PETRA III (DESY) \cite{Strempfer2013,Francoual2013}. This comparison, which shows the importance of including the angular and energy distributions of the incident beam, is presented in \cite{SanchezdelRio2026desy}.
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
@@ -1057,19 +1048,20 @@ The SHADOW4 phase plate has also been compared with the polarization of the beam
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
-We have described how the SHADOW4 ray tracing code represents, transports and modifies the electric field of the rays, and how the polarization of the beam is obtained from it. Each ray carries two electric vectors, along the $\sigma$ and $\pi$ directions, and their phases. SHADOW4 keeps the convention of SHADOW3, in which the triad $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})$ is left-handed. We have made explicit the relation with the standard (right-handed) formalism of polarization optics: the standard Jones vector is $(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$, and the Stokes parameters calculated by SHADOW4, for each ray and for the beam, follow the standard definitions and conventions. They can be used to obtain the polarization ellipse of every ray and of the beam, as shown for a geometrical source and for a bending magnet source.
+We have described how the SHADOW4 ray tracing code represents, transports and modifies the electric field of the rays, and how the polarization of the beam is obtained from it. Each ray carries two electric vectors, along the $\sigma$ and $\pi$ directions, and their phases. SHADOW4 keeps the convention of SHADOW3, in which the triad $(\hat{u}_\sigma,\hat{u}_\pi,\vec{v})$ is left-handed. We have made explicit the relation with the standard (right-handed) formalism of polarization optics: the standard Jones vector is $(\mathcal{E}_\sigma,-\mathcal{E}_\pi)^T$, and the Stokes parameters calculated by SHADOW4, for each ray and for the beam, follow the standard definitions and conventions. They can be used to obtain the polarization ellipse of every ray and of the beam, as shown for a geometrical source and for bending magnet, wiggler and undulator sources.
 
 The interaction of the rays with the optical elements is described with the Jones calculus. For each ray, the incident electric field is projected onto the $\sigma$ and $\pi$ directions of its own scattering plane, multiplied by the complex amplitudes of the element, and expressed along the $\sigma$ and $\pi$ directions of the outgoing ray. This is valid for any orientation of the element with respect to the polarization of the incident beam. The amplitudes are calculated with the Fresnel equations for mirrors, and with the dynamical theory of diffraction ({\it crystalpy}) for perfect crystals, both for the diffracted and the transmitted (forward-diffracted) beams. For the Fresnel equations, the root of $n_2\cos\theta_2$ must correspond to an outgoing or decaying transmitted wave, which is not always the principal root.
 
-The examples show that SHADOW4 reproduces the polarization properties of polarizers and phase shifters in the X-ray and visible ranges:
+The examples show that SHADOW4 reproduces the polarization of synchrotron sources, and the polarization properties of polarizers and phase shifters in the visible and X-ray ranges:
 \begin{itemize}
+\item {\it Synchrotron sources.} The polarization of the rays of bending magnets, wigglers and undulators is obtained from the emission at the angles of each ray. For a bending magnet, the handedness above and below the orbit plane is set by the sign of the magnetic field, in agreement with the literature and with a direct calculation of the Li\'enard--Wiechert field; in a wiggler, the poles of opposite field give opposite handedness at every angle, so that a slit does not select circular polarization; the radiation of a planar undulator is linearly polarized, with a small rotation of the polarization that changes sign with the quadrant, obtained from the calculated emission fields. These checks led to corrections in SHADOW4 (the handedness of bending magnets with $B>0$, the sign of the field and the sampling of the vertical angle in wigglers, and the polarization of undulators).
+\item {\it Visible polarizers.} The reflection of linearly polarized light by a glass mirror reproduces the Fresnel reflectances (in agreement with \cite{born_wolf}, $n=1.52$) and the change of phase at the Brewster angle, and the results do not depend on whether the polarization of the light or the orientation of the mirror is rotated.
 \item {\it X-ray polarizers.} A polarizer and analyzer made of crystals at $\theta_B\simeq45^\circ$ (Si 800) gives results in agreement with the analytical Jones calculation, for two physically equivalent configurations of the incident polarization and the orientation of the crystals. For the polarimeter used at the European XFEL, the simulated linear polarization purity ($7.24\times10^{-14}$) agrees with the limit imposed by the divergence of the beam ($7.45\times10^{-14}$) and with the theoretical limit given in \cite{Schulze2022} for this setup.
-\item {\it Visible polarizers.} The reflection of linearly polarized light by a glass mirror reproduces the Fresnel reflectances and the change of phase at the Brewster angle, and the results do not depend on whether the polarization of the light or the orientation of the mirror is rotated.
-\item {\it X-ray phase plates.} A new optical element calculates the transmitted beam of a perfect crystal plate in Bragg geometry, detuned from the Bragg angle. It agrees with direct calculations with {\it crystalpy}, and reproduces the transmission and phase retardation of a Si 220 plate at 10~keV used as phase retarder. A comparison with polarization measurements of a Si 111 phase plate at the P09 beamline of PETRA III is presented in \cite{SanchezdelRio2026desy}.
 \item {\it Visible phase shifters.} Two total internal reflections in a Fresnel rhomb convert linear into circular polarization at the incidence angles predicted by the Fresnel equations, with the handedness given by the Jones calculus. The absorption of the glass has a negligible effect on the polarization.
+\item {\it X-ray phase plates.} A new optical element calculates the transmitted beam of a perfect crystal plate in Bragg geometry, detuned from the Bragg angle. It agrees with direct calculations with {\it crystalpy}, and reproduces the transmission and phase retardation of a Si 220 plate at 10~keV used as phase retarder. A comparison with polarization measurements of a Si 111 phase plate at the P09 beamline of PETRA III is presented in \cite{SanchezdelRio2026desy}.
 \end{itemize}
 
-The simulations of this paper can be reproduced with the scripts available as supplementary material, and most of them also with the SHADOW4 widgets of the OASYS environment. The electric fields of the rays carry their phases, which are preserved through the beamline; this opens the possibility of using them for the simulation of partially coherent beams, a topic that will be addressed in future work. \todo{check: extension of the Jones treatment to gratings and multilayers}
+The simulations of this paper can be reproduced with the scripts available as supplementary material, and most of them also with the SHADOW4 widgets of the OASYS environment (the widget for the crystal phase plate will be included in a forthcoming release). The electric fields of the rays carry their phases, which are preserved through the beamline; this opens the possibility of using them for the simulation of partially coherent beams, a topic that will be addressed in future work. The Jones treatment is implemented for mirrors and crystals; its extension to multilayers (which currently apply real reflectivities to the $\sigma$ and $\pi$ components) and to gratings (whose efficiency is not yet applied) is future work.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1091,14 +1083,13 @@ Snell’s law:
 n_1 \sin\theta_1 = n_2 \sin\theta_2
 \end{equation}
 
-\textbf{S-polarization reflection coefficient (amplitude)}
+The reflection coefficients (amplitudes) for the $\sigma$ (s) and $\pi$ (p) polarizations are
 \begin{equation}
 r_s =
 \frac{n_1 \cos\theta_1 - n_2 \cos\theta_2}
      {n_1 \cos\theta_1 + n_2 \cos\theta_2}
 \end{equation}
-
-\textbf{P-polarization reflection coefficient (amplitude)}
+and
 \begin{equation}
 r_p =
 \frac{n_2 \cos\theta_1 - n_1 \cos\theta_2}
@@ -1114,10 +1105,7 @@ For real refractive indices, from the numerator of $r_p$:
 \begin{equation}
 \theta_{Bw} = \arctan\left(\frac{n_2}{n_1}\right).
 \end{equation}
-At the Brewster angle $\theta_{Bw}$:
-i) The reflected and refracted rays are perpendicular.
-ii) The $p$-polarized reflection vanishes.
-iii) Only the $s$-polarization remains reflected.
+At the Brewster angle the reflected and refracted rays are perpendicular, and only the $\sigma$ (s) polarization is reflected.
 
 The phases of $r_s$ and $r_p$ are
 obtained from the complex
@@ -1197,7 +1185,7 @@ for the Bragg case, and
 \begin{equation}\label{eq:tlaue}
 t_{\mathrm{L}} = \left[\cos(aT) - i\frac{\Omega}{a}\sin(aT)\right] \exp[iT(u_0+\Omega)]
 \end{equation}
-for the Laue case. Far from the Bragg position ($|\Omega|\gg|bu_hu_{-h}|^{1/2}$, so $a\simeq\pm\Omega$), both reduce to $\exp(iTu_0)$, the amplitude of a wave refracted and absorbed along the path $T$ in the crystal, which is the same for the $\sigma$ and $\pi$ polarizations. Close to the Bragg position the transmitted amplitudes $t_\sigma$ and $t_\pi$ differ in modulus and phase, because the diffraction couples the transmitted and diffracted waves with different strengths for both polarizations. This is the basis of the X-ray phase retarders (phase shifters) working in transmission, which use thin crystal plates (typically diamond) in Laue or Bragg geometry, slightly detuned from the Bragg position, where the absorption of the transmitted beam is small and the phase difference $\arg(t_\sigma)-\arg(t_\pi)$ is large \cite{PolarizationDraft}.
+for the Laue case. Far from the Bragg position ($|\Omega|\gg|bu_hu_{-h}|^{1/2}$, so $a\simeq\pm\Omega$), both reduce to $\exp(iTu_0)$, the amplitude of a wave refracted and absorbed along the path $T$ in the crystal, which is the same for the $\sigma$ and $\pi$ polarizations. Close to the Bragg position the transmitted amplitudes $t_\sigma$ and $t_\pi$ differ in modulus and phase, because the diffraction couples the transmitted and diffracted waves with different strengths for both polarizations. This is the basis of the X-ray phase retarders (phase shifters) working in transmission, which use thin crystal plates (typically diamond) in Laue or Bragg geometry, slightly detuned from the Bragg position, where the absorption of the transmitted beam is small and the phase difference $\arg(t_\pi)-\arg(t_\sigma)$ is large \cite{PolarizationDraft}.
 
 These expressions are written for the $\sigma$ polarization. For the $\pi$ polarization, $\chi_h$ and $\chi_{-h}$ are replaced by $C\chi_h$ and $C\chi_{-h}$, with the polarization factor $C=\cos(2\theta_B)$. Note that $C$ is taken with its sign (it is negative for $\theta_B>45^\circ$). This is consistent with the SHADOW definition of the $\pi$ versors, for which $\hat{u}_{\pi,i}\cdot\hat{u}_{\pi,f}=\cos\Theta=\cos(2\theta_B)$ for a symmetric Bragg reflection (section~\ref{sec:S4}). Therefore, the amplitudes $r_\sigma$ and $r_\pi$ calculated by {\it crystalpy} can be directly used as the diagonal elements of the Jones matrix $\textbf{J}_e$ in equation~(\ref{eq:J}). The off-diagonal elements are zero for the charge scattering by a crystal with a scalar susceptibility.
 
@@ -1206,7 +1194,7 @@ The intensity of the diffracted beam is the reflectance $\mathcal{R}=|r|^2/|b|$,
 
 The amplitudes $r_\sigma$ and $r_\pi$ have, in general, different moduli and different phases, which vary across the diffraction profile. This difference is the basis of the crystal polarization optics: at $\theta_B=45^\circ$ we have $C=0$ and $r_\pi=0$, so the crystal is a linear polarizer (section~\ref{sec:polarizers45degBenchmark}), and the phase difference between $t_\sigma$ and $t_\pi$ (and also between $r_\sigma$ and $r_\pi$) in the tails of the diffraction profile is used in crystal phase retarders \cite{PolarizationDraft}.
 
-In the ray tracing, the amplitudes are calculated for each ray, with its own incidence direction and photon energy, and the local normal to the crystal surface at the intercept point. For curved crystals this assumes that the local reflectivity is that of a flat crystal \cite{Guigay2024}. The direction of the diffracted ray is $\mathbf{k}_{out}=\mathbf{k}_h+\beta\mathbf{n}$, with $\mathbf{k}_h=\mathbf{k}_0+\mathbf{h}$, $\mathbf{n}$ the unit vector along the inward normal to the crystal exit surface, and $\beta$ obtained from the condition $|\mathbf{k}_{out}|=k$ \cite{Guigay2024}.
+In the ray tracing, the amplitudes are calculated for each ray, with its own incidence direction and photon energy, and the local normal to the crystal surface at the intercept point. For curved crystals this assumes that the local reflectivity is that of a flat crystal \cite{Guigay2024}. The direction of the diffracted ray is $\mathbf{k}_{out}=\mathbf{k}_h+\varepsilon\mathbf{n}$, with $\mathbf{k}_h=\mathbf{k}_0+\mathbf{h}$, $\mathbf{n}$ the unit vector along the inward normal to the crystal exit surface, and $\varepsilon$ obtained from the condition $|\mathbf{k}_{out}|=k$ \cite{Guigay2024}.
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
@@ -1224,17 +1212,17 @@ The effect of the beamline element (reflection/refraction/diffraction) is applie
 \end{enumerate}
 
 % -----------------------------------------------------------------
-\subsection{Modifications of electric fields in ``local'' o.e.}
+\subsection{Modifications of electric fields in the ``local'' frame of the optical element}
 \label{sec:localoe}
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
 
 The physics of the X-ray reflection and diffraction in an optical surface affects in a different way 
-the {\it local} parallel ($\sigma$) and perpendicular ($\pi$) components. The ``local'' parallel component
-is a vector that sits on the o.e. surface and it is not coincident with the incident $\vec{E}_\sigma$.
+the {\it local} $\sigma$ (parallel to the surface) and $\pi$ components. The ``local'' $\sigma$ component
+is a vector that sits on the surface of the optical element, and it is not coincident with the incident $\vec{E}_\sigma$.
 Therefore, one must calculate the ``local'' $\vec{u}'_\sigma$ and $\vec{u}'_\pi$ vectors that verify
-1) they are orthogonal to $\vec{v}$ and ii) $\vec{u}'_\sigma$ is contained in the o.e. surface. 
+i) they are orthogonal to $\vec{v}$ and ii) $\vec{u}'_\sigma$ is contained in the surface of the optical element. 
 This is done in the method {\tt get\_local\_directions\_sigma\_pi} of {\tt S4Beam}.
 
 % \begin{lstlisting}[caption={Method of {\tt S4Beam} to compute the local directions $\sigma$ and $\pi$ at the beamline element.}, label={lst:localsigmaandpi}, captionpos=b]
@@ -1316,19 +1304,19 @@ moduli, but also the phases. The new (complex) electric vectors are build from t
 new axes, thus originating a transformation in both moduli and phases:
 
 \begin{eqnarray}
-\vec{E'}_\sigma e^{i \phi'_\sigma} = [(\vec{E}_\sigma e^{i \phi_\sigma}).\vec{u'}_\sigma + (\vec{E}_\pi e^{i \phi_\pi}).\vec{u'}_\sigma ] 
+\vec{E'}_\sigma e^{i \phi'_\sigma} = [(\vec{E}_\sigma e^{i \phi_\sigma})\cdot\vec{u'}_\sigma + (\vec{E}_\pi e^{i \phi_\pi})\cdot\vec{u'}_\sigma ] 
   ~~\vec{u'}_\sigma  \\ 
-\vec{E'}_\pi e^{i \phi'_\pi} = [(\vec{E}_\sigma e^{i \phi_\sigma}).\vec{u'}_\pi + (\vec{E}_\pi e^{i \phi_\pi}).\vec{u'}_\pi ] 
+\vec{E'}_\pi e^{i \phi'_\pi} = [(\vec{E}_\sigma e^{i \phi_\sigma})\cdot\vec{u'}_\pi + (\vec{E}_\pi e^{i \phi_\pi})\cdot\vec{u'}_\pi ] 
   ~~\vec{u'}_\pi 
 \end{eqnarray}
 
 
 Defining the projection of the (real) electric field components onto these versors as: 
 \begin{eqnarray}
-a_{11} = \vec{E}_\sigma . \vec{u'}_\sigma, ~~~~ 
-a_{12} = \vec{E}_\inred{\pi} . \vec{u'}_\inred{\sigma} \nonumber \\
-a_{21} = \vec{E}_\inred{\sigma} . \vec{u'}_\inred{\pi}, ~~~~
-a_{22} = \vec{E}_\pi . \vec{u'}_\pi 
+a_{11} = \vec{E}_\sigma \cdot \vec{u'}_\sigma, ~~~~ 
+a_{12} = \vec{E}_\pi \cdot \vec{u'}_\sigma \nonumber \\
+a_{21} = \vec{E}_\sigma \cdot \vec{u'}_\pi, ~~~~
+a_{22} = \vec{E}_\pi \cdot \vec{u'}_\pi 
 \end{eqnarray}
 
 we get:
@@ -1341,10 +1329,10 @@ we get:
 And the moduli are: 
 
 \begin{eqnarray}
-|\vec{E'}_\sigma|^2 = \vec{E'}_\sigma . \vec{E'}_\sigma^*  = 
+|\vec{E'}_\sigma|^2 = \vec{E'}_\sigma \cdot \vec{E'}_\sigma^*  = 
 a_{11}^2 + a_{12}^2 + 2 a_{11} a_{12} \cos(\phi_\sigma-\phi_\pi) \equiv
 M_\sigma^2 \nonumber \\ 
-|\vec{E'}_\pi|^2    = \vec{E'}_\pi    . \vec{E'}_\pi^*     = 
+|\vec{E'}_\pi|^2    = \vec{E'}_\pi \cdot \vec{E'}_\pi^*     = 
 a_{21}^2 + a_{22}^2 + 2 a_{21} a_{22} \cos(\phi_\sigma-\phi_\pi) \equiv
 M_\pi^2
 \end{eqnarray}
@@ -1356,7 +1344,7 @@ Therefore we can construct the new local (real) electric fields as:
 \vec{E'}_\pi = M_\pi \vec{u'}_\pi  
 \end{eqnarray}
 
-To compute the new phases, we insert Eq.~\ref{final1} in Eq.~\ref{withphases} and get: 
+To compute the new phases, we insert equation~(\ref{final1}) in equation~(\ref{withphases}) and get: 
 \begin{eqnarray}
 e^{i \phi'_\sigma} = M_\sigma^{-1} (a_{11} e^{i \phi_\sigma} + a_{12} e^{i \phi_\pi})  \nonumber \\ 
 e^{i \phi'_\pi} =  M_\pi^{-1}      (a_{21} e^{i \phi_\sigma} + a_{22} e^{i \phi_\pi}) 
@@ -1428,19 +1416,19 @@ These equations were implemented in SHADOW3.
 % \end{lstlisting}
 
 
-Note that these transformations imply a polarization mixing, or not conservation of the intensity of each component during the projection ($|\vec{E'}_\sigma| \ne |\vec{E}_\sigma|$),
+Note that these transformations mix the polarizations: the intensity of each component is not conserved in the projection ($|\vec{E'}_\sigma| \ne |\vec{E}_\sigma|$),
 but the total intensity is conserved ($I=|\vec{E}_\sigma|^2+|\vec{E}_\pi|^2=
 |\vec{E'}_\sigma|^2+|\vec{E'}_\pi|^2$). The phases also change.
 % but the difference of thase is conserved $\Phi=\phi_\sigma-\pi_\pi=\phi'_\sigma-\phi'_\pi$ (I think, but I have not demostrated it).
-The new electric vectors are orthogonal to $\vec{v}$ by constructions.
+The new electric vectors are orthogonal to $\vec{v}$ by construction.
 
 % -----------------------------------------------------------------
-\subsection{Reflection/refraction in the o.e. and subsequent changes in electric vectors}
+\subsection{Reflection/refraction in the optical element}
 \label{sec:reflection}
 % -----------------------------------------------------------------
 
-Once the electric vectors are expressed in the o.e. local coordinates ($\vec{E'}_\sigma$ and 
-$\vec{E'}_\pi$) they are multiplied by the mirror/crystal reflectivities and the phases also affected: : 
+Once the electric vectors are expressed in the local coordinates of the optical element ($\vec{E'}_\sigma$ and 
+$\vec{E'}_\pi$) they are multiplied by the mirror/crystal reflectivities, and the phases are also modified:
 \begin{eqnarray}
  \label{reflectivities}
  \vec{E'}_\sigma^{new} = \vec{E'}_\sigma R_\sigma, \nonumber \\
@@ -1448,14 +1436,14 @@ $\vec{E'}_\pi$) they are multiplied by the mirror/crystal reflectivities and the
  {\phi '}_\sigma^{new} = {\phi '}_\sigma + \Sigma_\sigma, \nonumber \\
  {\phi '}_\pi^{new} = {\phi '}_\pi + \Sigma_\pi,
 \end{eqnarray}
-where $R_\sigma$ and $R_\pi$ are the o.e. reflectivities and $\Sigma_\sigma$ and $\Sigma_\pi$ are the  phases added in the reflection/refraction/diffraction. 
+where $R_\sigma$ and $R_\pi$ are the reflectivities of the optical element and $\Sigma_\sigma$ and $\Sigma_\pi$ are the phases added in the reflection/refraction/diffraction. 
 
 % -----------------------------------------------------------------
-\subsection{subsequent changes in electric vectors to guarantee orthogonality}
+\subsection{Subsequent changes in electric vectors to guarantee orthogonality}
 \label{sec:orthogonality}
 % -----------------------------------------------------------------
 
-The resulting electric vectors and phases after applying Eq.~\ref{reflectivities} must now hold the orthogonality relations (Eq.~\ref{ortho}) with respect to the new direction $\vec{v'}$, therefore they must be changed. 
+The resulting electric vectors and phases after applying equation~(\ref{reflectivities}) must now hold the orthogonality relations [equation~(\ref{ortho})] with respect to the new direction $\vec{v'}$, therefore they must be changed. 
 
 % \color{red}
 % This part was incorrectly
@@ -1524,7 +1512,7 @@ The resulting electric vectors and phases after applying Eq.~\ref{reflectivities
 
 % \color{red}
 
-The code simply calculates the new $\sigma$ and $\pi$ versors orthogonal to $\vec{v'}$ and affects them by the electric field moduli that do not change. 
+The code simply calculates the new $\sigma$ and $\pi$ versors orthogonal to $\vec{v'}$ and multiplies them by the moduli of the electric fields, which do not change. 
 Also, the phases are not changed. 
 This guarantees that the intensity is conserved, as well as orthogonality.
 
@@ -1601,9 +1589,6 @@ This guarantees that the intensity is conserved, as well as orthogonality.
 
 %%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
-
-% -----------------------------------------------------------------
 \section{Scripts}\label{sec:scripts}
 % -----------------------------------------------------------------
 
@@ -1624,7 +1609,7 @@ Script & Example \\
 {\tt si800\_rs\_rp\_xraylib.py}, {\tt shadow4\_case\_1\_and\_2.py} & Si 800 polarizer and analyzer (section~\ref{sec:polarizers45degBenchmark}) \\
 {\tt shadow4\_practical\_polarizer.py} & Polarimeter of the European XFEL (Fig.~\ref{fig:polarizer}) \\
 {\tt shadow4\_fresnel\_rhomb.py} & Fresnel rhomb (Figs.~\ref{fig:internal} and \ref{fig:rtrhomb}) \\
-{\tt shadow4\_phase\_plate.py}, {\tt shadow4\_phase\_plate.ows} & Si 220 crystal phase plate (Fig.~\ref{fig:phase_plate}); OASYS workspace \\
+{\tt shadow4\_phase\_plate.py} & Si 220 crystal phase plate (Fig.~\ref{fig:phase_plate}) \\
 \hline
 \end{tabular}
 \end{table}

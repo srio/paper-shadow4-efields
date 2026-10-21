@@ -17,7 +17,7 @@
 # (sign of the trajectory curvature d2x/dy2). The rays are separated by the sign of the curvature at their emission
 # point; the two families have opposite handedness, and S3 cancels for the whole beam.
 #
-# Undulator: 6.084 GeV, K = 1.656, 111 periods of 18 mm, at the resonance 8.234 keV, within +/-18 urad. The amplitudes
+# Undulator: 6.0 GeV, K = 1.656, 111 periods of 18 mm, at the resonance 8.008 keV, within +/-18 urad. The amplitudes
 # are from the undulator emission, with a phase difference of +/- 90 deg with the sign of psi (as for the bending magnet).
 #
 # The theoretical values are plotted only for the bending magnet.
@@ -233,7 +233,7 @@ if __name__ == "__main__":
             zp_ = beam.get_column(6, nolost=1)
             # quadrants: P2 changes sign with X' Z'
             groups = [(xp * zp_ > 0, "X'Z'>0", 'v', 'C2'), (xp * zp_ < 0, "X'Z'<0", '^', 'C8')]
-            title = "Undulator (K=1.656, 111 periods, 8.234 keV)"
+            title = "Undulator (K=1.656, 111 periods, 8.008 keV)"
             kwargs = dict(groups=groups, group_component=2, p_range=(-0.06, 0.06))
         kwargs["title"] = title
 

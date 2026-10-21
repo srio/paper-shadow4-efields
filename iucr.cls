@@ -4255,7 +4255,7 @@
 \def\j@urnalcode{\relax}                         % Some defaults in case the
 \def\j@urnaltitle{\relax}                        %  relevant items are not
 \def\j@urnalfullname{\relax}                     %  declared in the source
-\def\j@urnalyear{2024}                           %  file
+\def\j@urnalyear{2026}                           %  file
 \def\v@lume{00}                                  %
 \def\issn{\relax}
 
