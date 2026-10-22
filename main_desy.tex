@@ -106,24 +106,24 @@
 
 \begin{document}                  % DO NOT DELETE THIS LINE
 
-\title{Ray tracing simulation of an X-ray crystal phase plate: comparison with polarization measurements at the P09 beamline of PETRA III}
+\title{Analysis of polarization measurements with ray tracing}
 
 % \todo{check the author list}
-\cauthor[1]{{Manuel}}{{Sanchez del Rio}}{srio@esrf.eu}{address if different from \aff}
-\author[2]{{Sonia}}{{Francoual}}
-\author[1]{{Carsten}}{{Detlefs}}
+\author[1]{{Sonia}}{{Francoual}}
+\cauthor[2]{{Manuel}}{{Sanchez del Rio}}{srio@esrf.eu}{address if different from \aff}
+\author[2]{{Carsten}}{{Detlefs}}
 
-\aff[1]{ESRF - The European Synchrotron, 71 Avenue des Martyrs, 38000 Grenoble, \country{France}}
-\aff[2]{DESY, Hamburg \country{Germany}}
+\aff[1]{DESY, Hamburg \country{Germany}}
+\aff[2]{ESRF - The European Synchrotron, 71 Avenue des Martyrs, 38000 Grenoble, \country{France}}
 
 \maketitle                        % DO NOT DELETE THIS LINE
 
 \begin{synopsis}
-The polarization of the beam transmitted by a Si 111 phase plate at 2838 eV, measured at the P09 beamline of PETRA III, is simulated with the SHADOW4 ray tracing code. The agreement improves when the angular and energy distributions of the beam are included.
+The polarization of the beam transmitted by a Si 111 phase plate at 2838 eV, measured at the P09 beamline of PETRA III, is simulated with the SHADOW4 ray tracing code. The agreement improves when the angular and energy distributions of the beam are considered.
 \end{synopsis}
 
 \begin{abstract}
-The SHADOW4 ray tracing code includes a new optical element, the crystal phase plate, that calculates the transmitted (forward-diffracted) beam of a perfect crystal in Bragg geometry, and transports the polarization of every ray using the Jones calculus. We simulate the polarization of the beam transmitted by a \SI{10}{\micro\meter} thick Si 111 phase plate at 2838 eV, rocked around the Bragg angle, and compare it with measurements at the P09 beamline of PETRA III. Three models of the incident beam are compared: a pencil beam, the monochromatic beam of the P09 undulator, and the beam of the undulator after a Si 111 double-crystal monochromator. The energy bandwidth selected by the monochromator, which corresponds to an angular spread at the phase plate comparable to the Darwin width, is the main cause of the smoothing of the measured curves, and must be included to reproduce the measurements. The partial depolarization of the beam must also be taken into account when the circular polarization is obtained from the measured linear polarization assuming a fully polarized beam.
+	The crystal phase plate is a new optical component recently implemented in the SHADOW4 ray tracing code. It calculates the transmitted (forward-diffracted) beam of a perfect crystal in Bragg geometry, and transports the polarization of every ray using the Jones calculus. In this paper we simulate the polarization of the beam transmitted by a \SI{10}{\micro\meter} thick Si 111 phase plate at 2838 eV, rocked around the Bragg angle, and compare it with measurements at the P09 beamline of PETRA III. The simulations are done for three input beams, to determine which contributions are noticed in the experimental data: (i) an ideal monochromatic and collimated pencil beam, (ii) the monochromatic undulator beam, and (iii) a polychromatic undulator beam passed by a Si 111 double-crystal monochromator. It is observed that the energy bandwidth selected by the monochromator, whose equivalent angular spread is comparable to the Darwin width of the phase plate, is the main cause of the smoothing of the measured curves. 
 \end{abstract}
 
 
@@ -136,23 +136,33 @@ The SHADOW4 ray tracing code includes a new optical element, the crystal phase p
 
 X-ray phase plates (phase retarders) convert the linear polarization of the synchrotron beam into circular or rotated linear polarization. They are thin perfect crystal plates, set close to (but not exactly at) the Bragg angle and used in transmission: the transmitted (forward-diffracted) amplitudes $t_\sigma$ and $t_\pi$ for the $\sigma$ and $\pi$ polarizations (referred to the diffraction plane) have different phases, and a phase difference $\Delta\phi=\pm90^\circ$ converts a linear polarization at $45^\circ$ from the diffraction plane into circular polarization \cite{hirano1993nim,Detlefs2012,PolarizationDraft}. The P09 beamline of PETRA III (DESY) \cite{Strempfer2013} is equipped with a double phase-retarder setup \cite{Francoual2013}, with diamond plates for the energy range 3.2--14~keV and \SI{10}{\micro\meter} thin silicon plates for the energy range 2.7--3.2~keV \cite{Strempfer2013}.
 
-In a companion paper \cite{SanchezdelRio2026efields} we have described the methods used in the ray tracing code SHADOW4 \cite{ShadowSRN2023} to transport the electric fields of the rays and to modify them by the optical elements using the Jones calculus, in a way that conforms with the standard formalism of polarization optics \cite{PolarizationDraft}. In particular, a new optical element, the crystal phase plate, has been implemented to calculate the transmitted beam of a perfect crystal in Bragg geometry, and it has been validated against direct calculations of the transmission amplitudes with the {\it crystalpy} library \cite{Guigay2024}.
+In a companion paper \cite{SanchezdelRio2026efields} we have described the methods used in the ray tracing code SHADOW4 \cite{SHADOW4} to transport the electric fields of the rays and to modify them by the optical elements using the Jones calculus, in a way that conforms to the standard formalism of polarization optics \cite{PolarizationDraft}. In particular, a new optical element, the crystal phase plate, has been implemented to calculate the transmitted beam of a perfect crystal in Bragg geometry, and it has been validated against direct calculations of the transmission amplitudes with the {\it crystalpy} library \cite{Guigay2024} and against the two-beam dynamical theory far from the Bragg angle.
 
-In this paper we compare SHADOW4 simulations with the polarization of the beam transmitted by a Si 111 phase plate measured at the P09 beamline. The ray tracing allows to include progressively the characteristics of the beam incident on the phase plate. We discuss three cases: (1) a pencil beam (a single ray), which is equivalent to the calculation with the transmission amplitudes for a plane monochromatic wave; (2) the monochromatic beam emitted by the P09 undulator, which includes the angular distribution of the beam; and (3) the polychromatic beam of the undulator after the Si 111 double-crystal monochromator of the beamline, which also includes the energy bandwidth.
+In this paper we compare SHADOW4 simulations with the polarization of the beam transmitted by a Si 111 phase plate measured at the P09 beamline. At this photon energy the Bragg angle of Si 111 is close to $45^\circ$, so that the plate behaves differently from a typical phase plate: close to the Bragg angle it also acts as a polarizer. The ray tracing makes it possible to include progressively the characteristics of the beam incident on the phase plate. We discuss three cases: (i) a pencil beam (a single ray), which is equivalent to the calculation with the transmission amplitudes for a plane monochromatic wave; (ii) the monochromatic beam emitted by the P09 undulator, which includes the angular distribution of the beam; and (iii) the polychromatic beam of the undulator after the Si 111 double-crystal monochromator of the beamline, which also includes the energy bandwidth.
 
 
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
-\section{The experiment}
+\section{Experimental setup}
 \label{sec:experiment}
 % -----------------------------------------------------------------
 % -----------------------------------------------------------------
 
-The source of P09 is a 2~m long U32 planar undulator (period 31.4~mm, 64 periods) placed in a high-$\beta$ straight section of PETRA III (electron energy 6.084~GeV, current 100~mA) \cite{Strempfer2013}. The beam emitted by the undulator is linearly polarized in the horizontal plane [Stokes vector $\mathbf{S}_{in}=(1,1,0,0)^T$]. The photon energy, 2838~eV, is in the first harmonic, close to the lowest energy available at the beamline (2.7~keV).
+The source of P09 is a 2~m long U32 planar undulator (period 31.4~mm, 64 periods) placed in a high-$\beta$ straight section of PETRA III (electron energy 6.0~GeV, current 100~mA) \cite{Strempfer2013}. The beam emitted by the undulator is linearly polarized in the horizontal plane [Stokes vector $\mathbf{S}_{in}=(1,1,0,0)^T$]. The photon energy, 2838~eV, is in the first harmonic, close to the lowest energy available at the beamline (2.7~keV).
 
-The phase plate is a Si 111 crystal plate of thickness \SI{10}{\micro\meter}, in symmetric Bragg geometry. At 2838~eV the Bragg angle (corrected for refraction) is $\theta_B=44.17^\circ$, and the Darwin half width for the $\sigma$ polarization is $\omega_s=\SI{64.5}{\micro\radian}=13.3$~arcsec. The diffraction plane of the plate is rotated by $45^\circ$ around the beam with respect to the horizontal plane. The normalized Stokes parameters $P_1=S_1/S_0$ (horizontal/vertical linear polarization) and $P_2=S_2/S_0$ (linear polarization at $\pm45^\circ$) of the transmitted beam were measured with the polarization analyzer of the beamline \cite{Strempfer2013} as a function of the angle of the crystal plate around the Bragg position (48 measurements between $-302$ and $+306$~arcsec). The circular polarization was obtained as $P_3=+\sqrt{1-P_1^2-P_2^2}$, assuming a fully polarized beam (degree of polarization DOP$=1$). Therefore, its sign (the handedness) is not measured, and its modulus is an upper bound of the circular polarization of a partially polarized beam.
+The phase plate is a Si 111 crystal plate of thickness \SI{10}{\micro\meter}, in symmetric Bragg geometry. The diffraction plane of the plate is rotated by $45^\circ$ around the beam with respect to the horizontal plane. Calculations with {\it crystalpy} \cite{Guigay2024} (script {\tt crystalpy\_desy\_p09.py}) give, at 2838~eV, a Bragg angle (corrected for refraction) $\theta_B=44.17^\circ$, and a Darwin half width for the $\sigma$ polarization $\omega_s=\SI{64.5}{\micro\radian}=13.3$~arcsec.
 
-The Bragg angle close to $45^\circ$ makes this plate behave differently from a typical phase plate: the polarization factor for the $\pi$ polarization, $C=\cos2\theta_B=0.03$, is close to zero, so that, within the reflection, the $\sigma$ component (in the crystal frame) is diffracted while the $\pi$ component is almost not diffracted, and the plate acts as a polarizer. Moreover, at this low photon energy the absorption of the plate is strong: the transmission far from the Bragg angle is only $\exp(-\mu t_c/\sin\theta_B)=0.021$, with $t_c$ the thickness.
+The Bragg angle close to $45^\circ$ means that the polarization factor for the $\pi$ polarization, $C=\cos2\theta_B=0.03$, is close to zero, so that, within the Darwin width, the $\sigma$ component (in the crystal frame) is diffracted while the $\pi$ component is almost not diffracted (Fig.~\ref{fig:crystalpy}a). The $\sigma$ component is therefore removed from the transmitted beam between about $-60$ and $+100$~\si{\micro\radian} from the Bragg angle, while the $\pi$ component is transmitted, and the plate acts as a polarizer (Fig.~\ref{fig:crystalpy}b). Moreover, at this low photon energy the absorption of the plate is strong: the transmission far from the Bragg angle is only $\exp(-\mu t_c/\sin\theta_B)=0.022$, with $t_c$ the thickness (the transmittance of the $\pi$ component in Fig.~\ref{fig:crystalpy}b).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{figures/crystalpyR.png}
+\includegraphics[width=0.85\textwidth]{figures/crystalpyT.png}
+\caption{Si 111 perfect crystal plate of thickness \SI{10}{\micro\meter} in Bragg geometry, at 2838~eV, for the $\sigma$ and $\pi$ polarizations, versus the angle $\theta$ from the Bragg angle $\theta_B$ corrected for refraction. a) Reflectivity (reflected beam). b) Transmittance (transmitted or forward-diffracted beam).}
+\label{fig:crystalpy}
+\end{figure}
+
+The normalized Stokes parameters $P_1=S_1/S_0$ (horizontal/vertical linear polarization) and $P_2=S_2/S_0$ (linear polarization at $\pm45^\circ$) of the transmitted beam were measured with the polarization analyzer of the beamline \cite{Strempfer2013} as a function of the angle of the crystal plate around the Bragg position (48 measurements between $-302$ and $+306$~arcsec). The circular polarization was obtained as $P_3=+\sqrt{1-P_1^2-P_2^2}$, assuming a fully polarized beam (degree of polarization DOP$=1$). Therefore, its sign (the handedness) is not measured, and its modulus is an upper bound of the circular polarization of a partially polarized beam.
 
 
 % -----------------------------------------------------------------
@@ -175,7 +185,7 @@ S_3 &=& \sum_j 2\,\mathrm{Im}\left(E_1^{(j)*}E_2^{(j)}\right),
 \end{eqnarray}
 with the conventions of \cite{SanchezdelRio2026efields} [time factor $e^{-i\omega t}$; $S_3>0$ for left-handed and $S_3<0$ for right-handed circular polarization]. The normalized Stokes parameters are $P_k=S_k/S_0$, and the degree of polarization is $\mathrm{DOP}=(P_1^2+P_2^2+P_3^2)^{1/2}$. Every ray is fully polarized, but the beam is partially polarized (DOP$<1$) when its rays have different polarization states. To compare with the measured $P_3$, we also calculate $\sqrt{1-P_1^2-P_2^2}$ from the simulated $P_1$ and $P_2$, as done with the measurements.
 
-The simulations are done with the script \url{shadow4_phase_plate_stokes_scan.py}, which is available with this paper.
+The simulations are done with the script \url{shadow4_desy_p09_scan.py}, which is available with this paper.
 
 
 % -----------------------------------------------------------------
@@ -190,13 +200,13 @@ The simulations are done with the script \url{shadow4_phase_plate_stokes_scan.py
 
 A pencil beam is a single ray, monochromatic (2838~eV) and with zero divergence, linearly polarized in the horizontal plane. It is equivalent to the calculation of the transmitted plane wave using the transmission amplitudes \cite{PolarizationDraft}, and it is used here as reference. The rocking scan, with a single ray traced for each detuning angle, is shown in Fig.~\ref{fig:pencil}.
 
-Far from the Bragg angle, the plate does not change the polarization ($P_1\simeq1$). Close to it, within the Darwin width, the plate acts as a polarizer, and the transmitted beam is linearly polarized at $45^\circ$ ($P_2\simeq1$); the transmission drops to 0.011, about half of its value far from the Bragg angle (0.021). On both sides of the reflection, the phase difference between the $\sigma$ and $\pi$ components produces circular polarization, with opposite handedness on each side: $|P_3|$ reaches 0.93 (right-handed, $P_3<0$) at $+31$~arcsec, and 0.72 (left-handed) at $-37$~arcsec. As in the example of Si 220 at 10~keV in \cite{SanchezdelRio2026efields}, the largest circular polarization is obtained on the low-angle side of the reflection (positive measured angles), where the transmission is enhanced (up to 0.037).
+Far from the Bragg angle, the plate does not change the polarization ($P_1\simeq1$). Close to it, within the Darwin width, the plate acts as a polarizer, and the transmitted beam is linearly polarized at $45^\circ$ ($P_2\simeq1$); the transmission drops to 0.011, about half of its value far from the Bragg angle (0.021 at the ends of the scan). On both sides of the reflection, the phase difference between the $\sigma$ and $\pi$ components produces circular polarization, with opposite handedness on each side: $|P_3|$ reaches 0.93 (right-handed, $P_3<0$) at $+31$~arcsec, and 0.72 (left-handed) at $-37$~arcsec. As in the example of Si 220 at 10~keV in \cite{SanchezdelRio2026efields}, the largest circular polarization is obtained on the low-angle side of the reflection (positive measured angles), where the transmission is enhanced (up to 0.037).
 
 The simulation reproduces the measured features, their positions, and the signs of $P_1$ and $P_2$. However, the calculated curves have sharper features than the measured ones, like the minimum $P_1=-0.96$ at $+17$~arcsec (the measured minimum is $P_1=-0.38$ at $+11$~arcsec). The root mean square (rms) differences with the 48 measured points are 0.15 for $P_1$ and 0.17 for $P_2$ (Table~\ref{tab:rms}).
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth]{figures/phase_plate_stokes_scan.png}
+\includegraphics[width=0.95\linewidth]{figures/desy_p09_scan_pencil_beam.png}
 \caption{Normalized Stokes parameters of the beam transmitted by a Si 111 phase plate (thickness \SI{10}{\micro\meter}, 2838~eV, $\alpha=45^\circ$) for a horizontally polarized pencil beam, versus the crystal angle. Lines: SHADOW4 (in the laboratory frame); symbols: measurements at the P09 beamline of PETRA III. The measured $P_3$ is $+\sqrt{1-P_1^2-P_2^2}$, and must be compared with $|P_3|$ (dotted line).}
 \label{fig:pencil}
 \end{figure}
@@ -205,13 +215,13 @@ The simulation reproduces the measured features, their positions, and the signs 
 \subsection{Monochromatic undulator beam}
 \label{sec:undulator_mono}
 
-The beam of the U32 undulator of P09 is simulated with the SHADOW4 undulator source, monochromatic at 2838~eV (first harmonic, deflection parameter $K=2.427$), with 5000 rays. The electron beam has the rms sizes and divergences of the high-$\beta$ section of PETRA III ($\sigma_x=\SI{141.5}{\micro\meter}$, $\sigma_y=\SI{4.9}{\micro\meter}$, $\sigma'_x=\SI{7.1}{\micro\radian}$, $\sigma'_y=\SI{2.1}{\micro\radian}$, design values for a 5~m undulator). The rms divergences of the photon beam (convolution of the electron beam divergence and the natural divergence of the undulator radiation) are $11.0\times\SI{8.7}{\micro\radian}$ (H$\times$V). The rays are linearly polarized in the horizontal plane ($P_1=0.9999$).
+The beam of the U32 undulator of P09 is simulated with the SHADOW4 undulator source, monochromatic at 2838~eV (first harmonic, deflection parameter $K=2.382$), with 5000 rays. The electron beam has the rms sizes and divergences of the high-$\beta$ section of PETRA III ($\sigma_x=\SI{141.5}{\micro\meter}$, $\sigma_y=\SI{4.9}{\micro\meter}$, $\sigma'_x=\SI{7.1}{\micro\radian}$, $\sigma'_y=\SI{2.1}{\micro\radian}$, design values for a 5~m undulator). The rms divergences of the photon beam (convolution of the electron beam divergence and the natural divergence of the undulator radiation) are $11.2\times\SI{8.7}{\micro\radian}$ (H$\times$V). The rays are linearly polarized in the horizontal plane ($P_1=0.9999$).
 
-The results are shown in Fig.~\ref{fig:undulator_mono}. They are very similar to those of the pencil beam (Table~\ref{tab:rms}), because the angular spread of the beam (about 2~arcsec rms) is much smaller than the Darwin width. The sharp features are slightly smoothed (the minimum of $P_1$ is $-0.84$), and the beam is slightly depolarized close to the Bragg angle (the minimum DOP is 0.79, at $+15$~arcsec), where $t_\sigma$ and $t_\pi$ change rapidly with the angle.
+The results are shown in Fig.~\ref{fig:undulator_mono}. They are very similar to those of the pencil beam (Table~\ref{tab:rms}), because the angular spread of the beam (about 2~arcsec rms) is much smaller than the Darwin width. The sharp features are slightly smoothed (the minimum of $P_1$ is $-0.84$), and the beam is slightly depolarized close to the Bragg angle (the minimum DOP is 0.78, at $+15$~arcsec), where $t_\sigma$ and $t_\pi$ change rapidly with the angle.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth]{figures/phase_plate_stokes_scan_undulator.png}
+\includegraphics[width=0.95\linewidth]{figures/desy_p09_scan_undulator.png}
 \caption{As Fig.~\ref{fig:pencil}, for the monochromatic beam of the P09 undulator (2838~eV, 5000 rays).}
 \label{fig:undulator_mono}
 \end{figure}
@@ -224,11 +234,11 @@ The beam incident on the phase plate is monochromatized by the Si 111 double-cry
 
 The results are shown in Fig.~\ref{fig:undulator_poly}. The energy bandwidth smooths the curves considerably, and the agreement with the measurements of $P_1$ and $P_2$ improves (rms differences 0.094 and 0.070, Table~\ref{tab:rms}): the minimum of $P_1$ is now $-0.50$ at $+10$~arcsec, and the maximum of $P_2$ is 0.96 at $-10$~arcsec. The beam is now partially polarized close to the Bragg angle (the minimum DOP is 0.52, at $+7.5$~arcsec). The maximum circular polarization is $|P_3|=0.83$ (right-handed, at $+35$~arcsec, with DOP$=0.93$ and a transmission of the plate of 0.033), and 0.68 (left-handed) on the other side of the reflection.
 
-The measured values of $\sqrt{1-P_1^2-P_2^2}$ (up to 0.97) are larger than the calculated $|P_3|$. This is not a disagreement: for a partially polarized beam, $\sqrt{1-P_1^2-P_2^2}$ includes the unpolarized part of the beam and overestimates $|P_3|$. When the same quantity is calculated from the simulated $P_1$ and $P_2$ (dashed line in Fig.~\ref{fig:undulator_poly}), it reproduces the measurements, including the minimum close to the Bragg angle (rms difference 0.069). This shows that the circular polarization of the beam cannot be obtained from the measured linear polarization alone when the beam is partially polarized, as is the case close to the Bragg angle.
+The measured values of $\sqrt{1-P_1^2-P_2^2}$ (up to 0.97) are larger than the calculated $|P_3|$. This is not a disagreement: for a partially polarized beam, $\sqrt{1-P_1^2-P_2^2}$ includes the unpolarized part of the beam and overestimates $|P_3|$. When the same quantity is calculated from the simulated $P_1$ and $P_2$ (dashed line in Fig.~\ref{fig:undulator_poly}), it reproduces the measurements, including the minimum close to the Bragg angle (rms difference 0.068). This shows that the circular polarization of the beam cannot be obtained from the measured linear polarization alone when the beam is partially polarized, as is the case close to the Bragg angle.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\linewidth]{figures/phase_plate_stokes_scan_undulator_polychromatic.png}
+\includegraphics[width=0.95\linewidth]{figures/desy_p09_scan_undulator_polychromatic.png}
 \caption{As Fig.~\ref{fig:pencil}, for the beam of the P09 undulator after the Si 111 double-crystal monochromator (5000 rays). The dashed line is $\sqrt{1-P_1^2-P_2^2}$ calculated with the simulated $P_1$ and $P_2$, to be compared with the measured values (triangles).}
 \label{fig:undulator_poly}
 \end{figure}
@@ -242,7 +252,7 @@ Incident beam & $P_1$ & $P_2$ & $\sqrt{1-P_1^2-P_2^2}$ & $|P_3|_{max}$ \\
 \midrule
 Pencil beam        & 0.149 & 0.174 & 0.263 & 0.93 \\
 Undulator (mono.)  & 0.141 & 0.157 & 0.226 & 0.92 \\
-Undulator + DCM    & 0.094 & 0.070 & 0.069 & 0.83 \\
+Undulator + DCM    & 0.094 & 0.070 & 0.068 & 0.83 \\
 \bottomrule
 \end{tabular}
 \end{table}

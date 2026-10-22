@@ -52,14 +52,14 @@ def get_source():
 def get_source_undulator(nrays=5000):
     # electron beam
     from shadow4.sources.s4_electron_beam import S4ElectronBeam
-    electron_beam = S4ElectronBeam(energy_in_GeV=6.084, energy_spread=0.001, current=0.1)
+    electron_beam = S4ElectronBeam(energy_in_GeV=6.0, energy_spread=0.001, current=0.1)
     electron_beam.set_sigmas_all(sigma_x=0.0001415, sigma_y=4.9e-06, sigma_xp=7.1e-06, sigma_yp=2.1e-06)
     electron_beam.set_dispersion_all(0, 0, 0, 0)
 
     # magnetic structure
     from shadow4.sources.undulator.s4_undulator import S4Undulator
     source = S4Undulator(
-        K_vertical=2.426729,  # syned Undulator parameter
+        K_vertical=2.381738,  # syned Undulator parameter
         period_length=0.0314,  # syned Undulator parameter
         number_of_periods=64,  # syned Undulator parameter
         emin=2837.9998557749605,  # Photon energy scan from energy (in eV)
@@ -105,14 +105,14 @@ def get_source_undulator_with_monochromator(nrays=5000):
 
     # electron beam
     from shadow4.sources.s4_electron_beam import S4ElectronBeam
-    electron_beam = S4ElectronBeam(energy_in_GeV=6.084, energy_spread=0.001, current=0.1)
+    electron_beam = S4ElectronBeam(energy_in_GeV=6.0, energy_spread=0.001, current=0.1)
     electron_beam.set_sigmas_all(sigma_x=0.0001415, sigma_y=4.9e-06, sigma_xp=7.1e-06, sigma_yp=2.1e-06)
     electron_beam.set_dispersion_all(0, 0, 0, 0)
 
     # magnetic structure
     from shadow4.sources.undulator.s4_undulator import S4Undulator
     source = S4Undulator(
-        K_vertical=2.426729,  # syned Undulator parameter
+        K_vertical=2.381738,  # syned Undulator parameter
         period_length=0.0314,  # syned Undulator parameter
         number_of_periods=64,  # syned Undulator parameter
         emin=2836.9998557749605,  # Photon energy scan from energy (in eV)
@@ -273,7 +273,8 @@ def get_experiment(fname="2838_10microns_Si111_111SB_Stokes.dat"):
 if __name__ == "__main__":
     import os
     SHOW_PLOTS = 1
-    USE_UNDULATOR = 2   # 0: pencil beam (a single ray), 1: P09 undulator (5000 rays), 2: 1: P09 undulator polychromatic + monochromator
+    USE_UNDULATOR = 1
+    # 0: pencil beam (a single ray), 1: P09 undulator (5000 rays), 2: 1: P09 undulator polychromatic + monochromator
     import sys
     if len(sys.argv) > 1: USE_UNDULATOR = int(sys.argv[1])
     here = os.path.dirname(os.path.abspath(__file__))
@@ -281,15 +282,15 @@ if __name__ == "__main__":
     if USE_UNDULATOR == 1:
         beam = get_source_undulator(nrays=5000)
         angle_arcsec = numpy.linspace(-300, 300, 241)    # in the experimental axis
-        figure_file = "phase_plate_stokes_scan_undulator.png"
+        figure_file = "desy_p09_scan_undulator.png"
     elif USE_UNDULATOR == 2:
         beam = get_source_undulator_with_monochromator(nrays=5000)
         angle_arcsec = numpy.linspace(-300, 300, 241)    # in the experimental axis
-        figure_file = "phase_plate_stokes_scan_undulator_polychromatic.png"
+        figure_file = "desy_p09_scan_undulator_polychromatic.png"
     else:
         beam = get_source()
         angle_arcsec = numpy.linspace(-300, 300, 601)
-        figure_file = "phase_plate_stokes_scan.png"
+        figure_file = "desy_p09_scan_pencil_beam.png"
     print("Source beam calculated: %d rays" % beam.get_number_of_rays())
     S0_in = stokes_lab(beam)[0]   # intensity incident on the phase plate (per ray)
 
