@@ -96,13 +96,17 @@ def get_source_undulator(nrays=5000):
     # plot_scatter(1e6 * rays[:, 0], 1e6 * rays[:, 2], title='(X,Z) in microns')
     return beam
 
-def get_source_undulator_with_monochromator(nrays=5000):
+def get_source_undulator_with_monochromator(nrays=5000, blue_shifted=0):
     import numpy as np
     from dabax.dabax_xraylib import DabaxXraylib
     from shadow4.beamline.s4_beamline import S4Beamline
 
-    beamline = S4Beamline()
+    if blue_shifted:
+        K_vertical = 2.365 # resonance at 2868 eV
+    else:
+        K_vertical = 2.381738 # resonance at 2838 eV
 
+    beamline = S4Beamline()
     # electron beam
     from shadow4.sources.s4_electron_beam import S4ElectronBeam
     electron_beam = S4ElectronBeam(energy_in_GeV=6.0, energy_spread=0.001, current=0.1)
@@ -112,13 +116,13 @@ def get_source_undulator_with_monochromator(nrays=5000):
     # magnetic structure
     from shadow4.sources.undulator.s4_undulator import S4Undulator
     source = S4Undulator(
-        K_vertical=2.381738,  # syned Undulator parameter
+        K_vertical=K_vertical,  # syned Undulator parameter
         period_length=0.0314,  # syned Undulator parameter
         number_of_periods=64,  # syned Undulator parameter
-        emin=2836.9998557749605,  # Photon energy scan from energy (in eV)
-        emax=2838.9998557749605,  # Photon energy scan to energy (in eV)
-        ng_e=3,  # Photon energy scan number of points
-        maxangle=3.0520561496869934e-05,  # Maximum radiation semiaperture in RADIANS
+        emin=2837,  # Photon energy scan from energy (in eV)
+        emax=2839,  # Photon energy scan to energy (in eV)
+        ng_e=30,  # Photon energy scan number of points
+        maxangle=3.0e-05,  # Maximum radiation semiaperture in RADIANS
         ng_t=100,  # Number of points in angle theta
         ng_p=11,  # Number of points in angle phi
         ng_j=20,  # Number of points in electron trajectory (per period) for internal calculation only
@@ -273,13 +277,18 @@ def get_experiment(fname="2838_10microns_Si111_111SB_Stokes.dat"):
 if __name__ == "__main__":
     import os
     SHOW_PLOTS = 1
-    USE_UNDULATOR = 1
-    # 0: pencil beam (a single ray), 1: P09 undulator (5000 rays), 2: 1: P09 undulator polychromatic + monochromator
+    USE_UNDULATOR = 3
+    # 0: pencil beam (a single ray), 1: P09 undulator (5000 rays), 2: P09 undulator polychromatic + monochromator,
+    # 3: as 2 with the undulator blue-shifted (resonance at 2868 eV)
     import sys
     if len(sys.argv) > 1: USE_UNDULATOR = int(sys.argv[1])
     here = os.path.dirname(os.path.abspath(__file__))
 
-    if USE_UNDULATOR == 1:
+    if USE_UNDULATOR == 0:
+        beam = get_source()
+        angle_arcsec = numpy.linspace(-300, 300, 601)
+        figure_file = "desy_p09_scan_pencil_beam.png"
+    elif USE_UNDULATOR == 1:
         beam = get_source_undulator(nrays=5000)
         angle_arcsec = numpy.linspace(-300, 300, 241)    # in the experimental axis
         figure_file = "desy_p09_scan_undulator.png"
@@ -287,10 +296,13 @@ if __name__ == "__main__":
         beam = get_source_undulator_with_monochromator(nrays=5000)
         angle_arcsec = numpy.linspace(-300, 300, 241)    # in the experimental axis
         figure_file = "desy_p09_scan_undulator_polychromatic.png"
+    elif USE_UNDULATOR == 3:
+        beam = get_source_undulator_with_monochromator(nrays=5000, blue_shifted=1)
+        angle_arcsec = numpy.linspace(-300, 300, 241)    # in the experimental axis
+        figure_file = "desy_p09_scan_undulator_polychromatic_blue_shifted.png"
     else:
-        beam = get_source()
-        angle_arcsec = numpy.linspace(-300, 300, 601)
-        figure_file = "desy_p09_scan_pencil_beam.png"
+        raise ValueError("Unrecognized value for USE_UNDULATOR")
+
     print("Source beam calculated: %d rays" % beam.get_number_of_rays())
     S0_in = stokes_lab(beam)[0]   # intensity incident on the phase plate (per ray)
 
@@ -336,7 +348,7 @@ if __name__ == "__main__":
     ax.set_xlabel('angle [arcsec] (detuning = -angle)')
     ax.set_ylabel('normalized Stokes parameters')
     ax.set_title(r'Si 111, %d $\mu$m, %g eV, $\alpha$=%g$^\circ$%s' % (round(1e6 * THICKNESS), ENERGY, ALPHA,
-                 ["", ", undulator (monochromatic)", ", undulator + Si 111 DCM"][USE_UNDULATOR]))
+                 ["", ", undulator (monochromatic)", ", undulator + Si 111 DCM", ", undulator (blue shifted) + Si 111 DCM"][USE_UNDULATOR]))
     ax.set_xlim(-300, 300)
     ax.set_ylim(-1.05, 1.05)
     ax.grid(alpha=0.3)
