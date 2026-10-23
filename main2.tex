@@ -479,7 +479,7 @@ The beamline element orientation angle $\alpha$ is not reset after the scatterin
 \begin{figure}
     \centering
 \includegraphics[width=0.9\linewidth]{figures/S4_orientations.png}
-\caption{Effect of the beamline element orientation angle $\alpha$ for the four most common values: 0, 90, 180 and 270 degrees. The effect of the angle $\alpha$ is carried over to the image plane, thus defining the position of the axes (in blue). }
+\caption{Effect of the beamline element orientation angle $\alpha$ for the four most common values: 0, 90, 180 and 270 degrees. The effect of the angle $\alpha$ is carried over to the image plane, thus defining the position of the axes (in blue). A positive $\alpha$ rotates the element counter-clockwise for an observer at the source looking downstream (as in the figure), i.e., it is a left-handed rotation about the beam direction.}
 \label{fig:S4_orientations}
 \end{figure}
 
@@ -629,7 +629,7 @@ The $2\times 2$ matrix is a coordinate transform (a ``passive'' rotation: the fi
  \end{array} \right).
 \end{equation}
 For a ray along the axis of the beamline element, $\alpha$ coincides with the orientation angle of the beamline element (section~\ref{sec:change_frame}).
-Note that, because the triad $(\hat{u}_\sigma, \hat{u}_\pi, \vec{v})$ is left-handed, a positive $\alpha$ corresponds to a clockwise rotation for an observer looking toward the source.
+Note that, because the triad $(\hat{u}_\sigma, \hat{u}_\pi, \vec{v})$ is left-handed, a positive $\alpha$ corresponds to a clockwise rotation for an observer looking toward the source, i.e., a positive $\alpha$ is a left-handed rotation about the propagation direction $\vec{v}$ (opposite to the advance of a right-handed screw along $\vec{v}$). The rotation angle $\chi$ of an element in the standard formalism, measured from $\check{x}$ toward $\check{y}$, is right-handed about $\vec{v}$, therefore $\chi=-\alpha$.
 The transpose of $\textbf{R}(\alpha)$ [i.e., $\textbf{R}(-\alpha)$, the ``active'' rotation matrix] must not be used here: it gives the same result only for $\alpha$ multiple of $90^\circ$ (for $\alpha=\pm 90^\circ$ the two matrices differ only in a global sign).
 
 
