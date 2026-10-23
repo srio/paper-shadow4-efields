@@ -19,6 +19,10 @@
 #     estimated from the beam, compared with the measurements.
 #   - figures/crystalpy_desy_p09_convolution_rms.png: rms differences with the measurements versus sigma.
 #
+# Usage: python crystalpy_desy_p09_convolution.py [thickness_in_microns]
+#   10 (default): 10 um plate (measurements 2838_10microns_Si111_111SB_Stokes.dat), figures as above.
+#   5: 5 um plate (measurements 2838_5microns_Si111_111SB_Stokes.dat), figures with the suffix "_5um".
+#
 import os
 import contextlib, io
 import numpy
@@ -100,8 +104,13 @@ if __name__ == "__main__":
     if not SHOW_PLOTS: matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    import sys
+    thickness_um = int(sys.argv[1]) if len(sys.argv) > 1 else 10
+    THICKNESS = thickness_um * 1e-6             # used by get_data()
+    suffix = "" if thickness_um == 10 else "_%dum" % thickness_um
+
     here = os.path.dirname(os.path.abspath(__file__))
-    xe, P1e, P2e, P3e = get_experiment(os.path.join(here, "2838_10microns_Si111_111SB_Stokes.dat"))
+    xe, P1e, P2e, P3e = get_experiment(os.path.join(here, "2838_%dmicrons_Si111_111SB_Stokes.dat" % thickness_um))
     bunch_out_dict, deviations = get_data()
 
     # rms differences versus sigma
@@ -142,13 +151,13 @@ if __name__ == "__main__":
     ax.plot(xe, P3e, '^', color='C3', ms=4, mfc='none', label=r'$\sqrt{1-P_1^2-P_2^2}$ exp')
     ax.set_xlabel('angle [arcsec] (detuning = -angle)')
     ax.set_ylabel('normalized Stokes parameters')
-    ax.set_title(r'Si 111, 10 $\mu$m, %g eV, crystalpy $\ast$ Gaussian ($\sigma$=%.1f arcsec)' % (ENERGY, SIGMA_ARCSEC))
+    ax.set_title(r'Si 111, %d $\mu$m, %g eV, crystalpy $\ast$ Gaussian ($\sigma$=%.1f arcsec)' % (thickness_um, ENERGY, SIGMA_ARCSEC))
     ax.set_xlim(-300, 300)
     ax.set_ylim(-1.05, 1.05)
     ax.grid(alpha=0.3)
     ax.legend(fontsize=7, ncol=2)
     fig.tight_layout()
-    fig.savefig(os.path.join(here, "..", "figures", "crystalpy_desy_p09_convolution.png"), dpi=200)
+    fig.savefig(os.path.join(here, "..", "figures", "crystalpy_desy_p09_convolution%s.png" % suffix), dpi=200)
 
     fig2, ax2 = plt.subplots(figsize=(6.5, 3.5))
     ax2.plot(sigmas, rms[:, 0], '-', color='k', label=r'$P_1$')
@@ -160,6 +169,6 @@ if __name__ == "__main__":
     ax2.grid(alpha=0.3)
     ax2.legend(fontsize=8)
     fig2.tight_layout()
-    fig2.savefig(os.path.join(here, "..", "figures", "crystalpy_desy_p09_convolution_rms.png"), dpi=200)
-    print("Files written to disk: figures/crystalpy_desy_p09_convolution.png, figures/crystalpy_desy_p09_convolution_rms.png")
+    fig2.savefig(os.path.join(here, "..", "figures", "crystalpy_desy_p09_convolution%s_rms.png" % suffix), dpi=200)
+    print("Files written to disk: figures/crystalpy_desy_p09_convolution%s.png, figures/crystalpy_desy_p09_convolution%s_rms.png" % (suffix, suffix))
     if SHOW_PLOTS: plt.show()

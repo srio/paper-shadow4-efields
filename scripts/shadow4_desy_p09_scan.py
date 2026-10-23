@@ -282,6 +282,11 @@ if __name__ == "__main__":
     # 3: as 2 with the undulator blue-shifted (resonance at 2868 eV)
     import sys
     if len(sys.argv) > 1: USE_UNDULATOR = int(sys.argv[1])
+    # optional second argument: thickness of the plate in microns (10: default; 5: the 5 um plate, with its
+    # measurements, and the suffix "_5um" in the figure file)
+    THICKNESS_UM = int(sys.argv[2]) if len(sys.argv) > 2 else 10
+    THICKNESS = THICKNESS_UM * 1e-6
+    SUFFIX = "" if THICKNESS_UM == 10 else "_%dum" % THICKNESS_UM
     here = os.path.dirname(os.path.abspath(__file__))
 
     if USE_UNDULATOR == 0:
@@ -313,7 +318,8 @@ if __name__ == "__main__":
     DOP = numpy.sqrt(P1 ** 2 + P2 ** 2 + P3 ** 2)
     P3_as_exp = numpy.sqrt(numpy.clip(1.0 - P1 ** 2 - P2 ** 2, 0.0, None))   # as reconstructed in the experiment
 
-    xe, P1e, P2e, P3e = get_experiment(os.path.join(here, "2838_10microns_Si111_111SB_Stokes.dat"))
+    xe, P1e, P2e, P3e = get_experiment(os.path.join(here, "2838_%dmicrons_Si111_111SB_Stokes.dat" % THICKNESS_UM))
+    figure_file = figure_file.replace(".png", SUFFIX + ".png")
     se = numpy.array([stokes_lab(trace(beam, -x * ARCSEC)) for x in xe])
     print("Si 111, %g eV, %g um, alpha=%g deg, %d experimental points:" % (ENERGY, 1e6 * THICKNESS, ALPHA, xe.size))
     print("   rms(P1 - P1exp) = %.3f, rms(P2 - P2exp) = %.3f, rms(|P3| - |P3|exp) = %.3f" % (
